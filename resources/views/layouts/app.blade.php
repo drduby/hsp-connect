@@ -30,6 +30,7 @@
 <x-modals.feedback />
 <x-modals.login />
 <x-modals.post />
+<livewire:report-post />
 
 @livewireScripts
 <script>

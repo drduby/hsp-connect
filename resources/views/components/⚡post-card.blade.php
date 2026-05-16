@@ -240,7 +240,8 @@ new class extends Component {
             </button>
         @endif
 
-        <button class="pab" onclick="reportPost({{ $post->id }})"
+        <button class="pab"
+            wire:click="$dispatch('open-report', { postId: {{ $post->id }} })"
             style="margin-left:auto;color:var(--light);font-size:11px">
             ⚠ Melden
         </button>
