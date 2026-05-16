@@ -4,81 +4,106 @@
 
 @section('content')
 
-<x-header />
+    <x-header/>
 
-<x-hero tags-id="hero-tags" />
+    <x-hero tags-id="hero-tags"/>
 
-<div class="layout">
-    <x-sidebar />
+    <div class="layout">
+        <x-sidebar :tags="$tags"/>
 
-    <main>
-        <div style="display:none"><span id="nav-Alle"></span></div>
+        <main>
+            <div style="display:none"><span id="nav-Alle"></span></div>
 
-        {{-- Compose / Search box --}}
-        <div class="compose">
-            <div class="c-srch-row">
-                <div class="ava" id="compose-ava" style="display:none;background:var(--bg3);color:var(--muted);font-size:16px;cursor:pointer" onclick="if(loggedIn)openProfileMenu()"></div>
-                <div class="c-srch-wrap">
-                    <input class="c-srch-inp" id="compose-srch" type="text"
-                        placeholder="Was besch&#xE4;ftigt dich gerade?"
-                        oninput="onComposeSrch()">
-                    <button class="c-srch-x" id="c-srch-x" onclick="clearComposeSrch()" style="display:none">&#xD7;</button>
+            {{-- Compose / Search box --}}
+            <div class="compose">
+                <div class="c-srch-row">
+                    <div class="ava" id="compose-ava"
+                         style="display:none;background:var(--bg3);color:var(--muted);font-size:16px;cursor:pointer"
+                         onclick="if(loggedIn)openProfileMenu()"></div>
+                    <div class="c-srch-wrap">
+                        <input class="c-srch-inp" id="compose-srch" type="text"
+                               placeholder="Was besch&#xE4;ftigt dich gerade?"
+                               oninput="onComposeSrch()">
+                        <button class="c-srch-x" id="c-srch-x" onclick="clearComposeSrch()" style="display:none">
+                            &#xD7;
+                        </button>
+                    </div>
+                </div>
+                <div id="compose-welcome"
+                     style="margin-top:12px;padding:12px 14px;background:var(--surf2);border-radius:12px;display:flex;align-items:flex-start;gap:11px">
+                    <span style="font-size:22px;flex-shrink:0">&#x1F44B;</span>
+                    <div>
+                        <div id="compose-welcome-title"
+                             style="font-family:var(--disp);font-size:14px;font-weight:700;color:var(--ink);margin-bottom:3px">
+                            Willkommen bei HSPConnect!
+                        </div>
+                        <div style="font-size:12px;color:var(--muted);line-height:1.65;font-weight:300">Bevor du eine
+                            Frage postest &#x2014; schau kurz in der <span onclick="openFAQPage()"
+                                                                           style="color:var(--t);font-weight:600;cursor:pointer">FAQ</span>
+                            nach. Hast du eine Erfahrung? Teile sie &#x2014; das hilft der Community!
+                        </div>
+                    </div>
+                </div>
+                <div style="margin-top:10px">
+                    <button class="c-big-btn c-big-btn-e" onclick="checkAuthThen(()=>openPM('Erfahrung'))"
+                            style="width:100%;padding:13px 18px;justify-content:flex-start;gap:14px;border-radius:12px">
+                        <span style="font-size:26px;line-height:1">&#x1F4AC;</span>
+                        <span style="font-size:14px;font-weight:700">Erfahrung teilen</span>
+                    </button>
                 </div>
             </div>
-            <div id="compose-welcome" style="margin-top:12px;padding:12px 14px;background:var(--surf2);border-radius:12px;display:flex;align-items:flex-start;gap:11px">
-                <span style="font-size:22px;flex-shrink:0">&#x1F44B;</span>
-                <div>
-                    <div id="compose-welcome-title" style="font-family:var(--disp);font-size:14px;font-weight:700;color:var(--ink);margin-bottom:3px">Willkommen bei HSPConnect!</div>
-                    <div style="font-size:12px;color:var(--muted);line-height:1.65;font-weight:300">Bevor du eine Frage postest &#x2014; schau kurz in der <span onclick="openFAQPage()" style="color:var(--t);font-weight:600;cursor:pointer">FAQ</span> nach. Hast du eine Erfahrung? Teile sie &#x2014; das hilft der Community!</div>
-                </div>
+
+            {{-- Active filter bar --}}
+            <div class="afilter" id="afilter"><span id="af-txt"></span>
+                <button class="af-x" onclick="clearAll()">&#xD7;</button>
             </div>
-            <div style="margin-top:10px">
-                <button class="c-big-btn c-big-btn-e" onclick="checkAuthThen(()=>openPM('Erfahrung'))" style="width:100%;padding:13px 18px;justify-content:flex-start;gap:14px;border-radius:12px">
-                    <span style="font-size:26px;line-height:1">&#x1F4AC;</span>
-                    <span style="font-size:14px;font-weight:700">Erfahrung teilen</span>
-                </button>
+
+            {{-- Feed tabs --}}
+            <div class="ftabs">
+                <button class="ft on" id="tab-Alle" onclick="setTab('Alle')">Alle</button>
+                <button class="ft" id="tab-Erfahrung" onclick="setTab('Erfahrung')">&#x2728; Erfahrungen</button>
+                <button class="ft" id="tab-Frage" onclick="setTab('Frage')">&#x2753; Fragen</button>
             </div>
-        </div>
 
-        {{-- Active filter bar --}}
-        <div class="afilter" id="afilter"><span id="af-txt"></span><button class="af-x" onclick="clearAll()">&#xD7;</button></div>
+            {{-- Post feed --}}
+            <div id="feed">
+                @foreach($posts as $post)
+                    <livewire:post-card :post="$post" wire:key="post-{{ $post->id }}"/>
+                @endforeach
+            </div>
 
-        {{-- Feed tabs --}}
-        <div class="ftabs">
-            <button class="ft on" id="tab-Alle" onclick="setTab('Alle')">Alle</button>
-            <button class="ft" id="tab-Erfahrung" onclick="setTab('Erfahrung')">&#x2728; Erfahrungen</button>
-            <button class="ft" id="tab-Frage" onclick="setTab('Frage')">&#x2753; Fragen</button>
-        </div>
+            <div id="feed-empty" class="empty" style="display:none">
+                <div class="empty-i">&#x1F30A;</div>
+                <div class="empty-t">Keine Beitr&#xE4;ge gefunden</div>
+                <p>Andere Filter oder neuen Beitrag erstellen!</p>
+            </div>
 
-        {{-- Post feed --}}
-        <div id="feed">
-            @foreach($posts as $post)
-                <x-post-card :post="$post" />
-            @endforeach
-        </div>
+            <div id="pag" class="pag"></div>
+        </main>
+    </div>
 
-        <div id="feed-empty" class="empty" style="display:none">
-            <div class="empty-i">&#x1F30A;</div>
-            <div class="empty-t">Keine Beitr&#xE4;ge gefunden</div>
-            <p>Andere Filter oder neuen Beitrag erstellen!</p>
-        </div>
+    <x-footer/>
 
-        <div id="pag" class="pag"></div>
-    </main>
-</div>
+    {{-- Overlay pages --}}
+    @include('partials.faq-page')
+    @include('partials.account-page')
 
-<x-footer />
-
-{{-- Overlay pages --}}
-@include('partials.faq-page')
-@include('partials.account-page')
-
-{{-- Data bridge for JavaScript --}}
-<script>
-window.__POSTS__ = @json($posts);
-window.__TAGS__ = @json($tags);
-window.__TAG_COLORS__ = @json($tagColors);
-window.__TAG_COUNTS__ = @json($tagCounts);
-</script>
+    {{-- Data bridge for JavaScript --}}
+    @php
+        $postsForJs = $posts->map(fn($p) => [
+            'id'      => $p->id,
+            'type'    => $p->type->value === 'experience' ? 'Erfahrung' : 'Frage',
+            'tags'    => $p->tags->pluck('name')->toArray(),
+            'tag'     => $p->tags->first()?->name ?? '',
+            'title'   => $p->title,
+            'content' => $p->content,
+            'mine'    => $p->is_mine,
+            'saved'   => $p->user_saved,
+            'liked'   => $p->user_liked,
+        ]);
+    @endphp
+    <script>
+        window.__POSTS__ = @json($postsForJs);
+    </script>
 
 @endsection

@@ -38,9 +38,10 @@ export function render() {
   updateTabCounts();
 
   const filtered = state.posts.filter(function (p) {
-    const matchTag = state.activeTags.size === 0 || state.activeTags.has(p.tag);
+    const postTags = Array.isArray(p.tags) && p.tags.length ? p.tags : (p.tag ? [p.tag] : []);
+    const matchTag = state.activeTags.size === 0 || postTags.some(function (t) { return state.activeTags.has(t); });
     const matchType = state.curType === 'Alle' || p.type === state.curType;
-    const matchSrch = !state.srch || (p.title + ' ' + p.content + ' ' + p.tag).toLowerCase().includes(state.srch);
+    const matchSrch = !state.srch || (p.title + ' ' + p.content + ' ' + postTags.join(' ')).toLowerCase().includes(state.srch);
     return matchTag && matchType && matchSrch;
   });
 

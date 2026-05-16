@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Http\Responses\LoginResponse;
 use App\Http\Responses\LogoutResponse;
 use App\Http\Responses\RegisterResponse;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Fortify\Contracts\LoginResponse as LoginResponseContract;
 use Laravel\Fortify\Contracts\LogoutResponse as LogoutResponseContract;
@@ -19,5 +20,11 @@ class AppServiceProvider extends ServiceProvider
         $this->app->singleton(LogoutResponseContract::class, LogoutResponse::class);
     }
 
-    public function boot(): void {}
+    public function boot(): void
+    {
+        Model::preventLazyLoading();
+        Model::shouldBeStrict();
+        Model::unguard();
+        Model::preventAccessingMissingAttributes();
+    }
 }
