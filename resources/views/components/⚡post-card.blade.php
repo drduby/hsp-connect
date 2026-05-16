@@ -183,7 +183,8 @@ new class extends Component {
     data-type="{{ $typeLabel }}"
     data-tag="{{ $tagName }}"
     data-search="{{ strtolower($post->title . ' ' . $post->content . ' ' . $tagName) }}"
-    style="border-left:3px solid {{ $tc }}">
+    style="border-left:3px solid {{ $tc }}"
+    wire:poll.visible.10s>
 
     {{-- Post header & body --}}
     <div class="post-inner">
