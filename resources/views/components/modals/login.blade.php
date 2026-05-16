@@ -10,6 +10,7 @@
             <input type="email" id="l-em" placeholder="deine@email.at">
             <label>Passwort</label>
             <input type="password" id="l-pw" placeholder="&#x2022;&#x2022;&#x2022;&#x2022;&#x2022;&#x2022;&#x2022;&#x2022;">
+            <div class="mlink mlink-tight">Passwort vergessen? <a onclick="setLT('reset')">Reset password</a></div>
             <div id="login-error" style="display:none;color:#c04040;font-size:12.5px;margin:-4px 0 10px;padding:8px 12px;background:rgba(192,64,64,.08);border-radius:8px;line-height:1.5"></div>
             <button class="mbtn" onclick="doLogin()">Anmelden</button>
             <div class="mlink">Noch kein Konto? <a onclick="setLT('up')">Registrieren</a></div>
@@ -36,6 +37,13 @@
             <div id="reg-err-password_confirmation" class="field-error"></div>
             <button class="mbtn" onclick="doReg()">Konto erstellen</button>
             <div class="mlink">Bereits registriert? <a onclick="setLT('in')">Anmelden</a></div>
+        </div>
+        <div id="lf-reset" style="display:none">
+            <label>E-Mail</label>
+            <input type="email" id="reset-em" placeholder="deine@email.at">
+            <div id="reset-message" style="display:none;font-size:12.5px;margin:-4px 0 10px;padding:8px 12px;border-radius:8px;line-height:1.5"></div>
+            <button class="mbtn" onclick="doPasswordResetLink()">Reset password</button>
+            <div class="mlink">Zur&#xFC;ck zum Login? <a onclick="setLT('in')">Anmelden</a></div>
         </div>
     </div>
 </div>
