@@ -14,6 +14,7 @@ Route::get('/reset-password/{token}', function (Request $request, string $token)
 Route::get('/', [PostController::class, 'index'])->name('home');
 
 Route::get('/help', function () {
+Route::get('/', function () {
     $tags = ['Spastik', 'Muskeln', 'Entspannung', 'Physiotherapie', 'Hilfsmittel', 'Alltag', 'Ernährung', 'Schlaf', 'Reha'];
     $tagColors = [
         'Spastik' => '#0a6e7a', 'Muskeln' => '#b8762a', 'Entspannung' => '#2a8a52',
