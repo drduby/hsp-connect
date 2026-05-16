@@ -1,0 +1,1538 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HSPConnect — Community für Spastik</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Mulish:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --t:#0a6e7a;--t2:#085660;--t3:#dff2f5;--t4:rgba(10,110,122,.09);
+  --g:#b8762a;--g2:#946018;--g3:#fdf0dd;
+  --bg:#f3ede4;--bg2:#ede5da;--bg3:#e4dace;
+  --surf:#fff;--surf2:#faf7f3;
+  --bord:rgba(10,110,122,.12);--bord2:rgba(10,110,122,.22);
+  --ink:#0f1e22;--ink2:#1c3038;--muted:#5e7880;--light:#96adb5;
+  --r:14px;--rlg:20px;
+  --sh:0 1px 6px rgba(10,30,36,.07);
+  --sh2:0 6px 24px rgba(10,30,36,.12);
+  --sh3:0 18px 52px rgba(10,30,36,.17);
+  --disp:'Bricolage Grotesque',system-ui,sans-serif;
+  --body:'Mulish',system-ui,sans-serif;
+}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.6;min-height:100vh;display:flex;flex-direction:column;-webkit-font-smoothing:antialiased}
+::-webkit-scrollbar{width:4px}::-webkit-scrollbar-thumb{background:var(--bg3);border-radius:4px}
+button{font-family:var(--body);cursor:pointer}
+canvas#hexbg{position:fixed;inset:0;z-index:0;pointer-events:none}
+
+/* ── HEADER ── */
+header{position:sticky;top:0;z-index:300;background:rgba(243,237,228,.92);backdrop-filter:blur(24px) saturate(1.6);border-bottom:1px solid var(--bord);height:76px;display:flex;align-items:center;padding:0 clamp(16px,3vw,44px) 0 clamp(24px,4vw,56px);gap:14px;box-shadow:var(--sh)}
+.logo{display:flex;align-items:center;gap:14px;cursor:pointer;flex-shrink:0;text-decoration:none}
+.logo-icon{width:48px;height:48px;display:block;flex-shrink:0}
+.logo-text{display:flex;flex-direction:column;line-height:1.1}
+.logo-name{font-family:var(--disp);font-size:23px;font-weight:800;color:var(--t);letter-spacing:-.03em}
+.logo-name span{color:var(--g)}
+.logo-sub{font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--light)}
+.h-acts{display:flex;align-items:center;gap:8px;flex-shrink:0;margin-left:auto}
+.h-ico-btn{width:34px;height:34px;border-radius:50%;background:var(--surf2);border:1.5px solid var(--bord);display:flex;align-items:center;justify-content:center;font-size:15px;cursor:pointer;transition:all .18s;position:relative}
+.h-ico-btn:hover{border-color:var(--t);background:var(--t3)}
+.notif-dot{position:absolute;top:3px;right:3px;width:7px;height:7px;border-radius:50%;background:var(--g);border:1.5px solid var(--bg)}
+.h-btn{background:var(--t);color:#fff;border:none;padding:8px 18px;border-radius:40px;font-family:var(--body);font-size:13px;font-weight:700;transition:all .2s;letter-spacing:.01em}
+.h-btn:hover{background:var(--t2);transform:translateY(-1px);box-shadow:0 4px 14px rgba(10,110,122,.3)}
+.h-btn-o{background:transparent;color:var(--t);border:1.5px solid var(--bord2);padding:7px 16px;border-radius:40px;font-family:var(--body);font-size:13px;font-weight:700;transition:all .18s}
+.h-btn-o:hover{border-color:var(--t);background:var(--t3)}
+.h-btn-muted{background:transparent;color:var(--muted);border:1.5px solid var(--bord2);padding:7px 16px;border-radius:40px;font-family:var(--body);font-size:13px;font-weight:700;transition:all .18s}
+.h-btn-muted:hover{border-color:var(--muted);background:var(--surf2)}
+.h-btn-muted.h-active{background:var(--t3);color:var(--t);border-color:var(--t)}
+
+/* ── HERO ── */
+.hero{background:linear-gradient(135deg,#0a4e58 0%,#0a6e7a 50%,#7a5010 100%);padding:28px clamp(16px,3vw,44px) 24px;position:relative;z-index:1;overflow:hidden}
+.hero::after{content:'';position:absolute;inset:0;pointer-events:none;background:repeating-linear-gradient(45deg,transparent,transparent 60px,rgba(255,255,255,.012) 60px,rgba(255,255,255,.012) 61px)}
+.hero-in{max-width:1200px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:28px;flex-wrap:wrap;position:relative;z-index:1}
+.hero-l{flex:1;min-width:260px}
+.hero-r{flex-shrink:0;display:flex;align-items:center}
+.online-pill{display:inline-flex;align-items:center;gap:6px;background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:40px;padding:4px 12px;font-size:11px;font-weight:700;color:rgba(255,255,255,.85);margin-bottom:12px;letter-spacing:.04em}
+.online-dot{width:7px;height:7px;border-radius:50%;background:#4de8a0;box-shadow:0 0 6px #4de8a0;animation:pulse 2s ease-in-out infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+.hero h1{font-family:var(--disp);font-size:clamp(20px,2.6vw,28px);font-weight:800;color:#fff;margin-bottom:4px;letter-spacing:-.03em;line-height:1.2}
+.hero-sub{font-size:14px;color:rgba(255,255,255,.62);font-weight:300;margin-bottom:16px}
+.hero-tags{display:flex;gap:6px;flex-wrap:wrap;margin-top:14px}
+.htag{padding:4px 12px;border-radius:40px;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.18);color:rgba(255,255,255,.8);font-size:12px;font-weight:600;cursor:pointer;transition:all .18s}
+.htag:hover{background:rgba(255,255,255,.2)}
+.htag.on{background:#fff;color:var(--t)}
+.hero-stats{display:flex;flex-direction:column;gap:8px}
+.hs{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);border-radius:10px;padding:9px 20px;min-width:130px;display:flex;align-items:center;gap:12px}
+.hs-n{font-family:var(--disp);font-size:22px;font-weight:800;color:#fff;line-height:1;min-width:54px}
+.hs-l{font-size:10px;color:rgba(255,255,255,.55);letter-spacing:.08em;text-transform:uppercase;margin-top:2px}
+
+/* ── LAYOUT ── */
+.layout{max-width:1200px;margin:0 auto;width:100%;padding:18px clamp(12px,3vw,22px);display:grid;grid-template-columns:220px 1fr;gap:18px;flex:1;align-items:start;position:relative;z-index:1}
+
+/* ── LEFT SIDEBAR ── */
+.lsb{position:sticky;top:88px;max-height:calc(100vh - 100px);overflow-y:auto;scrollbar-width:none;padding-top:2px;-webkit-overflow-scrolling:touch}
+.lsb::-webkit-scrollbar{display:none}
+.sb-card{background:var(--surf);border:1px solid rgba(10,110,122,.1);border-radius:var(--rlg);padding:14px;margin-bottom:12px;box-shadow:var(--sh)}
+.sb-hdg{font-size:9px;font-weight:800;letter-spacing:.2em;text-transform:uppercase;color:var(--light);margin-bottom:10px;display:flex;align-items:center;gap:7px}
+.sb-hdg::after{content:'';flex:1;height:1px;background:var(--bord)}
+.tsr-wrap{position:relative;margin-bottom:9px}
+.tsr{width:100%;padding:7px 11px 7px 28px;border-radius:8px;border:1.5px solid var(--bord2);background:var(--surf2);font-family:var(--body);font-size:12.5px;outline:none;color:var(--ink);transition:border-color .18s}
+.tsr:focus{border-color:var(--t)}
+.tsr::placeholder{color:var(--light)}
+.tsr-wrap::before{content:'#';position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:12px;font-weight:800;color:var(--light)}
+.tlist{display:flex;flex-direction:column;gap:1px;max-height:none}
+
+.titem{display:flex;align-items:center;justify-content:space-between;padding:6px 9px;border-radius:8px;font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;border:none;background:transparent;width:100%;text-align:left;transition:all .15s;gap:6px}
+.titem:hover{background:var(--surf2);color:var(--ink)}
+.titem.on{background:var(--t3);color:var(--t)}
+.tdot{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.tlbl{display:flex;align-items:center;gap:6px;flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.tcnt{font-size:10px;padding:1px 6px;border-radius:20px;background:var(--bg2);color:var(--light);flex-shrink:0}
+.titem.on .tcnt{background:rgba(10,110,122,.12);color:var(--t)}
+.fb-btn{width:100%;background:var(--surf2);border:1.5px solid var(--bord2);color:var(--ink2);padding:8px 12px;border-radius:10px;font-family:var(--body);font-size:12.5px;font-weight:600;cursor:pointer;transition:all .18s;text-align:left;display:block}
+.fb-btn:hover{border-color:var(--t);color:var(--t);background:var(--t3)}
+.active-nav{border-color:var(--t)!important;color:var(--t)!important;background:var(--t3)!important}
+.fb-btn-red:hover{border-color:#c04040;color:#c04040;background:#fdf0f0}
+
+/* ── MAIN ── */
+main{min-width:0}
+.compose{background:var(--surf);border:1px solid rgba(10,110,122,.1);border-radius:var(--rlg);padding:16px;margin-bottom:12px;box-shadow:var(--sh)}
+.c-srch-row{display:flex;align-items:center;gap:10px}
+.c-srch-wrap{flex:1;position:relative}
+.c-srch-inp{width:100%;padding:11px 36px 11px 16px;border-radius:40px;border:1.5px solid rgba(10,110,122,.18);background:var(--bg);font-family:var(--body);font-size:14px;outline:none;color:var(--ink);transition:border-color .2s,box-shadow .2s}
+.c-srch-inp:focus{border-color:var(--t);box-shadow:0 0 0 3px var(--t4);background:var(--surf)}
+.c-srch-inp::placeholder{color:var(--light)}
+.c-srch-x{position:absolute;right:12px;top:50%;transform:translateY(-50%);background:none;border:none;font-size:18px;color:var(--muted);cursor:pointer;line-height:1;transition:color .15s}
+.c-srch-x:hover{color:var(--ink)}
+.ava{width:36px;height:36px;border-radius:50%;flex-shrink:0;background:linear-gradient(135deg,var(--t),var(--g));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:13px}
+.c-btn{background:var(--t);color:#fff;border:none;padding:9px 18px;border-radius:40px;font-family:var(--body);font-size:13px;font-weight:700;transition:all .2s;flex-shrink:0}
+.c-btn:hover{background:var(--t2)}
+.c-btns-row{display:flex;gap:7px;margin-top:10px}
+.c-big-btn{flex:1;display:flex;align-items:center;justify-content:center;gap:6px;padding:7px 13px;border-radius:40px;border:none;font-family:var(--body);font-size:12.5px;font-weight:700;cursor:pointer;transition:all .18s}
+.c-big-btn-icon{font-size:14px;line-height:1}
+.c-big-btn-label{font-size:12.5px;font-weight:700}
+.c-big-btn-e{background:var(--t3);color:var(--t);border:1.5px solid rgba(10,110,122,.18)}
+.c-big-btn-e:hover{background:var(--t);color:#fff}
+.c-big-btn-f{background:var(--g3);color:var(--g2);border:1.5px solid rgba(184,118,42,.18)}
+.c-big-btn-f:hover{background:var(--g);color:#fff}
+.afilter{display:none;align-items:center;gap:8px;padding:9px 13px;background:var(--t3);border:1px solid rgba(10,110,122,.18);border-radius:10px;margin-bottom:11px;font-size:13px;font-weight:600;color:var(--t)}
+.afilter.on{display:flex}
+.af-x{margin-left:auto;background:none;border:none;color:var(--t);cursor:pointer;font-size:18px;line-height:1;transition:transform .18s}
+.af-x:hover{transform:rotate(90deg)}
+.ftabs{background:var(--surf);border:1px solid rgba(10,110,122,.1);border-radius:var(--rlg);padding:4px;margin-bottom:12px;display:flex;gap:3px;box-shadow:var(--sh)}
+.ft{flex:1;padding:7px;border-radius:10px;border:none;background:transparent;font-family:var(--body);font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;transition:all .18s;text-align:center}
+.ft:hover{background:var(--surf2);color:var(--ink)}
+.ft.on{background:var(--t3);color:var(--t)}
+
+/* ── POSTS ── */
+.post{background:var(--surf);border:1px solid rgba(10,110,122,.1);border-radius:var(--rlg);margin-bottom:16px;box-shadow:var(--sh);overflow:hidden;transition:transform .25s cubic-bezier(.22,1,.36,1),box-shadow .25s,border-color .2s}
+.post:hover{transform:translateY(-2px);box-shadow:var(--sh2);border-color:rgba(10,110,122,.2)}
+.post-inner{padding:16px 18px 12px;border-bottom:1px solid rgba(10,110,122,.08)}
+.pmeta{display:flex;align-items:center;gap:7px;margin-bottom:10px;flex-wrap:wrap}
+.pava{width:34px;height:34px;border-radius:50%;flex-shrink:0;background:linear-gradient(135deg,var(--t),var(--g));display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:12px}
+.pname{font-weight:700;font-size:13px;color:var(--ink)}
+.ptime{font-size:11px;color:var(--light);margin-top:1px}
+.pbadge{padding:3px 9px;border-radius:20px;font-size:9.5px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;margin-left:auto;flex-shrink:0}
+.pb-e{background:var(--t3);color:var(--t)}
+.pb-f{background:var(--g3);color:var(--g2)}
+.ptag{background:var(--bg2);border:1px solid rgba(10,110,122,.12);color:var(--muted);padding:2px 8px;border-radius:20px;font-size:10.5px;font-weight:700;cursor:pointer;transition:all .18s}
+.ptag:hover{background:var(--t3);border-color:rgba(10,110,122,.3);color:var(--t)}
+.ptitle{font-family:var(--disp);font-size:16px;font-weight:700;color:var(--ink);margin-bottom:6px;line-height:1.3;letter-spacing:-.02em}
+.pbody{font-size:13.5px;color:var(--ink2);line-height:1.75;font-weight:300}
+.pbody.cl{display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.readmore{font-size:12.5px;font-weight:700;color:var(--t);cursor:pointer;background:none;border:none;padding:4px 0 0;display:inline-block;transition:opacity .15s}
+.readmore:hover{opacity:.7}
+.pacts{padding:10px 18px;display:flex;align-items:center;gap:2px;border-bottom:1px solid rgba(10,110,122,.07)}
+.pab{display:flex;align-items:center;gap:4px;padding:5px 10px;border-radius:40px;border:none;background:transparent;font-family:var(--body);font-size:12.5px;font-weight:600;color:var(--muted);cursor:pointer;transition:all .18s}
+.pab:hover{background:var(--surf2);color:var(--ink)}
+.pab.lk{color:#e03535;background:#fdeaea}
+.pab.sv{color:var(--t);background:var(--t3)}
+.sepv{width:1px;height:16px;background:rgba(10,110,122,.12);margin:0 2px}
+.stars{display:flex;gap:1px}
+.star{font-size:14px;color:var(--bg3);cursor:pointer;transition:color .1s;line-height:1}
+.star.on{color:#f5a500}
+.avgr{font-size:11px;color:var(--muted);font-weight:700;margin-left:3px}
+.read-cmts-btn{display:block;padding:8px 18px;background:var(--surf2);border:none;border-top:1px solid rgba(10,110,122,.08);font-family:var(--body);font-size:12px;font-weight:700;color:var(--t);cursor:pointer;transition:opacity .15s;width:100%;text-align:left}
+.read-cmts-btn:hover{opacity:.7}
+.cmts{padding:12px 18px 14px;background:var(--surf2)}
+.cmt{display:flex;gap:8px;margin-bottom:9px}
+.cava{width:24px;height:24px;border-radius:50%;flex-shrink:0;margin-top:1px;background:var(--t);display:flex;align-items:center;justify-content:center;color:#fff;font-size:8.5px;font-weight:800}
+.cbub{background:var(--surf);border:1px solid rgba(10,110,122,.1);border-radius:10px;padding:7px 11px;flex:1}
+.cname{font-size:11.5px;font-weight:800;color:var(--ink);margin-bottom:2px}
+.ctext{font-size:12.5px;color:var(--ink2);line-height:1.55;font-weight:300}
+.cmt-write-label{font-size:10px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--light);margin:12px 0 6px}
+.cform{display:flex;gap:7px;margin-top:0;align-items:center}
+.cinp{flex:1;padding:8px 13px;border-radius:40px;border:1.5px solid rgba(10,110,122,.15);background:var(--surf);font-family:var(--body);font-size:12.5px;outline:none;transition:border-color .18s;color:var(--ink)}
+.cinp:focus{border-color:var(--t)}
+.cinp::placeholder{color:var(--light)}
+.csend{padding:7px 15px;border-radius:40px;background:var(--t);color:#fff;border:none;font-family:var(--body);font-size:12px;font-weight:700;cursor:pointer;transition:background .18s}
+.csend:hover{background:var(--t2)}
+.togcmt{font-size:12px;font-weight:700;color:var(--t);cursor:pointer;background:none;border:none;padding:0;margin-bottom:8px;display:block;transition:opacity .15s}
+.togcmt:hover{opacity:.7}
+.ni-cnt{font-size:10px;background:var(--t);color:#fff;padding:1px 6px;border-radius:20px;margin-left:auto}
+.empty{text-align:center;padding:52px 20px;color:var(--muted)}
+.empty-i{font-size:38px;margin-bottom:12px;opacity:.3}
+.empty-t{font-family:var(--disp);font-size:18px;font-weight:700;color:var(--ink2);margin-bottom:5px;letter-spacing:-.02em}
+.pag{display:flex;justify-content:center;gap:5px;margin:18px 0 4px}
+.pgb{width:32px;height:32px;border-radius:50%;border:1.5px solid rgba(10,110,122,.15);background:var(--surf);font-family:var(--body);font-size:12.5px;font-weight:700;color:var(--muted);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .18s}
+.pgb:hover{border-color:var(--t);color:var(--t)}
+.pgb.on{background:var(--t);color:#fff;border-color:var(--t)}
+.pgb:disabled{opacity:.3;cursor:default}
+
+/* ── MODALS ── */
+.mbg{position:fixed;inset:0;background:rgba(10,20,24,.4);backdrop-filter:blur(9px);z-index:800;display:none;align-items:center;justify-content:center;padding:20px}
+.mbg.on{display:flex}
+.modal{background:var(--surf);border-radius:20px;padding:30px;width:100%;max-width:460px;box-shadow:var(--sh3);position:relative;animation:mIn .32s cubic-bezier(.22,1,.36,1)}
+@keyframes mIn{from{opacity:0;transform:translateY(14px) scale(.96)}to{opacity:1;transform:none}}
+.mc{position:absolute;top:13px;right:13px;width:26px;height:26px;border-radius:50%;background:var(--bg);border:none;color:var(--muted);font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:all .18s}
+.mc:hover{background:var(--bg2);color:var(--ink)}
+.mttl{font-family:var(--disp);font-size:22px;font-weight:800;color:var(--ink);margin-bottom:3px;letter-spacing:-.03em}
+.msub{font-size:13px;color:var(--muted);margin-bottom:18px}
+.mtabs{display:flex;gap:5px;margin-bottom:18px}
+.mtab{flex:1;padding:8px;border-radius:9px;border:1.5px solid rgba(10,110,122,.15);background:transparent;font-family:var(--body);font-size:13px;font-weight:700;color:var(--muted);cursor:pointer;text-align:center;transition:all .18s}
+.mtab.on{border-color:var(--t);background:var(--t3);color:var(--t)}
+.modal label{font-size:11.5px;font-weight:700;color:var(--ink2);display:block;margin-bottom:4px}
+.modal input{width:100%;padding:10px 13px;border:1.5px solid rgba(10,110,122,.15);border-radius:10px;font-family:var(--body);font-size:14px;outline:none;transition:border-color .18s;color:var(--ink);background:var(--surf2);margin-bottom:12px}
+.modal input:focus{border-color:var(--t)}
+.modal input::placeholder{color:var(--light)}
+.mbtn{width:100%;background:var(--t);color:#fff;border:none;padding:12px;border-radius:40px;font-family:var(--body);font-weight:700;font-size:14.5px;cursor:pointer;transition:all .22s;margin-bottom:10px}
+.mbtn:hover{background:var(--t2);box-shadow:0 5px 18px rgba(10,110,122,.28)}
+.mdiv{text-align:center;font-size:12px;color:var(--light);margin:2px 0 11px;position:relative}
+.mdiv::before,.mdiv::after{content:'';position:absolute;top:50%;width:38%;height:1px;background:rgba(10,110,122,.12)}
+.mdiv::before{left:0}.mdiv::after{right:0}
+.msoc{display:flex;gap:7px}
+.msb{flex:1;padding:9px;border-radius:10px;border:1.5px solid rgba(10,110,122,.15);background:transparent;font-family:var(--body);font-size:12.5px;font-weight:700;color:var(--ink2);cursor:pointer;text-align:center;transition:all .18s;display:flex;align-items:center;justify-content:center;gap:7px}
+.msb:hover{border-color:var(--t);color:var(--t)}
+.mlink{text-align:center;font-size:12.5px;color:var(--muted);margin-top:13px}
+.mlink a{color:var(--t);font-weight:700;cursor:pointer}
+.pmbg{position:fixed;inset:0;background:rgba(10,20,24,.4);backdrop-filter:blur(9px);z-index:800;display:none;align-items:center;justify-content:center;padding:20px}
+.pmbg.on{display:flex}
+.pmodal{background:var(--surf);border-radius:20px;padding:28px;width:100%;max-width:480px;box-shadow:var(--sh3);position:relative;animation:mIn .32s cubic-bezier(.22,1,.36,1)}
+.ptypes{display:flex;gap:6px;margin-bottom:13px}
+.ptyp{flex:1;padding:8px;border-radius:9px;border:1.5px solid rgba(10,110,122,.15);background:transparent;font-family:var(--body);font-size:12.5px;font-weight:700;color:var(--muted);cursor:pointer;text-align:center;transition:all .18s}
+.ptyp.on{border-color:var(--t);background:var(--t3);color:var(--t)}
+.pmodal label{font-size:11.5px;font-weight:700;color:var(--ink2);display:block;margin-bottom:4px}
+.pmodal select,.pmodal input,.pmodal textarea{width:100%;padding:10px 12px;border:1.5px solid rgba(10,110,122,.15);border-radius:10px;font-family:var(--body);font-size:13.5px;outline:none;transition:border-color .18s;color:var(--ink);background:var(--surf2);margin-bottom:11px}
+.pmodal select:focus,.pmodal input:focus,.pmodal textarea:focus{border-color:var(--t)}
+.pmodal textarea{resize:vertical;min-height:96px}
+.info-modal{background:var(--surf);border-radius:20px;padding:0;width:100%;max-width:580px;box-shadow:var(--sh3);position:relative;animation:mIn .32s cubic-bezier(.22,1,.36,1);max-height:85vh;display:flex;flex-direction:column;overflow:hidden}
+.info-modal-head{padding:24px 28px 18px;border-bottom:1px solid var(--bord);display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-shrink:0}
+.info-modal-title{font-family:var(--disp);font-size:20px;font-weight:700;color:var(--ink);letter-spacing:-.02em;line-height:1.2}
+.info-modal-body{padding:24px 28px 28px;overflow-y:auto;font-size:13.5px;color:var(--ink2);line-height:1.85;font-weight:300}
+.info-modal-body h3{font-family:var(--disp);font-size:15px;font-weight:600;color:var(--ink);margin:18px 0 6px}
+.info-modal-body a{color:var(--t);cursor:pointer}
+.info-modal-body h3:first-child{margin-top:0}
+.info-modal-body p{margin-bottom:10px}
+.info-modal-body ul{padding-left:18px;margin-bottom:10px}
+.info-modal-body ul li{margin-bottom:5px}
+.info-modal-body .warn-box{background:rgba(184,118,42,.08);border:1px solid rgba(184,118,42,.2);border-radius:10px;padding:12px 16px;margin:14px 0;color:var(--ink2)}
+.info-modal-body .warn-box strong{color:var(--g2)}
+
+/* ── TOASTS ── */
+.toasts{position:fixed;bottom:22px;left:50%;transform:translateX(-50%);z-index:9000;display:flex;flex-direction:column;gap:7px;align-items:center;pointer-events:none}
+.toast{background:var(--ink);color:#fff;padding:9px 20px;border-radius:40px;font-size:12.5px;font-weight:600;box-shadow:var(--sh3);animation:ti .28s cubic-bezier(.22,1,.36,1);white-space:nowrap}
+.toast.out{animation:to .22s ease forwards}
+@keyframes ti{from{opacity:0;transform:translateY(7px)}to{opacity:1;transform:none}}
+@keyframes to{to{opacity:0;transform:translateY(-5px)}}
+
+/* ── FOOTER ── */
+footer{background:linear-gradient(135deg,#0a4e58 0%,#0a6e7a 50%,#7a5010 100%);color:rgba(255,255,255,.75);padding:38px clamp(16px,3vw,44px) 22px;position:relative;z-index:1;margin-top:auto}
+.fg{display:grid;grid-template-columns:2fr 1fr 1fr;gap:40px;max-width:1200px;margin:0 auto 26px}
+.fn{display:flex;align-items:center;gap:10px;font-family:var(--disp);font-size:18px;font-weight:800;color:#fff;margin-bottom:7px;letter-spacing:-.03em}
+.fd{font-size:13px;line-height:1.75;color:rgba(255,255,255,.42);font-weight:300}
+.fh{font-size:9px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:11px;padding-bottom:7px;border-bottom:1px solid rgba(255,255,255,.1)}
+.fa{display:block;color:rgba(255,255,255,.5);text-decoration:none;font-size:13px;margin-bottom:8px;font-weight:400;transition:color .18s;cursor:pointer;user-select:none}
+.fa:hover{color:#fff}
+.fbot{max-width:1200px;margin:0 auto;border-top:1px solid rgba(255,255,255,.1);padding-top:15px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:7px;font-size:11.5px;color:rgba(255,255,255,.42)}
+
+@media(max-width:960px){.layout{grid-template-columns:1fr}.lsb{display:none}header{padding:0 14px}.hero{padding:22px 14px 18px}footer{padding:28px 14px 18px}.fg{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+
+<canvas id="hexbg"></canvas>
+<div class="toasts" id="toasts"></div>
+
+
+<!-- NOTIF PANEL -->
+<div id="notif-panel" style="display:none;position:fixed;top:80px;right:clamp(14px,3vw,44px);width:320px;background:var(--surf);border:1px solid var(--bord2);border-radius:var(--rlg);box-shadow:var(--sh3);z-index:600;overflow:hidden;flex-direction:column;max-height:420px">
+  <div style="display:flex;justify-content:space-between;align-items:center;padding:12px 16px;border-bottom:1px solid var(--bord);flex-shrink:0;background:var(--surf);position:sticky;top:0">
+    <span id="notif-unread-count" style="font-family:var(--disp);font-size:14px;font-weight:700;color:var(--ink)">Benachrichtigungen</span>
+    <button onclick="event.stopPropagation();deleteAllNotifs()" style="background:none;border:none;font-size:12px;color:var(--muted);cursor:pointer;font-family:var(--body);font-weight:600">Alle löschen</button>
+  </div>
+  <div id="notif-list" style="overflow-y:auto"></div>
+</div>
+
+<!-- PROFILE MENU -->
+<div id="profile-menu" style="display:none;position:fixed;top:80px;right:clamp(14px,3vw,44px);width:210px;background:var(--surf);border:1px solid var(--bord2);border-radius:var(--rlg);box-shadow:var(--sh3);z-index:600;overflow:hidden">
+  <div style="padding:13px 16px 10px;border-bottom:1px solid var(--bord)">
+    <div id="profile-menu-name" style="font-family:var(--disp);font-size:15px;font-weight:700;color:var(--ink);letter-spacing:-.02em"></div>
+    <div style="font-size:11px;color:var(--muted);margin-top:2px">Angemeldet</div>
+  </div>
+  <div style="padding:5px">
+    <button onclick="openAccountPage()" style="width:100%;padding:9px 12px;background:none;border:none;text-align:left;font-family:var(--body);font-size:13.5px;font-weight:600;color:var(--ink2);cursor:pointer;border-radius:8px;display:flex;align-items:center;gap:8px">&#x1F464; Konto</button>
+    <div style="height:1px;background:var(--bord);margin:4px 0"></div>
+    <button onclick="closeProfileMenu();doLogout()" style="width:100%;padding:9px 12px;background:none;border:none;text-align:left;font-family:var(--body);font-size:13.5px;font-weight:600;color:#c04040;cursor:pointer;border-radius:8px;display:flex;align-items:center;gap:8px">&#x21A6; Abmelden</button>
+  </div>
+</div>
+
+
+
+
+<!-- HEADER -->
+<header>
+  <a class="logo" onclick="clearAll()">
+    <svg class="logo-icon" viewBox="0 0 40 40" fill="none">
+      <rect x="1" y="1" width="38" height="38" rx="12" fill="#0a6e7a" opacity=".08"/>
+      <circle cx="13" cy="11" r="4" fill="#0a6e7a"/>
+      <path d="M10 15.5 Q10 20 10 23 L16 23 Q16 20 16 15.5 Q14.5 14.5 13 14.5 Q11.5 14.5 10 15.5Z" fill="#0a6e7a" opacity=".9"/>
+      <path d="M10 23 L9 30" stroke="#0a6e7a" stroke-width="2.2" stroke-linecap="round"/>
+      <path d="M15 23 L14.5 30" stroke="#0a6e7a" stroke-width="2.2" stroke-linecap="round"/>
+      <circle cx="27" cy="11" r="4" fill="#b8762a"/>
+      <path d="M24 15.5 Q24 20 24 23 L30 23 Q30 20 30 15.5 Q28.5 14.5 27 14.5 Q25.5 14.5 24 15.5Z" fill="#b8762a" opacity=".9"/>
+      <path d="M25.5 23 L25 30" stroke="#b8762a" stroke-width="2.2" stroke-linecap="round"/>
+      <path d="M29 23 L30 30" stroke="#b8762a" stroke-width="2.2" stroke-linecap="round"/>
+      <path d="M16 17 Q20 13 20 13" stroke="#0a6e7a" stroke-width="2" stroke-linecap="round" fill="none"/>
+      <path d="M24 17 Q20 13 20 13" stroke="#b8762a" stroke-width="2" stroke-linecap="round" fill="none"/>
+      <path d="M20 13 C20 13 18 10.5 18 9 C18 7.5 19 6.5 20 7.5 C21 6.5 22 7.5 22 9 C22 10.5 20 13 20 13Z" fill="#b8762a"/>
+    </svg>
+    <div class="logo-text">
+      <div class="logo-name">HSP<span>Connect</span></div>
+      <div class="logo-sub">Community</div>
+    </div>
+  </a>
+  <div class="h-acts">
+    <div class="h-ico-btn" id="notif-btn" onclick="openNotifs()" style="display:none">
+      &#x1F514;<span class="notif-dot"></span>
+    </div>
+    <button class="h-btn-muted" id="h-home-btn" onclick="clearAll()">Home</button>
+    <button class="h-btn-muted" id="h-faq-btn" onclick="openFAQPage()">FAQ</button>
+    <button class="h-btn-o" id="h-login-btn" onclick="openLg()">Anmelden</button>
+    <button class="h-btn"   id="h-reg-btn"   onclick="openLg('up')">Registrieren</button>
+  </div>
+</header>
+
+<!-- HERO -->
+
+  
+  
+</div>
+
+
+
+
+<!-- INFO MODAL -->
+<div class="mbg" id="mbg-info" onclick="if(event.target===this)closeInfo()">
+  <div class="info-modal">
+    <div class="info-modal-head">
+      <div class="info-modal-title" id="info-title"></div>
+      <button class="mc" onclick="closeInfo()">&#x2715;</button>
+    </div>
+    <div class="info-modal-body" id="info-body"></div>
+  </div>
+</div>
+
+<!-- FEEDBACK MODAL -->
+<div class="mbg" id="fbmbg" onclick="if(event.target===this)closeFB()">
+  <div class="modal">
+    <button class="mc" onclick="closeFB()">&#x2715;</button>
+    <div class="mttl" id="fb-ttl">Feedback</div>
+    <div class="msub" id="fb-sub">Dein Feedback hilft uns.</div>
+    <label>Thema</label>
+    <input type="text" id="fb-topic" placeholder="z.B. Login, Suche, Beiträge…" style="width:100%;padding:10px 13px;border:1.5px solid rgba(10,110,122,.15);border-radius:10px;font-family:var(--body);font-size:14px;outline:none;color:var(--ink);background:var(--surf2);margin-bottom:12px;transition:border-color .18s" onfocus="fbFocus(this)" onblur="fbBlur(this)">
+    <label>Beschreibung</label>
+    <textarea id="fb-txt" style="width:100%;padding:10px 13px;border:1.5px solid rgba(10,110,122,.15);border-radius:10px;font-family:var(--body);font-size:13.5px;outline:none;color:var(--ink);background:var(--surf2);resize:vertical;min-height:90px;margin-bottom:12px;transition:border-color .18s" onfocus="fbFocus(this)" onblur="fbBlur(this)" placeholder="Beschreibe dein Feedback..."></textarea>
+    <div id="fb-email-wrap">
+      <label>E-Mail <span style="font-size:10.5px;color:var(--light);font-weight:400">(optional, für Rückfragen)</span></label>
+      <input type="email" id="fb-email" placeholder="deine@email.at" style="width:100%;padding:10px 13px;border:1.5px solid rgba(10,110,122,.15);border-radius:10px;font-family:var(--body);font-size:14px;outline:none;color:var(--ink);background:var(--surf2);margin-bottom:12px;transition:border-color .18s" onfocus="fbFocus(this)" onblur="fbBlur(this)">
+    </div>
+    <div id="fb-email-note" style="display:none;font-size:12px;color:var(--t);background:var(--t3);border-radius:8px;padding:8px 12px;margin-bottom:12px;font-weight:500"></div>
+    <button class="mbtn" onclick="submitFeedback()">Feedback senden</button>
+  </div>
+</div>
+
+<!-- LOGIN MODAL -->
+<div class="mbg" id="lmbg" onclick="if(event.target===this)closeLg()">
+  <div class="modal">
+    <button class="mc" onclick="closeLg()">&#x2715;</button>
+    <div class="mttl" id="lg-title">Willkommen zur&#xFC;ck</div>
+    <div class="msub" id="lg-sub">Melde dich an oder erstelle ein Konto</div>
+    <div class="mtabs">
+      <button class="mtab on" id="lt-in" onclick="setLT('in')">Anmelden</button>
+      <button class="mtab"    id="lt-up" onclick="setLT('up')">Registrieren</button>
+    </div>
+    <div id="lf-in">
+      <label>E-Mail</label><input type="email" id="l-em" placeholder="deine@email.at">
+      <label>Passwort</label><input type="password" id="l-pw" placeholder="&#x2022;&#x2022;&#x2022;&#x2022;&#x2022;&#x2022;&#x2022;&#x2022;">
+      <button class="mbtn" onclick="doLogin()">Anmelden</button>
+      <div class="mlink">Noch kein Konto? <a onclick="setLT('up')">Registrieren</a></div>
+    </div>
+    <div id="lf-up" style="display:none">
+      <label>Vor- und Nachname</label><input type="text" id="r-nm" placeholder="z.B. Maria Schmidt">
+      <label>E-Mail</label><input type="email" id="r-em" placeholder="deine@email.at">
+      <label>Passwort</label><input type="password" id="r-pw" placeholder="Mindestens 8 Zeichen">
+      <button class="mbtn" onclick="doReg()">Konto erstellen</button>
+      <div class="mlink">Bereits registriert? <a onclick="setLT('in')">Anmelden</a></div>
+    </div>
+    <div id="lf-nick" style="display:none">
+      <div style="text-align:center;margin-bottom:18px">
+        <div style="font-size:32px;margin-bottom:8px">&#x1F389;</div>
+        <div style="font-size:13px;color:var(--muted);line-height:1.6">Fast geschafft! W&#xE4;hle deinen<br>Community-Nickname.</div>
+      </div>
+      <label>Nickname (sichtbar f&#xFC;r alle)</label>
+      <input type="text" id="r-nick" placeholder="z.B. spastik_warrior" maxlength="30">
+      <div style="font-size:11px;color:var(--light);margin:-8px 0 12px">Nur Buchstaben, Zahlen und _ erlaubt.</div>
+      <button class="mbtn" onclick="doSetNick()">Profil erstellen</button>
+    </div>
+  </div>
+</div>
+
+<!-- POST MODAL -->
+<div class="pmbg" id="pmbg" onclick="if(event.target===this)closePM()">
+  <div class="pmodal">
+    <button class="mc" onclick="closePM()">&#x2715;</button>
+    <div style="font-family:var(--disp);font-size:20px;font-weight:800;color:var(--ink);margin-bottom:13px;letter-spacing:-.03em">Beitrag erstellen</div>
+<div style="font-family:var(--disp);font-size:13px;font-weight:700;color:var(--t);margin-bottom:13px;padding:6px 10px;background:var(--t3);border-radius:8px">&#x2728; Erfahrung teilen</div>
+    <label>Thema</label><select id="mod-tag"></select>
+    <label>Titel</label><input type="text" id="mod-h" placeholder="Worum geht es?">
+    <label>Inhalt</label><textarea id="mod-b" placeholder="Teile deine Gedanken..."></textarea>
+    <button class="mbtn" onclick="savePost()">Ver&#xF6;ffentlichen</button>
+  </div>
+</div>
+
+
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-in">
+    <div class="hero-l">
+      <div class="online-pill"><span class="online-dot"></span>84 Mitglieder gerade online</div>
+      <h1>Community f&#xFC;r Menschen<br>mit Spastik</h1>
+      <div class="hero-sub">Erfahrungen teilen &middot; Fragen stellen &middot; Einander unterst&#xFC;tzen</div>
+      <div style="font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-top:14px;margin-bottom:6px">Top-Themen</div>
+      <div class="hero-tags" id="hero-tags"></div>
+    </div>
+    <div class="hero-r">
+      <div class="hero-stats">
+        <div class="hs"><div class="hs-n">1.248</div><div class="hs-l">Mitglieder</div></div>
+        <div class="hs"><div class="hs-n">3.672</div><div class="hs-l">Beitr&#xE4;ge</div></div>
+        <div class="hs"><div class="hs-n">84</div><div class="hs-l">Online</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- LAYOUT -->
+<div class="layout">
+  <!-- LEFT -->
+  <aside class="lsb">
+    <div class="sb-card" id="auth-nav" style="display:none">
+      <div class="sb-hdg">Mein Bereich</div>
+      <button class="fb-btn" id="nav-saved" onclick="showSaved()" style="margin-bottom:6px">&#x1F516; Gespeichert</button>
+      <button class="fb-btn" id="nav-mine" onclick="showMine()">&#x270F;&#xFE0F; Meine Beitr&#xE4;ge</button>
+    </div>
+    <div class="sb-card">
+      <div class="sb-hdg">Themen</div>
+      <div class="tlist" id="sb-tags"></div>
+    </div>
+    <div class="sb-card" id="fb-widget">
+      <div class="sb-hdg">Feedback</div>
+      <button class="fb-btn" onclick="openFeedback('idee')" style="margin-bottom:6px">&#x1F4A1; Idee oder Wunsch</button>
+      <button class="fb-btn fb-btn-red" onclick="openFeedback('problem')">&#x1F41B; Technisches Problem</button>
+    </div>
+  </aside>
+
+  <!-- MAIN -->
+  <main>
+    <div style="display:none"><span id="nav-Alle"></span></div>
+    <div class="compose">
+      <div class="c-srch-row">
+        <div class="ava" id="compose-ava" style="display:none;background:var(--bg3);color:var(--muted);font-size:16px;cursor:pointer" onclick="if(loggedIn)openProfileMenu()"></div>
+        <div class="c-srch-wrap">
+          <input class="c-srch-inp" id="compose-srch" type="text"
+            placeholder="Was besch&#xE4;ftigt dich gerade?"
+            oninput="onComposeSrch()">
+          <button class="c-srch-x" id="c-srch-x" onclick="clearComposeSrch()" style="display:none">&#xD7;</button>
+        </div>
+      </div>
+      <!-- welcome hint -->
+      <div id="compose-welcome" style="margin-top:12px;padding:12px 14px;background:var(--surf2);border-radius:12px;display:flex;align-items:flex-start;gap:11px">
+        <span style="font-size:22px;flex-shrink:0">&#x1F44B;</span>
+        <div>
+          <div id="compose-welcome-title" style="font-family:var(--disp);font-size:14px;font-weight:700;color:var(--ink);margin-bottom:3px">Willkommen bei HSPConnect!</div>
+          <div style="font-size:12px;color:var(--muted);line-height:1.65;font-weight:300">Bevor du eine Frage postest &#x2014; schau kurz in der <span onclick="openFAQPage()" style="color:var(--t);font-weight:600;cursor:pointer">FAQ</span> nach. Hast du eine Erfahrung? Teile sie &#x2014; das hilft der Community!</div>
+        </div>
+      </div>
+      <!-- Erfahrung button -->
+      <div style="margin-top:10px">
+        <button class="c-big-btn c-big-btn-e" onclick="checkAuthThen(()=>openPM('Erfahrung'))" style="width:100%;padding:13px 18px;justify-content:flex-start;gap:14px;border-radius:12px">
+          <span style="font-size:26px;line-height:1">&#x1F4AC;</span>
+          <span style="font-size:14px;font-weight:700">Erfahrung teilen</span>
+        </button>
+      </div>
+    </div>
+    <div class="afilter" id="afilter"><span id="af-txt"></span><button class="af-x" onclick="clearAll()">&#xD7;</button></div>
+    <div class="ftabs">
+      <button class="ft on" id="tab-Alle"      onclick="setTab('Alle')">Alle</button>
+      <button class="ft"    id="tab-Erfahrung" onclick="setTab('Erfahrung')">&#x2728; Erfahrungen</button>
+      <button class="ft"    id="tab-Frage"     onclick="setTab('Frage')">&#x2753; Fragen</button>
+    </div>
+    <div id="feed"></div>
+    <div id="pag" class="pag"></div>
+  </main>
+</div>
+
+<footer>
+  <div class="fg">
+    <div>
+      <div style="display:flex;align-items:center;gap:14px;margin-bottom:12px">
+        <svg width="44" height="44" viewBox="0 0 40 40" fill="none">
+          <rect x="1" y="1" width="38" height="38" rx="12" fill="rgba(255,255,255,.12)"/>
+          <circle cx="13" cy="11" r="4" fill="rgba(255,255,255,.7)"/>
+          <path d="M10 15.5 Q10 20 10 23 L16 23 Q16 20 16 15.5 Q14.5 14.5 13 14.5 Q11.5 14.5 10 15.5Z" fill="rgba(255,255,255,.6)"/>
+          <path d="M10 23 L9 30" stroke="rgba(255,255,255,.55)" stroke-width="2.2" stroke-linecap="round"/>
+          <path d="M15 23 L14.5 30" stroke="rgba(255,255,255,.55)" stroke-width="2.2" stroke-linecap="round"/>
+          <circle cx="27" cy="11" r="4" fill="rgba(184,118,42,.85)"/>
+          <path d="M24 15.5 Q24 20 24 23 L30 23 Q30 20 30 15.5 Q28.5 14.5 27 14.5 Q25.5 14.5 24 15.5Z" fill="rgba(184,118,42,.7)"/>
+          <path d="M25.5 23 L25 30" stroke="rgba(184,118,42,.65)" stroke-width="2.2" stroke-linecap="round"/>
+          <path d="M29 23 L30 30" stroke="rgba(184,118,42,.65)" stroke-width="2.2" stroke-linecap="round"/>
+          <path d="M16 17 Q20 13 20 13" stroke="rgba(255,255,255,.5)" stroke-width="2" stroke-linecap="round" fill="none"/>
+          <path d="M24 17 Q20 13 20 13" stroke="rgba(184,118,42,.65)" stroke-width="2" stroke-linecap="round" fill="none"/>
+          <path d="M20 13 C20 13 18 10.5 18 9 C18 7.5 19 6.5 20 7.5 C21 6.5 22 7.5 22 9 C22 10.5 20 13 20 13Z" fill="rgba(184,118,42,.9)"/>
+        </svg>
+        <div style="display:flex;flex-direction:column;line-height:1.15">
+          <span style="font-family:var(--disp);font-size:23px;font-weight:800;color:#fff;letter-spacing:-.03em">HSP<span style="color:rgba(184,118,42,.9)">Connect</span></span>
+          <span style="font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.45)">Community</span>
+        </div>
+      </div>
+      <p class="fd">Die Community f&#xFC;r Menschen mit Spastik &#x2014; teilen, fragen, verbinden.</p>
+    </div>
+    <div>
+      <div class="fh">Rechtliches</div>
+      <a class="fa" onclick="openInfo('impressum')">Impressum</a>
+      <a class="fa" onclick="openInfo('datenschutz')">Datenschutz</a>
+      <a class="fa" onclick="openInfo('nutzung')">Nutzungsbedingungen</a>
+    </div>
+    <div>
+      <div class="fh">Support</div>
+      <a class="fa" onclick="openFAQPage()">FAQ</a>
+      <a class="fa" onclick="openInfo('regeln')">Community-Regeln</a>
+      <a class="fa" onclick="openInfo('kontakt')">Kontakt</a>
+    </div>
+  </div>
+  <div class="fbot">
+    <span>&#xA9; 2026 HSPConnect. Alle Rechte vorbehalten.</span>
+  </div>
+</footer>
+
+<!-- FAQ PAGE -->
+<!-- FAQ PAGE -->
+<div id="faq-page" style="display:none;position:fixed;inset:0;z-index:500;overflow-y:auto;background:var(--bg)">
+  <canvas id="hexbg2" style="position:fixed;inset:0;z-index:0;pointer-events:none"></canvas>
+  <header>
+  <a class="logo" onclick="closeFAQPage()">
+    <svg class="logo-icon" viewBox="0 0 40 40" fill="none">
+      <rect x="1" y="1" width="38" height="38" rx="12" fill="#0a6e7a" opacity=".08"/>
+      <circle cx="13" cy="11" r="4" fill="#0a6e7a"/>
+      <path d="M10 15.5 Q10 20 10 23 L16 23 Q16 20 16 15.5 Q14.5 14.5 13 14.5 Q11.5 14.5 10 15.5Z" fill="#0a6e7a" opacity=".9"/>
+      <path d="M10 23 L9 30" stroke="#0a6e7a" stroke-width="2.2" stroke-linecap="round"/>
+      <path d="M15 23 L14.5 30" stroke="#0a6e7a" stroke-width="2.2" stroke-linecap="round"/>
+      <circle cx="27" cy="11" r="4" fill="#b8762a"/>
+      <path d="M24 15.5 Q24 20 24 23 L30 23 Q30 20 30 15.5 Q28.5 14.5 27 14.5 Q25.5 14.5 24 15.5Z" fill="#b8762a" opacity=".9"/>
+      <path d="M25.5 23 L25 30" stroke="#b8762a" stroke-width="2.2" stroke-linecap="round"/>
+      <path d="M29 23 L30 30" stroke="#b8762a" stroke-width="2.2" stroke-linecap="round"/>
+      <path d="M16 17 Q20 13 20 13" stroke="#0a6e7a" stroke-width="2" stroke-linecap="round" fill="none"/>
+      <path d="M24 17 Q20 13 20 13" stroke="#b8762a" stroke-width="2" stroke-linecap="round" fill="none"/>
+      <path d="M20 13 C20 13 18 10.5 18 9 C18 7.5 19 6.5 20 7.5 C21 6.5 22 7.5 22 9 C22 10.5 20 13 20 13Z" fill="#b8762a"/>
+    </svg>
+    <div class="logo-text">
+      <div class="logo-name">HSP<span>Connect</span></div>
+      <div class="logo-sub">Community</div>
+    </div>
+  </a>
+  <div class="h-acts"><button class="h-btn-muted" onclick="closeFAQPage()" style="display:flex;align-items:center;gap:5px"><span style="font-size:14px">&#x2190;</span> Home</button>
+    <div class="h-ico-btn" id="faq-notif-btn" onclick="openNotifs()" style="display:none">
+      &#x1F514;<span class="notif-dot"></span>
+    </div>
+    <button class="h-btn-muted h-active" id="faq-h-faq-btn">FAQ</button>
+    <button class="h-btn-o" id="faq-h-login-btn" onclick="closeFAQPage();openLg()">Anmelden</button>
+    <button class="h-btn"   id="faq-h-reg-btn"   onclick="closeFAQPage();openLg('up')">Registrieren</button>
+  </div>
+</header>
+  <div class="hero">
+  <div class="hero-in">
+    <div class="hero-l">
+      <div class="online-pill"><span class="online-dot"></span>84 Mitglieder gerade online</div>
+      <h1>Community f&#xFC;r Menschen<br>mit Spastik</h1>
+      <div class="hero-sub">Erfahrungen teilen &middot; Fragen stellen &middot; Einander unterst&#xFC;tzen</div>
+      <div style="font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-top:14px;margin-bottom:6px">Top-Themen</div>
+      <div class="hero-tags" id="faq-hero-tags"></div>
+    </div>
+    <div class="hero-r">
+      <div class="hero-stats">
+        <div class="hs"><div class="hs-n">1.248</div><div class="hs-l">Mitglieder</div></div>
+        <div class="hs"><div class="hs-n">3.672</div><div class="hs-l">Beitr&#xE4;ge</div></div>
+        <div class="hs"><div class="hs-n">84</div><div class="hs-l">Online</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+  <div style="position:relative;z-index:1">
+<div class="layout" style="position:relative;z-index:1">
+    <aside class="lsb">
+      <div class="sb-card">
+        <div class="sb-hdg">Frage stellen</div>
+        <div id="faq-ask-form">
+          <p id="faq-intro-text" style="font-size:12.5px;color:var(--muted);line-height:1.65;font-weight:300;margin-bottom:12px">Frage nicht gefunden? Stell sie hier &#x2014; die Community hilft!</p>
+          <div id="faq-fields" style="display:none">
+          <label style="font-size:11.5px;font-weight:700;color:var(--ink2);display:block;margin-bottom:6px">Thema</label>
+          <div id="topic-chips" style="display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px"></div>
+          <input type="text" id="faq-q-topic" placeholder="oder freies Thema..." style="width:100%;padding:8px 12px;border:1.5px solid var(--bord2);border-radius:10px;font-family:var(--body);font-size:13px;outline:none;color:var(--ink);background:var(--surf2);margin-bottom:8px;display:block">
+          <label style="font-size:11.5px;font-weight:700;color:var(--ink2);display:block;margin-bottom:4px">Deine Frage</label>
+          <textarea id="faq-q-txt" placeholder="Was möchtest du wissen?" style="width:100%;padding:8px 12px;border:1.5px solid var(--bord2);border-radius:10px;font-family:var(--body);font-size:13px;outline:none;color:var(--ink);background:var(--surf2);resize:none;height:80px;margin-bottom:10px;display:block"></textarea>
+          </div>
+          <button onclick="showFAQForm()" style="width:100%;background:var(--t);color:#fff;border:none;padding:9px;border-radius:40px;font-family:var(--body);font-size:13px;font-weight:700;cursor:pointer">Frage einreichen &#x2192;</button>
+        </div>
+        <div id="faq-ask-thanks" style="display:none;text-align:center;padding:12px 0">
+          <div style="font-size:22px;margin-bottom:8px">&#x1F64F;</div>
+          <div style="font-family:var(--disp);font-size:14px;font-weight:700;color:var(--t);margin-bottom:6px">Danke für deine Frage!</div>
+          <div style="font-size:12.5px;color:var(--muted);line-height:1.65;font-weight:300">Wir hoffen, die Community kann dir helfen.</div>
+        </div>
+      </div>
+      <div class="sb-card" id="faq-fb-widget">
+        <div class="sb-hdg">Feedback</div>
+        <button class="fb-btn" onclick="closeFAQPage();openFeedback('idee')" style="margin-bottom:6px">&#x1F4A1; Idee oder Wunsch</button>
+        <button class="fb-btn fb-btn-red" onclick="closeFAQPage();openFeedback('problem')">&#x1F41B; Technisches Problem</button>
+      </div>
+    </aside>
+    <main style="min-width:0">
+      <div class="compose" style="margin-bottom:14px">
+        <div class="c-srch-row">
+          <div class="c-srch-wrap">
+            <input id="faq-srch" type="text" placeholder="FAQ durchsuchen..." oninput="filterFAQ()" class="c-srch-inp" style="padding-left:16px">
+          </div>
+        </div>
+        <div id="faq-tag-filter" style="display:flex;flex-wrap:wrap;gap:5px;margin-top:10px"></div>
+      </div>
+      <div id="faq-list"></div>
+      <div id="faq-empty" style="display:none;text-align:center;padding:40px;color:var(--muted);font-size:14px">Keine Eintr&#xE4;ge gefunden &#x2014; stell deine Frage links!</div>
+    </main>
+  </div>
+  
+  </div>
+  <footer>
+  <div class="fg">
+    <div>
+      <div style="display:flex;align-items:center;gap:14px;margin-bottom:12px">
+        <svg width="44" height="44" viewBox="0 0 40 40" fill="none">
+          <rect x="1" y="1" width="38" height="38" rx="12" fill="rgba(255,255,255,.12)"/>
+          <circle cx="13" cy="11" r="4" fill="rgba(255,255,255,.7)"/>
+          <path d="M10 15.5 Q10 20 10 23 L16 23 Q16 20 16 15.5 Q14.5 14.5 13 14.5 Q11.5 14.5 10 15.5Z" fill="rgba(255,255,255,.6)"/>
+          <path d="M10 23 L9 30" stroke="rgba(255,255,255,.55)" stroke-width="2.2" stroke-linecap="round"/>
+          <path d="M15 23 L14.5 30" stroke="rgba(255,255,255,.55)" stroke-width="2.2" stroke-linecap="round"/>
+          <circle cx="27" cy="11" r="4" fill="rgba(184,118,42,.85)"/>
+          <path d="M24 15.5 Q24 20 24 23 L30 23 Q30 20 30 15.5 Q28.5 14.5 27 14.5 Q25.5 14.5 24 15.5Z" fill="rgba(184,118,42,.7)"/>
+          <path d="M25.5 23 L25 30" stroke="rgba(184,118,42,.65)" stroke-width="2.2" stroke-linecap="round"/>
+          <path d="M29 23 L30 30" stroke="rgba(184,118,42,.65)" stroke-width="2.2" stroke-linecap="round"/>
+          <path d="M16 17 Q20 13 20 13" stroke="rgba(255,255,255,.5)" stroke-width="2" stroke-linecap="round" fill="none"/>
+          <path d="M24 17 Q20 13 20 13" stroke="rgba(184,118,42,.65)" stroke-width="2" stroke-linecap="round" fill="none"/>
+          <path d="M20 13 C20 13 18 10.5 18 9 C18 7.5 19 6.5 20 7.5 C21 6.5 22 7.5 22 9 C22 10.5 20 13 20 13Z" fill="rgba(184,118,42,.9)"/>
+        </svg>
+        <div style="display:flex;flex-direction:column;line-height:1.15">
+          <span style="font-family:var(--disp);font-size:23px;font-weight:800;color:#fff;letter-spacing:-.03em">HSP<span style="color:rgba(184,118,42,.9)">Connect</span></span>
+          <span style="font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.45)">Community</span>
+        </div>
+      </div>
+      <p class="fd">Die Community f&#xFC;r Menschen mit Spastik &#x2014; teilen, fragen, verbinden.</p>
+    </div>
+    <div>
+      <div class="fh">Rechtliches</div>
+      <a class="fa" onclick="openInfo('impressum')">Impressum</a>
+      <a class="fa" onclick="openInfo('datenschutz')">Datenschutz</a>
+      <a class="fa" onclick="openInfo('nutzung')">Nutzungsbedingungen</a>
+    </div>
+    <div>
+      <div class="fh">Support</div>
+      <a class="fa" onclick="openFAQPage()">FAQ</a>
+      <a class="fa" onclick="openInfo('regeln')">Community-Regeln</a>
+      <a class="fa" onclick="openInfo('kontakt')">Kontakt</a>
+    </div>
+  </div>
+  <div class="fbot">
+    <span>&#xA9; 2026 HSPConnect. Alle Rechte vorbehalten.</span>
+  </div>
+</footer>
+</div>
+
+
+
+
+
+<!-- ACCOUNT PAGE -->
+<div id="account-page" style="display:none;position:fixed;inset:0;z-index:500;overflow-y:auto;background:var(--bg)">
+  <canvas id="hexbg3" style="position:fixed;inset:0;z-index:0;pointer-events:none"></canvas>
+  <header>
+  <a class="logo" onclick="closeAccountPage()">
+    <svg class="logo-icon" viewBox="0 0 40 40" fill="none">
+      <rect x="1" y="1" width="38" height="38" rx="12" fill="#0a6e7a" opacity=".08"/>
+      <circle cx="13" cy="11" r="4" fill="#0a6e7a"/>
+      <path d="M10 15.5 Q10 20 10 23 L16 23 Q16 20 16 15.5 Q14.5 14.5 13 14.5 Q11.5 14.5 10 15.5Z" fill="#0a6e7a" opacity=".9"/>
+      <path d="M10 23 L9 30" stroke="#0a6e7a" stroke-width="2.2" stroke-linecap="round"/>
+      <path d="M15 23 L14.5 30" stroke="#0a6e7a" stroke-width="2.2" stroke-linecap="round"/>
+      <circle cx="27" cy="11" r="4" fill="#b8762a"/>
+      <path d="M24 15.5 Q24 20 24 23 L30 23 Q30 20 30 15.5 Q28.5 14.5 27 14.5 Q25.5 14.5 24 15.5Z" fill="#b8762a" opacity=".9"/>
+      <path d="M25.5 23 L25 30" stroke="#b8762a" stroke-width="2.2" stroke-linecap="round"/>
+      <path d="M29 23 L30 30" stroke="#b8762a" stroke-width="2.2" stroke-linecap="round"/>
+      <path d="M16 17 Q20 13 20 13" stroke="#0a6e7a" stroke-width="2" stroke-linecap="round" fill="none"/>
+      <path d="M24 17 Q20 13 20 13" stroke="#b8762a" stroke-width="2" stroke-linecap="round" fill="none"/>
+      <path d="M20 13 C20 13 18 10.5 18 9 C18 7.5 19 6.5 20 7.5 C21 6.5 22 7.5 22 9 C22 10.5 20 13 20 13Z" fill="#b8762a"/>
+    </svg>
+    <div class="logo-text">
+      <div class="logo-name">HSP<span>Connect</span></div>
+      <div class="logo-sub">Konto</div>
+    </div>
+  </a>
+  <div class="h-acts"><div class="h-ico-btn" id="accp-notif-btn" onclick="openNotifs()" style="display:none">
+      &#x1F514;<span class="notif-dot"></span>
+    </div>
+    <button class="h-btn-muted" id="accp-home-btn" onclick="closeAccountPage()">Home</button>
+    <button class="h-btn-muted" id="accp-faq-btn" onclick="closeAccountPage();openFAQPage()">FAQ</button>
+    <button class="h-btn-o" id="accp-h-login-btn" onclick="openLg()">Anmelden</button>
+    <button class="h-btn"   id="accp-h-reg-btn"   onclick="doLogout()">Registrieren</button>
+  </div>
+</header>
+  <div class="hero">
+  <div class="hero-in">
+    <div class="hero-l">
+      <div class="online-pill"><span class="online-dot"></span>84 Mitglieder gerade online</div>
+      <h1>Community f&#xFC;r Menschen<br>mit Spastik</h1>
+      <div class="hero-sub">Erfahrungen teilen &middot; Fragen stellen &middot; Einander unterst&#xFC;tzen</div>
+      <div style="font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-top:14px;margin-bottom:6px">Top-Themen</div>
+      <div class="hero-tags" id="acc-hero-tags"></div>
+    </div>
+    <div class="hero-r">
+      <div class="hero-stats">
+        <div class="hs"><div class="hs-n">1.248</div><div class="hs-l">Mitglieder</div></div>
+        <div class="hs"><div class="hs-n">3.672</div><div class="hs-l">Beitr&#xE4;ge</div></div>
+        <div class="hs"><div class="hs-n">84</div><div class="hs-l">Online</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+  <div style="position:relative;z-index:1;background:var(--bg)">
+    <div style="max-width:600px;margin:0 auto;padding:24px clamp(16px,3vw,32px) 60px">
+      <!-- avatar + name -->
+      <div style="background:var(--surf);border:1px solid var(--bord);border-radius:var(--rlg);padding:28px 24px;margin-bottom:16px;box-shadow:var(--sh);display:flex;align-items:center;gap:20px">
+        <div id="acc-avatar" style="width:64px;height:64px;border-radius:50%;background:linear-gradient(135deg,var(--t),var(--g));display:flex;align-items:center;justify-content:center;color:#fff;font-family:var(--disp);font-size:26px;font-weight:800;flex-shrink:0"></div>
+        <div>
+          <div id="acc-name" style="font-family:var(--disp);font-size:22px;font-weight:800;color:var(--ink);letter-spacing:-.03em"></div>
+          <div style="font-size:12.5px;color:var(--muted);margin-top:3px">Mitglied seit 2026</div>
+        </div>
+      </div>
+      <!-- stats -->
+      <div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:16px">
+        <div class="sb-card" style="text-align:center;padding:16px 12px">
+          <div id="acc-posts" style="font-family:var(--disp);font-size:24px;font-weight:800;color:var(--t)">0</div>
+          <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-top:3px">Beitr&#xE4;ge</div>
+        </div>
+        <div class="sb-card" style="text-align:center;padding:16px 12px">
+          <div id="acc-saved" style="font-family:var(--disp);font-size:24px;font-weight:800;color:var(--t)">0</div>
+          <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-top:3px">Gespeichert</div>
+        </div>
+        <div class="sb-card" style="text-align:center;padding:16px 12px">
+          <div id="acc-likes" style="font-family:var(--disp);font-size:24px;font-weight:800;color:var(--t)">0</div>
+          <div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;margin-top:3px">Likes gegeben</div>
+        </div>
+      </div>
+      <!-- actions -->
+      <div class="sb-card" style="padding:6px">
+        <button onclick="closeAccountPage();showMine()" style="width:100%;padding:11px 14px;background:none;border:none;text-align:left;font-family:var(--body);font-size:14px;font-weight:600;color:var(--ink2);cursor:pointer;border-radius:10px;display:flex;align-items:center;gap:10px">&#x270F;&#xFE0F; Meine Beitr&#xE4;ge</button>
+        <button onclick="closeAccountPage();showSaved()" style="width:100%;padding:11px 14px;background:none;border:none;text-align:left;font-family:var(--body);font-size:14px;font-weight:600;color:var(--ink2);cursor:pointer;border-radius:10px;display:flex;align-items:center;gap:10px">&#x1F516; Gespeicherte Beitr&#xE4;ge</button>
+        <div style="height:1px;background:var(--bord);margin:4px 8px"></div>
+        <button onclick="closeAccountPage();doLogout()" style="width:100%;padding:11px 14px;background:none;border:none;text-align:left;font-family:var(--body);font-size:14px;font-weight:600;color:#c04040;cursor:pointer;border-radius:10px;display:flex;align-items:center;gap:10px">&#x21A6; Abmelden</button>
+      </div>
+    </div>
+  </div>
+  
+
+
+<footer>
+  <div class="fg">
+    <div>
+      <div style="display:flex;align-items:center;gap:14px;margin-bottom:12px">
+        <svg width="44" height="44" viewBox="0 0 40 40" fill="none">
+          <rect x="1" y="1" width="38" height="38" rx="12" fill="rgba(255,255,255,.12)"/>
+          <circle cx="13" cy="11" r="4" fill="rgba(255,255,255,.7)"/>
+          <path d="M10 15.5 Q10 20 10 23 L16 23 Q16 20 16 15.5 Q14.5 14.5 13 14.5 Q11.5 14.5 10 15.5Z" fill="rgba(255,255,255,.6)"/>
+          <path d="M10 23 L9 30" stroke="rgba(255,255,255,.55)" stroke-width="2.2" stroke-linecap="round"/>
+          <path d="M15 23 L14.5 30" stroke="rgba(255,255,255,.55)" stroke-width="2.2" stroke-linecap="round"/>
+          <circle cx="27" cy="11" r="4" fill="rgba(184,118,42,.85)"/>
+          <path d="M24 15.5 Q24 20 24 23 L30 23 Q30 20 30 15.5 Q28.5 14.5 27 14.5 Q25.5 14.5 24 15.5Z" fill="rgba(184,118,42,.7)"/>
+          <path d="M25.5 23 L25 30" stroke="rgba(184,118,42,.65)" stroke-width="2.2" stroke-linecap="round"/>
+          <path d="M29 23 L30 30" stroke="rgba(184,118,42,.65)" stroke-width="2.2" stroke-linecap="round"/>
+          <path d="M16 17 Q20 13 20 13" stroke="rgba(255,255,255,.5)" stroke-width="2" stroke-linecap="round" fill="none"/>
+          <path d="M24 17 Q20 13 20 13" stroke="rgba(184,118,42,.65)" stroke-width="2" stroke-linecap="round" fill="none"/>
+          <path d="M20 13 C20 13 18 10.5 18 9 C18 7.5 19 6.5 20 7.5 C21 6.5 22 7.5 22 9 C22 10.5 20 13 20 13Z" fill="rgba(184,118,42,.9)"/>
+        </svg>
+        <div style="display:flex;flex-direction:column;line-height:1.15">
+          <span style="font-family:var(--disp);font-size:23px;font-weight:800;color:#fff;letter-spacing:-.03em">HSP<span style="color:rgba(184,118,42,.9)">Connect</span></span>
+          <span style="font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.45)">Community</span>
+        </div>
+      </div>
+      <p class="fd">Die Community f&#xFC;r Menschen mit Spastik &#x2014; teilen, fragen, verbinden.</p>
+    </div>
+    <div>
+      <div class="fh">Rechtliches</div>
+      <a class="fa" onclick="openInfo('impressum')">Impressum</a>
+      <a class="fa" onclick="openInfo('datenschutz')">Datenschutz</a>
+      <a class="fa" onclick="openInfo('nutzung')">Nutzungsbedingungen</a>
+    </div>
+    <div>
+      <div class="fh">Support</div>
+      <a class="fa" onclick="openFAQPage()">FAQ</a>
+      <a class="fa" onclick="openInfo('regeln')">Community-Regeln</a>
+      <a class="fa" onclick="openInfo('kontakt')">Kontakt</a>
+    </div>
+  </div>
+  <div class="fbot">
+    <span>&#xA9; 2026 HSPConnect. Alle Rechte vorbehalten.</span>
+  </div>
+</footer>
+</div>
+<script>
+const TAGS=['Spastik','Muskeln','Entspannung','Physiotherapie','Hilfsmittel','Alltag','Ernährung','Schlaf','Reha'];
+const TC={Spastik:'#0a6e7a',Muskeln:'#b8762a',Entspannung:'#2a8a52',Physiotherapie:'#1a5080',Hilfsmittel:'#7a4820',Alltag:'#486070',Ernährung:'#607020',Schlaf:'#583878',Reha:'#7a3060'};
+const TN={Spastik:48,Muskeln:31,Entspannung:27,Physiotherapie:44,Hilfsmittel:22,Alltag:38,Ernährung:15,Schlaf:19,Reha:29};
+const NAMES=['Anna K.','Ben M.','Clara F.','David R.','Eva S.','Felix T.','Greta L.','Hannes P.','Ida W.','Jonas B.','Kira N.','Leo C.'];
+const AV=['A','B','C','D','E','F','G','H','I','J','K','L'];
+let posts=[],activeTags=new Set(),curType='Alle',srch='',page=1,modType='Erfahrung',curView='home';
+let loggedIn=false,currentUser=null;
+const PS=5;
+
+function getSS(k,d){try{const v=sessionStorage.getItem(k);return v!==null?JSON.parse(v):d;}catch(e){return d;}}
+function setSS(k,v){try{sessionStorage.setItem(k,JSON.stringify(v));}catch(e){}}
+
+function checkAuthThen(fn){if(!loggedIn){toast('🔒 Bitte erst anmelden!');openLg();return;}if(typeof fn==='function')fn();}
+
+/* HEX GRID */
+function initHexBg(id){
+  var existing=document.getElementById(id);
+  if(!existing||existing._hexInit)return;
+  existing._hexInit=true;
+  const cv=existing,ctx=cv.getContext('2d');
+  let W,H,t=0;
+  function resize(){W=cv.width=window.innerWidth;H=cv.height=window.innerHeight}
+  resize();window.addEventListener('resize',resize);
+  const R=28;
+  function hex(cx,cy,r,fill,stroke,lw){ctx.beginPath();for(let i=0;i<6;i++){const a=Math.PI/3*i-Math.PI/6;ctx.lineTo(cx+r*Math.cos(a),cy+r*Math.sin(a));}ctx.closePath();if(fill){ctx.fillStyle=fill;ctx.fill();}if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=lw||1;ctx.stroke();}}
+  function draw(){
+    ctx.clearRect(0,0,W,H);
+    const g=ctx.createLinearGradient(0,0,W,H);
+    g.addColorStop(0,'#e6f4f6');g.addColorStop(.55,'#f3ede4');g.addColorStop(1,'#fdf5e8');
+    ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+    t+=0.006;
+    const cols=Math.ceil(W/(R*Math.sqrt(3)))+2,rows=Math.ceil(H/(R*1.5))+2;
+    for(let row=-1;row<rows;row++){
+      for(let col=-1;col<cols;col++){
+        const cx=col*R*Math.sqrt(3)+(row%2)*R*Math.sqrt(3)/2;
+        const cy=row*R*1.5;
+        const wave=Math.sin(cx*0.014+t)*Math.cos(cy*0.012+t*0.7);
+        const pulse=(wave+1)/2;
+        const isTeal=(Math.floor(row+col*1.3))%3!==0;
+        if(pulse>0.3){const a=(pulse-0.3)*0.28;hex(cx,cy,R-1,isTeal?`rgba(10,110,122,${a})`:`rgba(184,118,42,${a*.85})`,null,0);}
+        const ba=0.06+pulse*0.09;
+        hex(cx,cy,R-1,null,isTeal?`rgba(10,110,122,${ba})`:`rgba(184,118,42,${ba*.75})`,1);
+      }
+    }
+    requestAnimationFrame(draw);
+  }
+  draw();
+}
+initHexBg('hexbg');
+
+function init(){
+  const ht=document.getElementById('hero-tags');
+  // Show top-5 tags by post count in hero
+  const heroTags=Object.entries(TN).sort((a,b)=>b[1]-a[1]).slice(0,5).map(([t])=>t);
+  heroTags.forEach(function(t){
+    var b=document.createElement('button');
+    b.className='htag';b.id='ht-'+t;b.textContent='# '+t;
+    b.onclick=function(){toggleTag(t);};
+    ht.appendChild(b);
+  });
+  // Top-5 tags by count
+  const top5=Object.entries(TN).sort((a,b)=>b[1]-a[1]).slice(0,5);
+
+  const st=document.getElementById('sb-tags'),sel=document.getElementById('mod-tag');
+  TAGS.forEach(t=>{
+    (function(tag){
+      var b=document.createElement('button');
+      b.className='titem';b.id='nav-'+tag;
+      b.innerHTML='<span class="tlbl"><span class="tdot" style="background:'+TC[tag]+'"></span># '+tag+'</span><span class="tcnt">'+TN[tag]+'</span>';
+      b.onclick=function(){toggleTag(tag);};
+      st.appendChild(b);
+    })(t);
+    sel.insertAdjacentHTML('beforeend',`<option value="${t}">${t}</option>`);
+  });
+  const savedR=getSS('ratings',{}),savedL=getSS('likes',{}),savedS=getSS('saves',{});
+  const te=['Physiotherapie hat wirklich geholfen','Neue Hilfsmittel für den Alltag','Entspannungstechniken die wirken','Erfolge mit Ernährungsumstellung','Warum Schlafhygiene alles verändert','6 Monate Reha — eine Bilanz','Wärme gegen Muskelspannung','App für Übungen getestet','Meine tägliche Routine','Tipps für das Büro mit Spastik'];
+  const tf=['Wer kennt Spastik-Medikamente?','Welche Hilfsmittel sind sinnvoll?','Tipps für besseren Schlaf?','Wie geht ihr mit Erschöpfung um?','Physio Empfehlung Wien?','Übungen alleine machbar?'];
+  for(let i=0;i<14;i++){
+    const isE=i%3!==2,pid=i+1;
+    posts.push({
+      id:pid,type:isE?'Erfahrung':'Frage',tag:TAGS[i%TAGS.length],
+      author:NAMES[i%12],ava:AV[i%12],
+      title:isE?te[i%te.length]:tf[i%tf.length],
+      content:isE?`Nach intensiver Beschäftigung mit ${TAGS[i%TAGS.length]} möchte ich meine Erfahrungen teilen. Es hat mir wirklich geholfen — die wichtigste Erkenntnis: Regelmäßigkeit ist alles. Auch kleine Fortschritte zählen.`:`Ich suche Erfahrungen zum Thema ${TAGS[i%TAGS.length]}. Hat jemand damit Erfahrungen gemacht? Was hat geholfen, was nicht? Für jeden Tipp dankbar!`,
+      likes:Math.floor(Math.random()*40)+2,liked:!!savedL[pid],saved:!!savedS[pid],mine:false,
+      rSum:Math.floor(Math.random()*40)+5,rCnt:Math.floor(Math.random()*10)+2,uRat:savedR[pid]||0,
+      expanded:false,showC:false,
+      comments:i===0?[
+        {a:'A',n:'Anna K.',t:'Sehr hilfreich, danke! 🙏'},
+        {a:'B',n:'Ben M.',t:'Ähnliche Erfahrungen hier!'},
+        {a:'C',n:'Clara F.',t:'Kannst du mehr über die Übungen erzählen?'},
+        {a:'D',n:'David R.',t:'Nach 3 Wochen merklicher Unterschied!'},
+        {a:'E',n:'Eva S.',t:'Welche Hilfsmittel hast du benutzt?'},
+        {a:'F',n:'Felix T.',t:'Danke — teile das mit meiner Physio.'},
+        {a:'G',n:'Greta L.',t:'Das gibt mir Hoffnung. ❤️'},
+        {a:'H',n:'Hannes P.',t:'Hast du Erfahrungen mit Wärme gemacht?'},
+        {a:'I',n:'Ida W.',t:'Super Beitrag! Mehr davon bitte.'},
+        {a:'J',n:'Jonas B.',t:'Ich würde gerne mehr über deine Routine erfahren.'},
+        {a:'K',n:'Kira N.',t:'Genau mein Thema. Danke! 🌟'}
+      ]:[{a:AV[(i+1)%12],n:NAMES[(i+1)%12],t:'Sehr hilfreich, danke! 🙏'},{a:AV[(i+2)%12],n:NAMES[(i+2)%12],t:'Ähnliche Erfahrungen hier!'}]
+    });
+  }
+  render();updateSavedCount();
+  setActiveNav('home');
+}
+
+function updateTabCounts(){
+  if(activeTags.size>0||srch){
+    document.getElementById('tab-Alle').textContent='Alle';
+    document.getElementById('tab-Erfahrung').textContent='✨ Erfahrungen';
+    document.getElementById('tab-Frage').textContent='❓ Fragen';
+    return;
+  }
+  const all=posts.length;
+  const exp=posts.filter(p=>p.type==='Erfahrung').length;
+  const frag=posts.filter(p=>p.type==='Frage').length;
+  document.getElementById('tab-Alle').textContent='Alle ('+all+')';
+  document.getElementById('tab-Erfahrung').textContent='✨ Erfahrungen ('+exp+')';
+  document.getElementById('tab-Frage').textContent='❓ Fragen ('+frag+')';
+}
+function render(){
+  const feed=document.getElementById('feed');
+  updateTabCounts();
+  let f=posts.filter(p=>(activeTags.size===0||activeTags.has(p.tag))&&(curType==='Alle'||p.type===curType)&&(!srch||p.title.toLowerCase().includes(srch)||p.content.toLowerCase().includes(srch)||p.tag.toLowerCase().includes(srch)));
+  const tot=Math.ceil(f.length/PS);if(page>tot&&tot>0)page=1;
+  const pg=f.slice((page-1)*PS,page*PS);
+  const af=document.getElementById('afilter'),parts=[];
+  if(activeTags.size>0)parts.push([...activeTags].map(function(t){return '# '+t;}).join(', '));
+  if(srch)parts.push('"'+srch+'"');
+  if(parts.length){af.classList.add('on');document.getElementById('af-txt').textContent='Filter: '+parts.join(' · ')+' — '+f.length+' Beitrag'+(f.length!==1?'e':'');}
+  else af.classList.remove('on');
+  feed.innerHTML=pg.length?pg.map(postHTML).join(''):`<div class="empty"><div class="empty-i">🌊</div><div class="empty-t">Keine Beiträge gefunden</div><p>Andere Filter oder neuen Beitrag erstellen!</p></div>`;
+  renderPag(tot);
+}
+
+function postHTML(p){
+  const avg=p.rCnt>0?(p.rSum/p.rCnt).toFixed(1):'—';
+  const stars=[1,2,3,4,5].map(s=>`<span class="star ${p.uRat>=s?'on':''}" onclick="rate(${p.id},${s})">★</span>`).join('');
+  const tc=TC[p.tag]||'var(--t)';
+  const cmtBlock=p.showC
+    ?`<div class="cmts"><button class="togcmt" onclick="togC(${p.id})">▲ Kommentare ausblenden</button>${p.comments.map((c,ci)=>`<div class="cmt" id="cmt-${p.id}-${ci}"><div class="cava">${c.a}</div><div class="cbub"><div class="cname" style="display:flex;justify-content:space-between;align-items:center">${c.n}${(loggedIn&&currentUser&&c.n===currentUser.name)?'<button onclick="deleteComment('+p.id+','+ci+')" style="background:none;border:none;color:var(--light);font-size:11px;cursor:pointer;padding:0;line-height:1">&#x2715;</button>':''}</div><div class="ctext">${c.t}</div></div></div>`).join('')}<div class="cmt-write-label">Kommentar schreiben</div><div class="cform"><div class="cava">${loggedIn&&currentUser?currentUser.ava:'?'}</div><input class="cinp" id="ci-${p.id}" placeholder="${loggedIn?'Dein Kommentar...':'Anmelden zum Kommentieren'}" ${!loggedIn?'readonly onclick="checkAuthThen(function(){})" style="cursor:pointer"':''} onkeydown="if(event.key==="Enter")addC(${p.id})"><button class="csend" onclick="addC(${p.id})">Senden</button></div></div>`
+    :'';
+  return `<div class="post" id="post-${p.id}" style="border-left:3px solid ${tc}">
+  <div class="post-inner">
+    <div class="pmeta">
+      <div class="pava">${p.ava}</div>
+      <div><div class="pname">${p.author}</div><div class="ptime">vor ${Math.floor(Math.random()*23)+1}h</div></div>
+      <span class="pbadge ${p.type==='Erfahrung'?'pb-e':'pb-f'}">${p.type}</span>
+      <span class="ptag" style="border-color:${tc}30;color:${tc}" onclick="toggleTag('${p.tag}')"># ${p.tag}</span>
+    </div>
+    <div class="ptitle">${p.title}</div>
+    <div class="pbody ${p.expanded?'':'cl'}">${p.content}</div>
+    ${!p.expanded?`<button class="readmore" onclick="expand(${p.id})">Weiterlesen →</button>`:''}
+  </div>
+  <div class="pacts">
+    ${p.mine?'<span class="pab" style="opacity:.3;cursor:default">🤍 '+p.likes+'</span><button class="pab" onclick="deletePost('+p.id+')" style="margin-left:auto;color:#c04040;font-size:12px">&#x1F5D1; Löschen</button>':`<button class="pab ${p.liked?'lk':''}" onclick="toggleLike(${p.id})">${p.liked?'❤️':'🤍'} ${p.likes}</button>`}
+    <button class="pab" onclick="togC(${p.id})">💬 ${p.comments.length}</button>
+    <button class="pab ${p.saved?'sv':''}" onclick="toggleSave(${p.id})">${p.saved?'🔖':'🏷️'} ${p.saved?'Gespeichert':'Speichern'}</button>
+    <button class="pab" onclick="reportPost(${p.id})" style="margin-left:auto;color:var(--light);font-size:11px">&#x26A0; Melden</button>
+    <span class="sepv"></span>
+    ${p.mine?'<div class="stars" style="opacity:.3;pointer-events:none">★★★★★</div><span class="avgr" style="opacity:.5">ø '+avg+'</span>':`<div class="stars">${stars}</div><span class="avgr">ø ${avg}</span>`}
+  </div>
+  ${!p.showC&&p.comments.length?`<button class="read-cmts-btn" onclick="togC(${p.id})">▼ Kommentare anzeigen (${p.comments.length})</button>`:''}
+  ${cmtBlock}
+</div>`;
+}
+
+function expand(id){posts.find(p=>p.id===id).expanded=true;render()}
+function toggleLike(id){if(!loggedIn){toast('🔒 Anmelden zum Liken');openLg();return;}const p=posts.find(x=>x.id===id);p.liked=!p.liked;p.likes+=p.liked?1:-1;const l=getSS('likes',{});l[id]=p.liked;setSS('likes',l);render();}
+function toggleSave(id){if(!loggedIn){toast('🔒 Anmelden zum Speichern');openLg();return;}const p=posts.find(x=>x.id===id);p.saved=!p.saved;const s=getSS('saves',{});s[id]=p.saved;setSS('saves',s);toast(p.saved?'🔖 Gespeichert!':'Entfernt');updateSavedCount();render();}
+function togC(id){const p=posts.find(x=>x.id===id);p.showC=!p.showC;render()}
+function rate(id,v){if(!loggedIn){toast('🔒 Anmelden zum Bewerten');openLg();return;}const p=posts.find(x=>x.id===id);const r=getSS('ratings',{});const prev=r[id]||0;if(p.uRat===v){p.rSum-=v;p.rCnt--;p.uRat=0;delete r[id];}else{if(prev)p.rSum-=prev;else p.rCnt++;p.rSum+=v;p.uRat=v;r[id]=v;}setSS('ratings',r);render();}
+function addC(id){if(!loggedIn){toast('🔒 Bitte erst anmelden!');openLg();return;}const i=document.getElementById(`ci-${id}`);if(!i||!i.value.trim())return;posts.find(p=>p.id===id).comments.push({a:currentUser.ava,n:currentUser.name,t:i.value});i.value='';render();}
+function updateSavedCount(){
+  const n=posts.filter(p=>p.saved).length;
+  const btn=document.getElementById('nav-saved');
+  if(btn) btn.innerHTML='&#x1F516; Gespeichert'+(n>0?' ('+n+')':'');
+}
+
+function toggleTag(t){
+  if(activeTags.has(t)){activeTags.delete(t);const el=document.getElementById('nav-'+t);if(el)el.classList.remove('on');const he=document.getElementById('ht-'+t);if(he)he.classList.remove('on');}
+  else{activeTags.add(t);document.getElementById('nav-Alle')&&document.getElementById('nav-Alle').classList.remove('on');const el=document.getElementById('nav-'+t);if(el)el.classList.add('on');const he=document.getElementById('ht-'+t);if(he)he.classList.add('on');}
+  page=1;render();
+}
+function setTab(t){
+  curType=t;page=1;
+  curView='home';markNav('home');
+  document.querySelectorAll('.ft').forEach(function(e){e.classList.remove('on');});
+  document.getElementById('tab-'+t).classList.add('on');
+  render();
+}
+function onComposeSrch(){const v=document.getElementById('compose-srch').value;srch=v.toLowerCase();page=1;document.getElementById('c-srch-x').style.display=v?'':'none';render();}
+function clearComposeSrch(){document.getElementById('compose-srch').value='';document.getElementById('c-srch-x').style.display='none';srch='';page=1;render();}
+function clearAll(){curView='home';markNav('home');activeTags.clear();curType='Alle';srch='';page=1;['compose-srch','tag-srch'].forEach(id=>{const e=document.getElementById(id);if(e)e.value='';});document.getElementById('c-srch-x').style.display='none';document.querySelectorAll('.titem,.htag').forEach(e=>e.classList.remove('on'));document.querySelectorAll('.ft').forEach(e=>e.classList.remove('on'));document.getElementById('tab-Alle').classList.add('on');filterTags();render();}
+function filterTags(){var el=document.getElementById('tag-srch');if(!el)return;var q=el.value.toLowerCase();document.querySelectorAll('.titem').forEach(function(c){c.style.display=(!q||c.textContent.toLowerCase().includes(q))?'':'none';});}
+function renderPag(tot){const c=document.getElementById('pag');if(tot<=1){c.innerHTML='';return;}let h=`<button class="pgb" onclick="go(${page-1})" ${page<=1?'disabled':''}>‹</button>`;for(let i=1;i<=tot;i++)h+=`<button class="pgb ${i===page?'on':''}" onclick="go(${i})">${i}</button>`;h+=`<button class="pgb" onclick="go(${page+1})" ${page>=tot?'disabled':''}>›</button>`;c.innerHTML=h;}
+function go(p){page=p;render();window.scrollTo({top:260,behavior:'smooth'});}
+
+function markNav(which){
+  document.getElementById('nav-saved').classList.toggle('active-nav', which==='saved');
+  document.getElementById('nav-mine').classList.toggle('active-nav', which==='mine');
+}
+function showSaved(){
+  if(curView==='saved'){clearAll();curView='home';markNav('home');return;}
+  curView='saved';markNav('saved');
+  activeTags.clear();curType='Alle';srch='';page=1;
+  document.querySelectorAll('.ft').forEach(e=>e.classList.remove('on'));document.getElementById('tab-Alle').classList.add('on');
+  const feed=document.getElementById('feed'),f=posts.filter(p=>p.saved);
+  const af=document.getElementById('afilter');af.classList.add('on');document.getElementById('af-txt').textContent='Gespeicherte Beiträge';
+  if(!f.length){feed.innerHTML=`<div class="empty"><div class="empty-i">🔖</div><div class="empty-t">Noch nichts gespeichert</div></div>`;document.getElementById('pag').innerHTML='';return;}
+  feed.innerHTML=f.map(postHTML).join('');document.getElementById('pag').innerHTML='';
+}
+function showMine(){
+  if(!loggedIn){toast('🔒 Bitte erst anmelden');openLg();return;}
+  if(curView==='mine'){clearAll();curView='home';markNav('home');return;}
+  curView='mine';markNav('mine');
+  activeTags.clear();curType='Alle';srch='';page=1;
+  document.querySelectorAll('.ft').forEach(e=>e.classList.remove('on'));document.getElementById('tab-Alle').classList.add('on');
+  const feed=document.getElementById('feed'),f=posts.filter(p=>p.mine);
+  const af=document.getElementById('afilter');af.classList.add('on');document.getElementById('af-txt').textContent='Meine Beiträge ('+f.length+')';
+  var nm=document.getElementById('nav-mine');if(nm)nm.innerHTML='&#x270F;&#xFE0F; Meine Beitr&#xE4;ge ('+f.length+')';
+  if(!f.length){feed.innerHTML=`<div class="empty"><div class="empty-i">✏️</div><div class="empty-t">Noch keine Beiträge</div></div>`;document.getElementById('pag').innerHTML='';return;}
+  feed.innerHTML=f.map(postHTML).join('');document.getElementById('pag').innerHTML='';
+}
+
+function openLg(tab){
+  document.getElementById('lf-in').style.display='';
+  document.getElementById('lf-up').style.display='none';
+  document.getElementById('lf-nick').style.display='none';
+  document.getElementById('lt-in').classList.add('on');
+  document.getElementById('lt-up').classList.remove('on');
+  document.getElementById('lg-title').textContent='Willkommen zurück';
+  document.getElementById('lg-sub').textContent='Melde dich an oder erstelle ein Konto';
+  document.getElementById('lmbg').classList.add('on');
+  if(tab) setLT(tab);
+}
+function closeLg(){
+  document.getElementById('lmbg').classList.remove('on');
+  // Reset to login tab
+  setTimeout(function(){setLT('in');},300);
+}
+function setLT(t){
+  document.getElementById('lt-in').classList.toggle('on',t==='in');
+  document.getElementById('lt-up').classList.toggle('on',t==='up');
+  document.getElementById('lf-in').style.display=t==='in'?'':'none';
+  document.getElementById('lf-up').style.display=t==='up'?'':'none';
+  document.getElementById('lf-nick').style.display='none';
+  document.getElementById('lg-title').textContent=t==='in'?'Willkommen zurück':'Konto erstellen';
+  document.getElementById('lg-sub').textContent=t==='in'?'Schön, dass du wieder da bist!':'Werde Teil der Community';
+}
+function doLogin(){
+  const em=document.getElementById('l-em');
+  closeLg();loggedIn=true;
+  const name=(em&&em.value.includes('@'))?em.value.split('@')[0]:'Lisa';
+  const disp=name.charAt(0).toUpperCase()+name.slice(1);
+  currentUser={name:disp,ava:disp[0].toUpperCase()};
+  setLoggedInUI();
+  toast('✅ Willkommen zurück, '+disp+'!');render();
+}
+function doReg(){
+  const nm=document.getElementById('r-nm'),em=document.getElementById('r-em'),pw=document.getElementById('r-pw');
+  if(!nm.value.trim()||!em.value.trim()||!pw.value){toast('⚠️ Bitte alle Felder ausfüllen');return;}
+  if(pw.value.length<8){toast('⚠️ Passwort mind. 8 Zeichen');return;}
+  document.getElementById('lf-up').style.display='none';
+  document.getElementById('lf-nick').style.display='block';
+  document.getElementById('lt-in').classList.remove('on');document.getElementById('lt-up').classList.remove('on');
+  document.getElementById('lg-title').textContent='Fast geschafft!';
+  document.getElementById('lg-sub').textContent='Wähle deinen Nickname.';
+}
+function doSocialLogin(provider){
+  document.getElementById('lf-in').style.display='none';document.getElementById('lf-up').style.display='none';
+  document.getElementById('lf-nick').style.display='block';
+  document.getElementById('lt-in').classList.remove('on');document.getElementById('lt-up').classList.remove('on');
+  document.getElementById('lg-title').textContent='Fast geschafft!';
+  document.getElementById('lg-sub').textContent=provider==='google'?'Google-Konto verbunden ✓':'Apple-Konto verbunden ✓';
+}
+function doSetNick(){
+  const nick=document.getElementById('r-nick').value.trim();
+  if(!nick){toast('⚠️ Bitte Nickname eingeben');return;}
+  closeLg();loggedIn=true;
+  currentUser={name:nick,ava:nick[0].toUpperCase()};
+  setLoggedInUI();
+  toast('🎉 Willkommen, '+nick+'!');render();
+}
+function setLoggedInUI(){
+  var ca=document.getElementById('compose-ava');ca.textContent=currentUser.ava;ca.style.display='flex';ca.style.background='';ca.style.color='';var wt=document.getElementById('compose-welcome-title');if(wt)wt.textContent='Willkommen zurück, '+currentUser.name+'!';
+  var hlb=document.querySelector('#h-login-btn');
+  if(hlb){hlb.textContent=currentUser.name;hlb.onclick=openProfileMenu;}
+  var hrb=document.querySelector('#h-reg-btn');
+  if(hrb){hrb.textContent='Abmelden';hrb.onclick=doLogout;hrb.style.display='';}
+  var an=document.getElementById('auth-nav');if(an){an.style.cssText='display:block !important';}
+  var nb=document.getElementById('notif-btn');if(nb)nb.style.display='flex';
+  var flb=document.getElementById('faq-h-login-btn');
+  if(flb){flb.textContent=currentUser.name;flb.onclick=openProfileMenu;}
+  var frb=document.getElementById('faq-h-reg-btn');
+  if(frb){frb.textContent='Abmelden';frb.onclick=doLogout;}
+  var alb=document.getElementById('acc-h-login-btn');
+  if(alb){alb.textContent=currentUser.name;alb.onclick=openProfileMenu;}
+  var arb=document.getElementById('acc-h-reg-btn');
+  if(arb){arb.textContent='Abmelden';arb.onclick=doLogout;}
+  var fnb=document.getElementById('faq-notif-btn');if(fnb)fnb.style.display='flex';
+  var anb=document.getElementById('accp-notif-btn');if(anb)anb.style.display='flex';
+}
+function doLogout(){
+  loggedIn=false;currentUser=null;
+  var ca=document.getElementById('compose-ava');ca.textContent='';ca.style.display='none';var wt=document.getElementById('compose-welcome-title');if(wt)wt.textContent='Willkommen bei HSPConnect!';
+  var hlb2=document.querySelector('#h-login-btn');
+  if(hlb2){hlb2.textContent='Anmelden';hlb2.onclick=openLg;}
+  var hrb=document.querySelector('#h-reg-btn');
+  if(hrb){hrb.textContent='Registrieren';hrb.onclick=function(){openLg('up');};hrb.style.display='';}
+  document.querySelector('#h-login-btn').textContent='Anmelden';
+  document.querySelector('#h-login-btn').onclick=openLg;
+  var an=document.getElementById('auth-nav');if(an){an.style.cssText='display:none !important';}
+  const nb=document.getElementById('notif-btn');if(nb)nb.style.display='none';
+  toast('👋 Bis bald!');render();
+}
+function openPM(t){if(t)setType(t);document.getElementById('pmbg').classList.add('on');}
+function closePM(){document.getElementById('pmbg').classList.remove('on');}
+function setType(t){modType=t;}
+function savePost(){
+  if(!loggedIn){toast('🔒 Bitte erst anmelden');openLg();return;}
+  const h=document.getElementById('mod-h').value.trim(),b=document.getElementById('mod-b').value.trim();
+  if(!h||!b){toast('⚠️ Titel und Inhalt ausfüllen');return;}
+  posts.unshift({id:Date.now(),type:modType,tag:document.getElementById('mod-tag').value,author:currentUser.name,ava:currentUser.ava,title:h,content:b,likes:0,liked:false,saved:false,mine:true,rSum:0,rCnt:0,uRat:0,expanded:true,showC:false,comments:[]});
+  closePM();document.getElementById('mod-h').value='';document.getElementById('mod-b').value='';
+  clearAll();toast('✅ Beitrag veröffentlicht!');
+}
+
+let fbType='';
+function fbFocus(el){el.style.borderColor="var(--t)"}
+function fbBlur(el){el.style.borderColor="rgba(10,110,122,.15)"}
+function closeFB(){document.getElementById('fbmbg').classList.remove('on');}
+function openFeedback(type){
+  fbType=type;
+  document.getElementById('fb-ttl').textContent=type==='idee'?'💡 Idee oder Wunsch':'🐛 Technisches Problem';
+  document.getElementById('fb-sub').textContent=type==='idee'?'Was würdest du dir wünschen?':'Was funktioniert nicht?';
+  document.getElementById('fb-txt').value='';
+  document.getElementById('fb-topic').value='';
+  // show/hide email field based on login state
+  var emailWrap=document.getElementById('fb-email-wrap');
+  var emailNote=document.getElementById('fb-email-note');
+  if(emailWrap){emailWrap.style.display=loggedIn?'none':'block';}
+  if(emailNote){emailNote.style.display=loggedIn?'block':'none';if(currentUser)emailNote.textContent='Antwort geht an: '+currentUser.name+'.';}
+  document.getElementById('fbmbg').classList.add('on');
+};
+
+
+const FAQ_TAG_ITEMS = [
+  {q:'Was gibt es zum Thema Spastik?', a:'Im Feed findest du viele Erfahrungen und Fragen rund um Spastik. Klicke auf den Tag # Spastik in der linken Sidebar oder im Hero-Bereich um alle Beiträge zu diesem Thema zu sehen.', tags:['spastik']},
+  {q:'Tipps zu Physiotherapie?', a:'Unter dem Tag # Physiotherapie findest du Erfahrungsberichte und Fragen zur Physiotherapie bei Spastik. Viele Mitglieder teilen ihre Übungen und Empfehlungen.', tags:['physiotherapie']},
+  {q:'Hilfsmittel für den Alltag?', a:'Unter # Hilfsmittel und # Alltag teilen Mitglieder Empfehlungen für praktische Helfer. Von Greifhilfen bis zu speziellen Schuheinlagen.', tags:['hilfsmittel','alltag']},
+  {q:'Entspannungstechniken bei Spastik?', a:'Unter dem Tag # Entspannung findest du Erfahrungen mit verschiedenen Entspannungsmethoden — Wärme, Massage, Yoga und mehr.', tags:['entspannung']},
+  {q:'Ernährung und Spastik?', a:'Einige Mitglieder berichten unter # Ernährung über den Einfluss der Ernährung auf ihre Symptome.', tags:['ernährung']},
+  {q:'Schlafprobleme bei Spastik?', a:'Unter # Schlaf tauschen sich Betroffene über Schlafprobleme und Lösungen aus — von Lagerungshilfen bis zu Abendroutinen.', tags:['schlaf']},
+  {q:'Muskeln und Muskelspannung?', a:'Zum Thema Muskelspannung und -entspannung gibt es viele Beiträge unter dem Tag # Muskeln.', tags:['muskeln']},
+];
+const FAQ_ITEMS = [...FAQ_TAG_ITEMS, 
+  {q:'Was ist HSPConnect?', a:'Eine kostenlose Community für Menschen mit Hereditärer Spastischer Paraplegie (HSP) und anderen Formen von Spastik. Erfahrungen teilen, Fragen stellen, vernetzen.'},
+  {q:'Muss ich angemeldet sein um zu lesen?', a:'Nein — alle Beiträge sind öffentlich lesbar. Für Kommentare, Likes und eigene Beiträge ist ein Konto erforderlich.'},
+  {q:'Ist HSPConnect kostenlos?', a:'Ja, vollständig kostenlos. Kein Abo, keine versteckten Kosten.'},
+  {q:'Sind die Inhalte medizinisch geprüft?', a:'Nein. Alle Beiträge sind persönliche Erfahrungsberichte der Mitglieder. Sie ersetzen keinen Arztbesuch. Bei gesundheitlichen Fragen bitte immer medizinisches Fachpersonal aufsuchen.'},
+  {q:'Wie melde ich einen problematischen Beitrag?', a:'Schreib uns an hallo@hspconnect.at mit einer kurzen Beschreibung. Wir nehmen alle Meldungen ernst und reagieren so schnell wie möglich.'},
+  {q:'Kann ich meinen Nickname später ändern?', a:'Ja, nach dem Einloggen kannst du deinen Nickname in den Profileinstellungen anpassen.'},
+  {q:'Kann ich mein Konto löschen?', a:'Ja. Schreib uns an hallo@hspconnect.at — wir löschen dein Konto und alle Daten innerhalb von 7 Tagen.'},
+  {q:'Wer betreibt HSPConnect?', a:'HSPConnect ist ein privates Community-Projekt von Betroffenen für Betroffene. Kein kommerzielles Unternehmen.'},
+  {q:'Welche Sprachen werden unterstützt?', a:'Aktuell hauptsächlich Deutsch. Englische Beiträge sind willkommen.'},
+  {q:'Tipps zur Rehabilitation bei Spastik?', a:'Unter dem Tag # Reha tauschen sich Mitglieder über Rehabilitations-Erfahrungen aus — stationäre Reha, ambulante Therapien, und was wirklich hilft.', tags:['reha']},
+  {q:'Wie kann ich einen Beitrag speichern?', a:'Klicke auf das 🏷️-Symbol unter jedem Beitrag. Gespeicherte Beiträge findest du unter "Mein Bereich" in der linken Seitenleiste (nach dem Anmelden).'},
+];
+
+function closeFAQPage(){
+  document.getElementById('faq-page').style.display='none';
+  document.body.style.overflow='';
+  setActiveNav('home');
+}
+function closeFAQPage(){
+  document.getElementById('faq-page').style.display='none';
+  document.body.style.overflow='';
+  setActiveNav('home');
+}
+function setActiveNav(page){
+  ['h-home-btn','h-faq-btn','faq-h-home-btn','faq-h-faq-btn'].forEach(function(id){
+    var el=document.getElementById(id);
+    if(el) el.classList.remove('h-active');
+  });
+  if(page==='home'){
+    var hh=document.getElementById('h-home-btn');if(hh)hh.classList.add('h-active');
+    var fhh=document.getElementById('faq-h-home-btn');if(fhh)fhh.classList.add('h-active');
+  } else if(page==='faq'){
+    var hf=document.getElementById('h-faq-btn');if(hf)hf.classList.add('h-active');
+    var fhf=document.getElementById('faq-h-faq-btn');if(fhf)fhf.classList.add('h-active');
+  }
+}
+function openFAQPage(){
+  document.getElementById('faq-page').style.display='block';
+  document.body.style.overflow='hidden';
+  setActiveNav('faq');
+  renderFAQ(FAQ_ITEMS);
+  document.getElementById('faq-srch').value='';
+  // init hex bg for faq
+  initHexBg('hexbg2');
+  var fht=document.getElementById('faq-hero-tags');
+  if(fht&&!fht.children.length){
+    var tagCounts2={};
+    posts.forEach(function(p){tagCounts2[p.tag]=(tagCounts2[p.tag]||0)+1;});
+    Object.keys(tagCounts2).sort(function(a,b){return tagCounts2[b]-tagCounts2[a];}).slice(0,5).forEach(function(t){
+      var b=document.createElement('button');
+      b.className='htag';b.textContent='# '+t;
+      b.onclick=function(){toggleTag(t);closeFAQPage();};
+      fht.appendChild(b);
+    });
+  }
+  // init tag filter chips
+  var tf=document.getElementById('faq-tag-filter');
+  if(tf&&!tf.children.length){
+    TAGS.forEach(function(t){
+      var btn=document.createElement('button');
+      btn.textContent='# '+t;
+      btn.dataset.tag=t;
+      btn.style.cssText='padding:4px 11px;border-radius:40px;border:1.5px solid var(--bord2);background:var(--surf2);font-family:var(--body);font-size:12px;font-weight:600;color:var(--muted);cursor:pointer;transition:all .15s';
+      btn.onclick=function(){
+        var active=btn.dataset.active==='1';
+        btn.dataset.active=active?'0':'1';
+        btn.style.background=active?'var(--surf2)':'var(--t3)';
+        btn.style.color=active?'var(--muted)':'var(--t)';
+        btn.style.borderColor=active?'var(--bord2)':'var(--t)';
+        filterFAQ();
+      };
+      tf.appendChild(btn);
+    });
+  }
+  var chips=document.getElementById('topic-chips');
+  if(chips&&!chips.children.length){
+    TAGS.forEach(function(t){
+      var btn=document.createElement('button');
+      btn.textContent='# '+t;
+      btn.style.cssText='padding:4px 11px;border-radius:40px;border:1.5px solid var(--bord2);background:var(--surf2);font-family:var(--body);font-size:12px;font-weight:600;color:var(--muted);cursor:pointer;transition:all .18s;margin-bottom:4px';
+      btn.dataset.selected='0';
+      btn.onclick=function(){
+        var sel=btn.dataset.selected==='1';
+        btn.dataset.selected=sel?'0':'1';
+        btn.style.background=sel?'var(--surf2)':'var(--t3)';
+        btn.style.color=sel?'var(--muted)':'var(--t)';
+        btn.style.borderColor=sel?'var(--bord2)':'var(--t)';
+        // update topic input with all selected
+        var selTags=[];
+        chips.querySelectorAll('button[data-selected="1"]').forEach(function(b){selTags.push(b.textContent.replace('# ',''));});
+        var inp=document.getElementById('faq-q-topic');
+        if(inp) inp.value=selTags.join(', ');
+      };
+      chips.appendChild(btn);
+    });
+  }
+}
+function renderFAQ(items){
+  var list=document.getElementById('faq-list');
+  var empty=document.getElementById('faq-empty');
+  if(!items||!items.length){if(list)list.innerHTML='';if(empty)empty.style.display='block';return;}
+  if(empty)empty.style.display='none';
+  window._faqItems=items;
+  list.innerHTML=items.map(function(item,i){
+    return '<div style="background:var(--surf);border:1px solid rgba(10,110,122,.1);border-radius:14px;margin-bottom:10px;overflow:hidden;box-shadow:var(--sh)">'+
+      '<button onclick="toggleFAQ('+i+')" style="width:100%;padding:16px 20px;background:none;border:none;display:flex;align-items:center;justify-content:space-between;gap:14px;cursor:pointer;text-align:left;font-family:var(--body)">'+
+      '<span style="font-size:14.5px;font-weight:700;color:var(--ink);line-height:1.4">'+item.q+'</span>'+
+      '<span id="faq-arrow-'+i+'" style="font-size:18px;color:var(--t);flex-shrink:0">+</span>'+
+      '</button>'+
+      '<div id="faq-ans-'+i+'" style="display:none;padding:0 20px 16px;font-size:13.5px;color:var(--ink2);line-height:1.8;font-weight:300;border-top:1px solid rgba(10,110,122,.08)">'+item.a+'</div>'+
+    '</div>';
+  }).join('');
+}
+function toggleFAQ(i){
+  var ans=document.getElementById('faq-ans-'+i);
+  var arr=document.getElementById('faq-arrow-'+i);
+  if(!ans)return;
+  var open=ans.style.display==='block';
+  ans.style.display=open?'none':'block';
+  if(arr)arr.textContent=open?'+':'−';
+}
+function filterFAQ(){
+  var q=document.getElementById('faq-srch').value.toLowerCase().trim();
+  var activeFaqTags=[];
+  var tf=document.getElementById('faq-tag-filter');
+  if(tf) tf.querySelectorAll('button[data-active="1"]').forEach(function(b){activeFaqTags.push(b.dataset.tag.toLowerCase());});
+  var filtered=FAQ_ITEMS.filter(function(item){
+    var matchQ=!q||(item.q.toLowerCase().includes(q)||item.a.toLowerCase().includes(q)||(item.tags&&item.tags.some(function(t){return t.includes(q);})));
+    var matchT=activeFaqTags.length===0||(item.tags&&item.tags.some(function(t){return activeFaqTags.includes(t.toLowerCase());}));
+    return matchQ&&matchT;
+  });
+  renderFAQ(filtered);
+}
+function showFAQForm(){
+  // If fields already visible (intro hidden), submit
+  var intro=document.getElementById('faq-intro-text');
+  var fields=document.getElementById('faq-fields');
+  if(intro&&intro.style.display!=='none'){
+    // First click: hide intro, show fields
+    intro.style.display='none';
+    if(fields) fields.style.display='block';
+    return;
+  }
+  // Second click: submit
+  submitFAQQuestion();
+}
+function submitFAQQuestion(){
+  var txt=document.getElementById('faq-q-txt');
+  if(!txt||!txt.value.trim())return;
+  // Option to post as community question
+  var txt2=document.getElementById('faq-q-txt');
+  var topic2=document.getElementById('faq-q-topic');
+  var qText=txt2?txt2.value.trim():'';
+  // Post for everyone (logged in or guest)
+  var selTopic='Spastik';
+  if(topic2&&topic2.value.trim()){
+    var tv=topic2.value.split(',')[0].trim();
+    if(TAGS.indexOf(tv)>=0) selTopic=tv;
+  }
+  posts.unshift({
+    id:Date.now(),type:'Frage',tag:selTopic,
+    author:loggedIn?currentUser.name:'Gast',
+    ava:loggedIn?currentUser.ava:'?',
+    title:qText,content:qText,
+    likes:0,liked:false,saved:false,mine:loggedIn,
+    rSum:0,rCnt:0,uRat:0,expanded:true,showC:false,comments:[]
+  });
+  document.getElementById('faq-ask-form').style.display='none';
+  document.getElementById('faq-ask-thanks').style.display='block';
+  setTimeout(function(){
+    document.getElementById('faq-ask-form').style.display='block';
+    document.getElementById('faq-ask-thanks').style.display='none';
+    txt.value='';
+    var ft=document.getElementById('faq-q-topic');if(ft)ft.value='';
+    var chips=document.getElementById('topic-chips');
+    if(chips) chips.querySelectorAll('button').forEach(function(b){
+      b.dataset.selected='0';
+      b.style.background='var(--surf2)';
+      b.style.color='var(--muted)';
+      b.style.borderColor='var(--bord2)';
+    });
+    var fields=document.getElementById('faq-fields');
+    if(fields) fields.style.display='none';
+    var intro=document.getElementById('faq-intro-text');
+    if(intro) intro.style.display='';
+  },3000);
+}
+
+const NOTIFS = [
+  {icon:'❤️', text:'Anna K. hat deinen Beitrag "Physiotherapie hat wirklich geholfen" geliked.', time:'vor 2 Min', read:false},
+  {icon:'💬', text:'Ben M. hat kommentiert: "Ähnliche Erfahrungen hier — danke für den Tipp!"', time:'vor 15 Min', read:false},
+  {icon:'⭐', text:'Dein Beitrag hat eine neue Bewertung erhalten (4.5 ⭐).', time:'vor 1 Std', read:false},
+  {icon:'💬', text:'Clara F. hat auf deinen Kommentar geantwortet.', time:'vor 2 Std', read:true},
+  {icon:'🔖', text:'Greta L. hat deinen Beitrag gespeichert.', time:'vor 3 Std', read:true},
+  {icon:'LOGO', text:'Willkommen bei HSPConnect! Stelle dich der Community vor.', time:'heute', read:true},
+];
+let notifsOpen=false;
+function renderNotifList(){
+  var list=document.getElementById('notif-list');
+  var uc=document.getElementById('notif-unread-count');
+  if(!list) return;
+  var unread=NOTIFS.filter(function(n){return !n.read;}).length;
+  if(uc) uc.textContent=unread>0?unread+' ungelesen':'Benachrichtigungen';
+  if(NOTIFS.length===0){
+    list.innerHTML='<div style="padding:28px 16px 20px;text-align:center">'
+      +'<div style="color:var(--light);font-size:13.5px;font-style:italic;margin-bottom:14px">Keine Benachrichtigungen</div>'
+      +'<button onclick="event.stopPropagation();closeNotifs()" style="background:var(--t);color:#fff;border:none;padding:8px 22px;border-radius:40px;font-family:var(--body);font-size:13px;font-weight:700;cursor:pointer">Schlie&#xDF;en</button>'
+      +'</div>';
+    return;
+  }
+  list.innerHTML=NOTIFS.map(function(n,i){
+    return '<div style="display:flex;gap:10px;padding:11px 14px;border-bottom:1px solid var(--bord);background:'+(n.read?'transparent':'rgba(10,110,122,.04)') + '">'
+      + '<span style="font-size:20px;flex-shrink:0;margin-top:2px">'+getNotifIcon(n.icon)+'</span>'
+      + '<div style="flex:1;min-width:0">'
+      + '<div style="font-size:12.5px;line-height:1.55;font-weight:'+(n.read?300:500)+';color:'+(n.read?'var(--muted)':'var(--ink2)')+'">'+n.text+'</div>'
+      + '<div style="font-size:11px;color:var(--light);margin-top:3px">'+n.time+'</div>'
+      + '</div>'
+      + '<button onclick="event.stopPropagation();deleteNotif('+i+')" style="background:none;border:none;color:var(--light);cursor:pointer;font-size:16px;line-height:1;padding:2px 4px;flex-shrink:0;align-self:flex-start">&#x2715;</button>'
+      + '</div>';
+  }).join('');
+}
+function openNotifs(){
+  if(notifsOpen){closeNotifs();return;}
+  notifsOpen=true;
+  const panel=document.getElementById('notif-panel');
+  const list=document.getElementById('notif-list');
+  // update sticky header count
+  var uc=document.getElementById('notif-unread-count');
+  var unread=NOTIFS.filter(n=>!n.read).length;
+  if(uc) uc.textContent=unread>0?unread+' ungelesen':'Benachrichtigungen';
+  renderNotifList();
+  panel.style.display='flex';
+  setTimeout(()=>document.addEventListener('click',outsideNotif),10);
+}
+function outsideNotif(e){
+  var panel=document.getElementById('notif-panel');
+  if(!panel) return;
+  var ids=['notif-btn','faq-notif-btn','accp-notif-btn'];
+  var fromBtn=ids.some(function(id){var el=document.getElementById(id);return el&&(el===e.target||el.contains(e.target));});
+  if(!panel.contains(e.target)&&!fromBtn){closeNotifs();}
+}
+function closeNotifs(){
+  notifsOpen=false;
+  document.getElementById('notif-panel').style.display='none';
+  document.removeEventListener('click',outsideNotif);
+}
+function markNotifRead(i){NOTIFS[i].read=!NOTIFS[i].read;openNotifs();}
+function deleteNotif(i){
+  NOTIFS.splice(i,1);
+  renderNotifList();
+}
+function deleteAllNotifs(){
+  NOTIFS.length=0;
+  renderNotifList();
+}
+
+function deletePost(id){
+  var p=posts.find(function(x){return x.id===id;});
+  if(!p||!p.mine||!loggedIn){toast('&#x26A0;&#xFE0F; Keine Berechtigung.');return;}
+  if(!confirm('Beitrag wirklich löschen?'))return;
+  posts=posts.filter(function(p){return p.id!==id;});
+  updateSavedCount();
+  if(curView==='mine') showMine();
+  else render();
+  toast('🗑️ Beitrag gelöscht');
+}
+function deleteComment(pid,ci){
+  var p=posts.find(function(x){return x.id===pid;});
+  if(!p||ci<0||ci>=p.comments.length)return;
+  p.comments.splice(ci,1);
+  render();
+}
+function reportPost(id){
+  if(!loggedIn){toast('&#x1F512; Bitte erst anmelden');openLg();return;}
+  var p=posts.find(function(x){return x.id===id;});
+  if(p&&p.mine){toast('&#x26A0;&#xFE0F; Eigene Beiträge können nicht gemeldet werden.');return;}
+  if(!p)return;
+  toast('&#x26A0;&#xFE0F; Beitrag gemeldet. Danke!');
+}
+function getNotifIcon(icon){return icon==="LOGO"?'<svg width="32" height="32" viewBox="0 0 40 40" fill="none"><rect x="1" y="1" width="38" height="38" rx="10" fill="rgba(10,110,122,.12)"/><circle cx="13" cy="11" r="4" fill="#0a6e7a"/><path d="M10 15.5 Q10 20 10 23 L16 23 Q16 20 16 15.5Z" fill="#0a6e7a" opacity=".9"/><circle cx="27" cy="11" r="4" fill="#b8762a"/><path d="M24 15.5 Q24 20 24 23 L30 23 Q30 20 30 15.5Z" fill="#b8762a" opacity=".9"/><path d="M16 17 Q20 13 20 13" stroke="#0a6e7a" stroke-width="2" stroke-linecap="round" fill="none"/><path d="M24 17 Q20 13 20 13" stroke="#b8762a" stroke-width="2" stroke-linecap="round" fill="none"/><path d="M20 13 C20 13 18 10.5 18 9 C18 7.5 19 6.5 20 7.5 C21 6.5 22 7.5 22 9 C22 10.5 20 13 20 13Z" fill="#b8762a"/></svg>':icon;}
+
+var _profileOpen=false;
+function openProfileMenu(){
+  if(_profileOpen){closeProfileMenu();return;}
+  _profileOpen=true;
+  var m=document.getElementById('profile-menu');
+  var nm=document.getElementById('profile-menu-name');
+  if(nm&&currentUser) nm.textContent=currentUser.name;
+  m.style.display='block';
+  setTimeout(function(){document.addEventListener('click',_outsideProfile);},10);
+}
+function _outsideProfile(e){
+  var m=document.getElementById('profile-menu');
+  var lb=document.getElementById('h-login-btn');
+  if(m&&!m.contains(e.target)&&e.target!==lb){closeProfileMenu();}
+}
+function closeProfileMenu(){
+  _profileOpen=false;
+  var m=document.getElementById('profile-menu');
+  if(m) m.style.display='none';
+  document.removeEventListener('click',_outsideProfile);
+}
+
+
+function openAccountPage(){
+  closeProfileMenu();
+  if(!loggedIn) return;
+  var page=document.getElementById('account-page');
+  if(!page) return;
+  // fill data
+  var av=document.getElementById('acc-avatar');
+  var nm=document.getElementById('acc-name');
+  if(av) av.textContent=currentUser.ava;
+  if(nm) nm.textContent=currentUser.name;
+  var myPosts=posts.filter(function(p){return p.mine;}).length;
+  var mySaved=posts.filter(function(p){return p.saved;}).length;
+  var myLikes=posts.filter(function(p){return p.liked;}).length;
+  var ep=document.getElementById('acc-posts'); if(ep) ep.textContent=myPosts;
+  var es=document.getElementById('acc-saved-cnt'); if(es) es.textContent=mySaved;
+  var el=document.getElementById('acc-likes'); if(el) el.textContent=myLikes;
+  page.style.display='block';
+  initHexBg('hexbg3');
+  var aht=document.getElementById('acc-hero-tags');
+  if(aht&&!aht.children.length){
+    var tc3={};posts.forEach(function(p){tc3[p.tag]=(tc3[p.tag]||0)+1;});
+    Object.keys(tc3).sort(function(a,b){return tc3[b]-tc3[a];}).slice(0,5).forEach(function(t){
+      var b=document.createElement('button');
+      b.className='htag';b.textContent='# '+t;
+      b.onclick=function(){toggleTag(t);closeAccountPage();};
+      aht.appendChild(b);
+    });
+  }
+}
+function closeAccountPage(){
+  var page=document.getElementById('account-page');
+  if(page) page.style.display='none';
+}
+
+function toast(msg){const c=document.getElementById('toasts'),t=document.createElement('div');t.className='toast';t.textContent=msg;c.appendChild(t);setTimeout(()=>{t.classList.add('out');setTimeout(()=>t.remove(),250);},2400);}
+
+
+var _savedScroll=0;
+function openInfo(key){
+  var content=INFO_CONTENT[key];if(!content)return;
+  _savedScroll=window.scrollY;
+  document.getElementById('info-title').textContent=content.title;
+  document.getElementById('info-body').innerHTML=content.body;
+  document.getElementById('mbg-info').classList.add('on');
+  document.getElementById('info-body').scrollTop=0;
+}
+function closeInfo(){
+  document.getElementById('mbg-info').classList.remove('on');
+  setTimeout(function(){window.scrollTo({top:_savedScroll,behavior:'instant'});},50);
+}
+function submitFeedback(){
+  var txt=document.getElementById('fb-txt').value.trim();
+  if(!txt){toast('⚠️ Bitte Beschreibung eingeben');return;}
+  closeFB();
+  var tp=document.getElementById('fb-topic');if(tp)tp.value='';
+  document.getElementById('fb-txt').value='';
+  var fe=document.getElementById('fb-email');if(fe)fe.value='';
+  toast(fbType==='idee'?'💡 Danke für deine Idee!':'🐛 Problem gemeldet — danke!');
+}
+
+const INFO_CONTENT={
+  impressum:{title:'Impressum',body:'<h3>Angaben gemäß § 5 ECG (Österreich)</h3><p><strong>HSPConnect</strong><br>Musterstraße 1<br>1010 Wien, Österreich</p><p>E-Mail: hallo@hspconnect.at</p><h3>Haftungsausschluss</h3><p>Alle Inhalte werden von Mitgliedern erstellt und stellen keine medizinischen Empfehlungen dar.</p>'},
+  datenschutz:{title:'Datenschutzerklärung',body:'<h3>Verantwortliche Stelle</h3><p>HSPConnect — hallo@hspconnect.at</p><h3>Erhobene Daten</h3><ul><li>Name, E-Mail, Passwort (verschlüsselt)</li><li>Beiträge, Kommentare, Bewertungen</li></ul><h3>Deine Rechte (DSGVO)</h3><ul><li>Auskunft, Berichtigung, Löschung</li><li>Datenportabilität</li></ul><p>Anfragen: hallo@hspconnect.at</p><h3>Cookies</h3><p>Nur technisch notwendige Session-Cookies. Kein Tracking.</p>'},
+  nutzung:{title:'Nutzungsbedingungen',body:'<h3>Geltungsbereich</h3><p>Mit der Registrierung stimmst du diesen Bedingungen zu.</p><h3>Verbotene Inhalte</h3><ul><li>Medizinische Empfehlungen ohne Qualifikation</li><li>Beleidigungen, Diskriminierung</li><li>Spam und Werbung</li></ul><div class="warn-box"><strong>⚕️ Wichtig:</strong> HSPConnect ersetzt keinen Arztbesuch.</div>'},
+  regeln:{title:'Community-Regeln',body:'<h3>Grundwerte</h3><p>Respekt, Verständnis und Unterstützung.</p><div class="warn-box"><strong>⚕️ Medizinische Inhalte:</strong> Nur eigene Erfahrungen teilen. "Bei mir hat X geholfen" ist erlaubt. Diagnosen oder Heilungsversprechen sind verboten.</div><h3>✅ Erwünscht</h3><ul><li>Eigene Erfahrungen teilen</li><li>Fragen stellen</li><li>Andere unterstützen</li></ul><h3>🚫 Verboten</h3><ul><li>Medizinische Empfehlungen ohne Qualifikation</li><li>Beleidigungen und Diskriminierung</li><li>Spam und Werbung</li></ul>'},
+  faq:{title:'FAQ',body:'<h3>Was ist HSPConnect?</h3><p>Community für Menschen mit HSP und Spastik.</p><h3>Kostenlos?</h3><p>Ja, vollständig kostenlos.</p><h3>Inhalte medizinisch geprüft?</h3><p>Nein — persönliche Erfahrungsberichte, kein Arztbesatz.</p><h3>Konto löschen?</h3><p>E-Mail an hallo@hspconnect.at.</p>'},
+  kontakt:{title:'Kontakt',body:'<h3>Schreib uns</h3><p><strong>E-Mail:</strong> hallo@hspconnect.at</p><h3>Reaktionszeit</h3><p>2–3 Werktage.</p>'}
+};
+
+init();
+</script>
+</body>
+</html>
