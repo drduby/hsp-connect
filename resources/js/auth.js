@@ -55,6 +55,7 @@ export function setLoggedInUI() {
 export function openLg(tab) {
   document.getElementById('lf-in').style.display = '';
   document.getElementById('lf-up').style.display = 'none';
+  document.getElementById('lf-reset').style.display = 'none';
   document.getElementById('lg-title').textContent = 'Willkommen zurück';
   document.getElementById('lg-sub').textContent = 'Melde dich an oder erstelle ein Konto';
   document.getElementById('lmbg').classList.add('on');
@@ -69,9 +70,14 @@ export function closeLg() {
 export function setLT(t) {
   document.getElementById('lf-in').style.display = t === 'in' ? '' : 'none';
   document.getElementById('lf-up').style.display = t === 'up' ? '' : 'none';
-  document.getElementById('lg-title').textContent = t === 'in' ? 'Willkommen zurück' : 'Konto erstellen';
-  document.getElementById('lg-sub').textContent = t === 'in' ? 'Schön, dass du wieder da bist!' : 'Werde Teil der Community';
+  document.getElementById('lf-reset').style.display = t === 'reset' ? '' : 'none';
+  document.getElementById('lg-title').textContent = t === 'in' ? 'Willkommen zurück' : (t === 'up' ? 'Konto erstellen' : 'Passwort zurücksetzen');
+  document.getElementById('lg-sub').textContent = t === 'in' ? 'Schön, dass du wieder da bist!' : (t === 'up' ? 'Werde Teil der Community' : 'Wir senden dir einen Link per E-Mail');
+  if (t === 'reset') {
+    document.getElementById('reset-em').value = document.getElementById('l-em').value.trim();
+  }
   setLoginError('');
+  setResetMessage('');
   setRegErrors(null);
 }
 
@@ -87,6 +93,15 @@ export function setRegErrors(errors) {
     const el = document.getElementById('reg-err-' + field);
     if (el) el.textContent = (errors && errors[field]) ? errors[field][0] : '';
   });
+}
+
+export function setResetMessage(msg, type = 'error') {
+  const el = document.getElementById('reset-message');
+  if (!el) return;
+  el.textContent = msg;
+  el.style.display = msg ? '' : 'none';
+  el.style.color = type === 'success' ? 'var(--t)' : '#c04040';
+  el.style.background = type === 'success' ? 'var(--t3)' : 'rgba(192,64,64,.08)';
 }
 
 export async function doLogin() {
@@ -145,6 +160,22 @@ export async function doReg() {
     }
   } catch (e) {
     setRegErrors({ first_name: ['Verbindungsfehler. Bitte erneut versuchen.'] });
+  }
+}
+
+export async function doPasswordResetLink() {
+  const email = document.getElementById('reset-em').value.trim();
+  setResetMessage('');
+  if (!email) { setResetMessage('Bitte E-Mail eingeben.'); return; }
+  try {
+    const { ok, data } = await authFetch('/forgot-password', { email });
+    if (ok) {
+      setResetMessage(data.status || 'Wenn ein Konto existiert, senden wir dir einen Link zum Zurücksetzen.', 'success');
+    } else {
+      setResetMessage(authError(data));
+    }
+  } catch (e) {
+    setResetMessage('Verbindungsfehler. Bitte erneut versuchen.');
   }
 }
 
