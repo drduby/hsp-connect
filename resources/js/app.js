@@ -66,6 +66,10 @@ function init() {
   render();
   updateSavedCount();
   setActiveNav('home');
+
+  if (new URLSearchParams(window.location.search).get('login') === '1') {
+    openLg();
+  }
 }
 
 init();

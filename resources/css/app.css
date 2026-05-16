@@ -224,6 +224,7 @@ main { min-width: 0 }
 /* ── MODALS ── */
 .mbg { position: fixed; inset: 0; background: rgba(10,20,24,.4); backdrop-filter: blur(9px); z-index: 800; display: none; align-items: center; justify-content: center; padding: 20px }
 .mbg.on { display: flex }
+.reset-page { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; background: var(--bg) }
 .modal { background: var(--surf); border-radius: 20px; padding: 30px; width: 100%; max-width: 460px; box-shadow: var(--sh3); position: relative; animation: mIn .32s cubic-bezier(.22,1,.36,1) }
 @keyframes mIn { from { opacity: 0; transform: translateY(14px) scale(.96) } to { opacity: 1; transform: none } }
 .mc { position: absolute; top: 13px; right: 13px; width: 26px; height: 26px; border-radius: 50%; background: var(--bg); border: none; color: var(--muted); font-size: 13px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all .18s }
