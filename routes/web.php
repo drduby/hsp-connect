@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\PostController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -10,6 +11,9 @@ Route::get('/reset-password/{token}', function (Request $request, string $token)
     ]);
 })->middleware('guest')->name('password.reset');
 
+Route::get('/', [PostController::class, 'index'])->name('home');
+
+Route::get('/help', function () {
 Route::get('/', function () {
     $tags = ['Spastik', 'Muskeln', 'Entspannung', 'Physiotherapie', 'Hilfsmittel', 'Alltag', 'Ernährung', 'Schlaf', 'Reha'];
     $tagColors = [

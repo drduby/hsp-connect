@@ -8,6 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Mulish:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @livewireStyles
 </head>
 <body>
 
@@ -30,5 +31,19 @@
 <x-modals.login />
 <x-modals.post />
 
+@livewireScripts
+<script>
+    document.addEventListener('livewire:initialized', function () {
+        Livewire.on('open-login', function () { if (typeof openLg === 'function') openLg(); });
+        Livewire.on('post-deleted', function (event) {
+            var el = document.getElementById('post-' + event.postId);
+            if (el) el.remove();
+            if (window.__POSTS__) {
+                window.__POSTS__ = window.__POSTS__.filter(function (p) { return p.id !== event.postId; });
+            }
+            if (typeof render === 'function') render();
+        });
+    });
+</script>
 </body>
 </html>
