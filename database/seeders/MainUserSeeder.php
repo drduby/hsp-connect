@@ -18,6 +18,7 @@ class MainUserSeeder extends Seeder
             'last_name' => 'Tarasyuk',
             'email' => 'test@hsp-connect.com',
             'password' => Hash::make('password'),
+            'nickname' => 'test_user',
         ]);
     }
 }
