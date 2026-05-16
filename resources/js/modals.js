@@ -1,7 +1,5 @@
 import { state } from './state.js';
-import { toast, requireAuth } from './utils.js';
-import { createPostElement } from './posts.js';
-import { clearAll } from './feed.js';
+import { toast } from './utils.js';
 
 export const INFO_CONTENT = {
   impressum: { title: 'Impressum', body: '<h3>Angaben gemäß § 5 ECG (Österreich)</h3><p><strong>HSPConnect</strong><br>Musterstraße 1<br>1010 Wien, Österreich</p><p>E-Mail: hallo@hspconnect.at</p><h3>Haftungsausschluss</h3><p>Alle Inhalte werden von Mitgliedern erstellt und stellen keine medizinischen Empfehlungen dar.</p>' },
@@ -13,38 +11,14 @@ export const INFO_CONTENT = {
 };
 
 export function openPM(t) {
-  if (t) setType(t);
+  const typeMap = { 'Erfahrung': 'experience', 'Frage': 'question' };
+  const type = typeMap[t] || t || 'experience';
+  window.dispatchEvent(new CustomEvent('open-create-post', { detail: { type } }));
   document.getElementById('pmbg').classList.add('on');
 }
 
 export function closePM() {
   document.getElementById('pmbg').classList.remove('on');
-}
-
-export function setType(t) {
-  state.modType = t;
-}
-
-export function savePost() {
-  if (!requireAuth('🔒 Bitte erst anmelden')) return;
-  const h = document.getElementById('mod-h').value.trim();
-  const b = document.getElementById('mod-b').value.trim();
-  if (!h || !b) { toast('⚠️ Titel und Inhalt ausfüllen'); return; }
-  const newPost = {
-    id: Date.now(), type: state.modType, tag: document.getElementById('mod-tag').value,
-    author: state.currentUser.name, ava: state.currentUser.ava, title: h, content: b,
-    likes: 0, liked: false, saved: false, mine: true,
-    rSum: 0, rCnt: 0, uRat: 0, expanded: true, showC: false, time: 'gerade eben', comments: [],
-  };
-  state.posts.unshift(newPost);
-  const feed = document.getElementById('feed');
-  const el = createPostElement(newPost);
-  feed.insertBefore(el, feed.firstChild);
-  closePM();
-  document.getElementById('mod-h').value = '';
-  document.getElementById('mod-b').value = '';
-  clearAll();
-  toast('✅ Beitrag veröffentlicht!');
 }
 
 let _fbType = '';

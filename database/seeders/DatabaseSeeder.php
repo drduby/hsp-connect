@@ -15,10 +15,16 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        $this->call([
+            TagsSeeder::class,
+        ]);
+
         // User::factory(10)->create();
 
         User::factory()->create([
-            'name' => 'Test User',
+            'first_name' => 'Test',
+            'last_name' => 'User',
+            'nickname' => 'test_user',
             'email' => 'test@example.com',
         ]);
     }
