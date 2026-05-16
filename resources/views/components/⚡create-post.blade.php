@@ -53,7 +53,9 @@ new class extends Component {
 
         $post->tags()->sync($this->selectedTagIds);
 
-        $this->redirect(route('home'), navigate: false);
+        $this->dispatch('post-created');
+        $this->dispatch('close-post-modal');
+        $this->reset(['title', 'content', 'selectedTagIds']);
     }
 
     #[Computed]

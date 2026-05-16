@@ -36,6 +36,9 @@
 <script>
     document.addEventListener('livewire:initialized', function () {
         Livewire.on('open-login', function () { if (typeof openLg === 'function') openLg(); });
+
+        Livewire.on('close-post-modal', function () { if (typeof closePM === 'function') closePM(); });
+
         Livewire.on('post-deleted', function (event) {
             var el = document.getElementById('post-' + event.postId);
             if (el) el.remove();
@@ -43,6 +46,14 @@
                 window.__POSTS__ = window.__POSTS__.filter(function (p) { return p.id !== event.postId; });
             }
             if (typeof render === 'function') render();
+        });
+
+        Livewire.on('posts-refreshed', function (event) {
+            if (event && event.posts) {
+                window.__POSTS__ = event.posts;
+                if (window.state) window.state.posts = event.posts.map(function (p) { return Object.assign({}, p, { expanded: false, showC: false }); });
+                if (typeof render === 'function') render();
+            }
         });
     });
 </script>

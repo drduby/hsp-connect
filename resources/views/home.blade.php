@@ -67,9 +67,7 @@
 
             {{-- Post feed --}}
             <div id="feed">
-                @foreach($posts as $post)
-                    <livewire:post-card :post="$post" wire:key="post-{{ $post->id }}"/>
-                @endforeach
+                <livewire:post-feed />
             </div>
 
             <div id="feed-empty" class="empty" style="display:none">
@@ -90,7 +88,7 @@
 
     {{-- Data bridge for JavaScript --}}
     @php
-        $postsForJs = $posts->map(fn($p) => [
+        $postsForJs = $posts->map(fn ($p) => [
             'id'      => $p->id,
             'type'    => $p->type->value === 'experience' ? 'Erfahrung' : 'Frage',
             'tags'    => $p->tags->pluck('name')->toArray(),

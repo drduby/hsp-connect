@@ -8,12 +8,7 @@ use Illuminate\Contracts\View\View;
 
 class PostController extends Controller
 {
-    private PostService $postService;
-
-    public function __construct(PostService $postService)
-    {
-        $this->postService = $postService;
-    }
+    public function __construct(private PostService $postService) {}
 
     public function index(): View
     {
@@ -23,9 +18,6 @@ class PostController extends Controller
             ->orderBy('id')
             ->get(['id', 'name', 'color']);
 
-        return view('home', [
-            'posts' => $posts,
-            'tags' => $tags,
-        ]);
+        return view('home', compact('posts', 'tags'));
     }
 }
