@@ -45,7 +45,6 @@ export function setLoggedInUI() {
   const frb = document.getElementById('faq-h-reg-btn'); if (frb) frb.style.display = 'none';
   const alb = document.getElementById('acc-h-login-btn');
   if (alb) { alb.textContent = state.currentUser.name; alb.onclick = function () { document.dispatchEvent(new CustomEvent('app:open-profile-menu')); }; }
-  const arb = document.getElementById('acc-h-reg-btn'); if (arb) { arb.textContent = 'Abmelden'; arb.onclick = doLogout; }
   const fnb = document.getElementById('faq-notif-btn'); if (fnb) fnb.style.display = 'flex';
   const anb = document.getElementById('accp-notif-btn'); if (anb) anb.style.display = 'flex';
 }

@@ -16,7 +16,6 @@
             <button class="h-btn-muted" id="accp-home-btn" onclick="closeAccountPage()">Home</button>
             <button class="h-btn-muted" id="accp-faq-btn" onclick="closeAccountPage();openFAQPage()">FAQ</button>
             <button class="h-btn-o" id="acc-h-login-btn" onclick="openLg()">Anmelden</button>
-            <button class="h-btn" id="acc-h-reg-btn" onclick="doLogout()">Registrieren</button>
         </div>
     </header>
 
