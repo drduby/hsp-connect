@@ -104,6 +104,21 @@ export function setResetMessage(msg, type = 'error') {
   el.style.background = type === 'success' ? 'var(--t3)' : 'rgba(192,64,64,.08)';
 }
 
+export function updatePwChecklist() {
+  const pw = document.getElementById('r-pw')?.value || '';
+  const list = document.getElementById('pw-checklist');
+  if (list) list.style.display = pw.length ? 'flex' : 'none';
+  function mark(id, ok, text) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    el.textContent = (ok ? '✓ ' : '✗ ') + text;
+    el.style.color = ok ? 'var(--t)' : 'var(--light)';
+  }
+  mark('pwc-len', pw.length >= 8, 'Mindestens 8 Zeichen');
+  mark('pwc-letter', /[a-zA-ZäöüÄÖÜß]/.test(pw), 'Mindestens 1 Buchstabe');
+  mark('pwc-num', /[0-9]/.test(pw), 'Mindestens 1 Zahl');
+}
+
 export async function doLogin() {
   const email = document.getElementById('l-em').value.trim();
   const password = document.getElementById('l-pw').value;
@@ -141,6 +156,8 @@ export async function doReg() {
   if (!em) clientErrors.email = ['Bitte E-Mail eingeben.'];
   if (!pw) clientErrors.password = ['Bitte Passwort eingeben.'];
   else if (pw.length < 8) clientErrors.password = ['Passwort mind. 8 Zeichen.'];
+  else if (!/[a-zA-ZäöüÄÖÜß]/.test(pw)) clientErrors.password = ['Passwort muss mind. 1 Buchstaben enthalten.'];
+  else if (!/[0-9]/.test(pw)) clientErrors.password = ['Passwort muss mind. 1 Zahl enthalten.'];
   if (pw && pw2 && pw !== pw2) clientErrors.password_confirmation = ['Passwörter stimmen nicht überein.'];
   if (Object.keys(clientErrors).length) { setRegErrors(clientErrors); return; }
   try {
