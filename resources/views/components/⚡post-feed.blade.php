@@ -2,15 +2,25 @@
 
 use App\Models\Post;
 use App\Services\PostService;
-use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
 use Livewire\Component;
+use Livewire\WithoutUrlPagination;
+use Livewire\WithPagination;
 
 new class extends Component {
+    use WithPagination, WithoutUrlPagination;
+
     public int $latestPostId = 0;
 
     public int $newPostCount = 0;
+
+    public string $search = '';
+
+    public string $type = 'Alle';
+
+    public array $tags = [];
 
     public function mount(): void
     {
@@ -28,8 +38,7 @@ new class extends Component {
     {
         $this->newPostCount = 0;
         $this->latestPostId = Post::where('is_published', true)->max('id') ?? 0;
-
-        $this->dispatch('posts-refreshed', posts: $this->postsForJs());
+        $this->resetPage();
     }
 
     #[On('post-created')]
@@ -38,25 +47,23 @@ new class extends Component {
         $this->loadNewPosts();
     }
 
-    #[Computed]
-    public function posts(): Collection
+    #[On('livewire-filter-updated')]
+    public function onFilterUpdated(string $search, string $type, array $tags): void
     {
-        return app(PostService::class)->publishedPosts();
+        $this->search = $search;
+        $this->type = $type;
+        $this->tags = $tags;
+        $this->resetPage();
     }
 
-    private function postsForJs(): array
+    #[Computed]
+    public function posts(): LengthAwarePaginator
     {
-        return $this->posts->map(fn ($p) => [
-            'id'      => $p->id,
-            'type'    => $p->type->value === 'experience' ? 'Erfahrung' : 'Frage',
-            'tags'    => $p->tags->pluck('name')->toArray(),
-            'tag'     => $p->tags->first()?->name ?? '',
-            'title'   => $p->title,
-            'content' => $p->content,
-            'mine'    => $p->is_mine,
-            'saved'   => $p->user_saved,
-            'liked'   => $p->user_liked,
-        ])->values()->all();
+        return app(PostService::class)->publishedPostsPaginated(
+            search: $this->search,
+            type: $this->type,
+            tags: $this->tags,
+        );
     }
 };
 ?>
@@ -77,8 +84,39 @@ new class extends Component {
     @endif
 
     {{-- Post list --}}
-    @foreach($this->posts as $post)
+    @forelse($this->posts as $post)
         <livewire:post-card :post="$post" wire:key="post-{{ $post->id }}"/>
-    @endforeach
+    @empty
+        <div class="empty">
+            <div class="empty-i">🌊</div>
+            <div class="empty-t">Keine Beiträge gefunden</div>
+            <p>Andere Filter oder neuen Beitrag erstellen!</p>
+        </div>
+    @endforelse
+
+    {{-- Pagination --}}
+    @php $lastPage = $this->posts->lastPage(); $currentPage = $this->posts->currentPage(); @endphp
+    @if($lastPage > 1)
+        <div class="pag">
+            <button class="pgb" wire:click="previousPage" @disabled($currentPage <= 1)>&#x2039;</button>
+
+            @for($i = 1; $i <= $lastPage; $i++)
+                <button class="pgb {{ $i === $currentPage ? 'on' : '' }}" wire:click="gotoPage({{ $i }})">{{ $i }}</button>
+            @endfor
+
+            <button class="pgb" wire:click="nextPage" @disabled($currentPage >= $lastPage)>&#x203A;</button>
+
+            @if($lastPage > 3)
+                <span x-data="{ p: '' }"
+                    style="display:flex;align-items:center;gap:5px;margin-left:6px;font-size:12px;color:var(--muted);font-family:var(--body)">
+                    Gehe zu
+                    <input type="number" min="1" max="{{ $lastPage }}"
+                        x-model.number="p"
+                        x-on:keydown.enter="if(p >= 1 && p <= {{ $lastPage }}) { $wire.gotoPage(p); p = ''; }"
+                        style="width:44px;height:32px;border-radius:16px;border:1.5px solid rgba(10,110,122,.15);background:var(--surf);font-family:var(--body);font-size:12.5px;font-weight:700;color:var(--muted);text-align:center;outline:none;padding:0 4px">
+                </span>
+            @endif
+        </div>
+    @endif
 
 </div>

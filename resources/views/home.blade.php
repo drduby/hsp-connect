@@ -76,7 +76,6 @@
                 <p>Andere Filter oder neuen Beitrag erstellen!</p>
             </div>
 
-            <div id="pag" class="pag"></div>
         </main>
     </div>
 

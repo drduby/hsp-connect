@@ -32,54 +32,35 @@ function updateTabCounts() {
   document.getElementById('tab-Frage').textContent = '❓ Fragen (' + state.posts.filter(function (p) { return p.type === 'Frage'; }).length + ')';
 }
 
+function dispatchToFeed() {
+  if (typeof Livewire !== 'undefined') {
+    Livewire.dispatch('livewire-filter-updated', {
+      search: state.srch,
+      type: state.curType,
+      tags: [...state.activeTags],
+    });
+  }
+}
+
 export function render() {
-  const feed = document.getElementById('feed');
-  const feedEmpty = document.getElementById('feed-empty');
   updateTabCounts();
 
-  const filtered = state.posts.filter(function (p) {
-    const postTags = Array.isArray(p.tags) && p.tags.length ? p.tags : (p.tag ? [p.tag] : []);
-    const matchTag = state.activeTags.size === 0 || postTags.some(function (t) { return state.activeTags.has(t); });
-    const matchType = state.curType === 'Alle' || p.type === state.curType;
-    const matchSrch = !state.srch || (p.title + ' ' + p.content + ' ' + postTags.join(' ')).toLowerCase().includes(state.srch);
-    return matchTag && matchType && matchSrch;
-  });
-
-  const tot = Math.ceil(filtered.length / PS);
-  if (state.page > tot && tot > 0) state.page = 1;
-  const pageIds = new Set(filtered.slice((state.page - 1) * PS, state.page * PS).map(function (p) { return p.id; }));
-
-  feed.querySelectorAll('.post[id^="post-"], .post-client[id^="post-"]').forEach(function (el) {
-    const pid = parseInt(el.id.replace('post-', ''), 10);
-    el.style.display = pageIds.has(pid) ? '' : 'none';
-  });
-
-  if (feedEmpty) feedEmpty.style.display = filtered.length === 0 ? '' : 'none';
+  const feedEmpty = document.getElementById('feed-empty');
+  if (feedEmpty && state.curView === 'home') { feedEmpty.style.display = 'none'; }
 
   const af = document.getElementById('afilter'), parts = [];
   if (state.activeTags.size > 0) parts.push([...state.activeTags].map(function (t) { return '# ' + t; }).join(', '));
   if (state.srch) parts.push('"' + state.srch + '"');
   if (parts.length) {
     af.classList.add('on');
-    document.getElementById('af-txt').textContent = 'Filter: ' + parts.join(' · ') + ' — ' + filtered.length + ' Beitrag' + (filtered.length !== 1 ? 'e' : '');
+    document.getElementById('af-txt').textContent = 'Filter: ' + parts.join(' · ');
   } else {
     af.classList.remove('on');
   }
-
-  renderPag(tot);
-}
-
-function renderPag(tot) {
-  const c = document.getElementById('pag');
-  if (tot <= 1) { c.innerHTML = ''; return; }
-  let h = '<button class="pgb" onclick="go(' + (state.page - 1) + ')" ' + (state.page <= 1 ? 'disabled' : '') + '>‹</button>';
-  for (let i = 1; i <= tot; i++) h += '<button class="pgb ' + (i === state.page ? 'on' : '') + '" onclick="go(' + i + ')">' + i + '</button>';
-  h += '<button class="pgb" onclick="go(' + (state.page + 1) + ')" ' + (state.page >= tot ? 'disabled' : '') + '>›</button>';
-  c.innerHTML = h;
 }
 
 export function go(p) {
-  state.page = p; render(); window.scrollTo({ top: 260, behavior: 'smooth' });
+  state.page = p; window.scrollTo({ top: 260, behavior: 'smooth' });
 }
 
 export function toggleTag(t) {
@@ -93,7 +74,9 @@ export function toggleTag(t) {
     const el = document.getElementById('nav-' + t); if (el) el.classList.add('on');
     const he = document.getElementById('ht-' + t); if (he) he.classList.add('on');
   }
-  state.page = 1; render();
+  state.page = 1;
+  dispatchToFeed();
+  render();
 }
 
 export function setTab(t) {
@@ -101,6 +84,7 @@ export function setTab(t) {
   state.curView = 'home'; markNav('home');
   document.querySelectorAll('.ft').forEach(function (e) { e.classList.remove('on'); });
   document.getElementById('tab-' + t).classList.add('on');
+  dispatchToFeed();
   render();
 }
 
@@ -108,13 +92,16 @@ export function onComposeSrch() {
   const v = document.getElementById('compose-srch').value;
   state.srch = v.toLowerCase(); state.page = 1;
   document.getElementById('c-srch-x').style.display = v ? '' : 'none';
+  dispatchToFeed();
   render();
 }
 
 export function clearComposeSrch() {
   document.getElementById('compose-srch').value = '';
   document.getElementById('c-srch-x').style.display = 'none';
-  state.srch = ''; state.page = 1; render();
+  state.srch = ''; state.page = 1;
+  dispatchToFeed();
+  render();
 }
 
 export function filterTags() {
@@ -134,7 +121,9 @@ export function clearAll() {
   document.querySelectorAll('.titem,.htag').forEach(function (e) { e.classList.remove('on'); });
   document.querySelectorAll('.ft').forEach(function (e) { e.classList.remove('on'); });
   document.getElementById('tab-Alle').classList.add('on');
-  filterTags(); render();
+  filterTags();
+  dispatchToFeed();
+  render();
 }
 
 export function showSaved() {
@@ -155,7 +144,6 @@ export function showSaved() {
   const af = document.getElementById('afilter');
   af.classList.add('on');
   document.getElementById('af-txt').textContent = 'Gespeicherte Beiträge';
-  document.getElementById('pag').innerHTML = '';
 }
 
 export function showMine() {
@@ -178,5 +166,4 @@ export function showMine() {
   document.getElementById('af-txt').textContent = 'Meine Beiträge (' + myIds.size + ')';
   const nm = document.getElementById('nav-mine');
   if (nm) nm.innerHTML = '&#x270F;&#xFE0F; Meine Beitr&#xE4;ge (' + myIds.size + ')';
-  document.getElementById('pag').innerHTML = '';
 }
