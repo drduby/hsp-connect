@@ -187,6 +187,7 @@ export async function doReg() {
   if (!ln) clientErrors.last_name = ['Bitte Nachname eingeben.'];
   if (!nick) clientErrors.nickname = ['Bitte Nickname eingeben.'];
   if (!em) clientErrors.email = ['Bitte E-Mail eingeben.'];
+  else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(em)) clientErrors.email = ['Bitte eine gültige E-Mail-Adresse eingeben.'];
   if (!pw) clientErrors.password = ['Bitte Passwort eingeben.'];
   else if (pw.length < 8) clientErrors.password = ['Passwort mind. 8 Zeichen.'];
   else if (!/[a-zA-ZäöüÄÖÜß]/.test(pw)) clientErrors.password = ['Passwort muss mind. 1 Buchstaben enthalten.'];
