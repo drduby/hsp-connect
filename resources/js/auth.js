@@ -37,7 +37,7 @@ export function setLoggedInUI() {
   const hlb = document.getElementById('h-login-btn');
   if (hlb) { hlb.textContent = state.currentUser.name; hlb.onclick = function () { document.dispatchEvent(new CustomEvent('app:open-profile-menu')); }; }
   const hrb = document.getElementById('h-reg-btn');
-  if (hrb) { hrb.textContent = 'Abmelden'; hrb.onclick = doLogout; hrb.style.display = ''; }
+  if (hrb) hrb.style.display = 'none';
   const an = document.getElementById('auth-nav'); if (an) an.style.cssText = 'display:block !important';
   const nb = document.getElementById('notif-btn'); if (nb) nb.style.display = 'flex';
   const flb = document.getElementById('faq-h-login-btn');
