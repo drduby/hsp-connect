@@ -12,7 +12,7 @@
         </div>
         <button class="h-btn-muted" id="h-home-btn" onclick="clearAll()">Home</button>
         <button class="h-btn-muted" id="h-faq-btn" onclick="openFAQPage()">FAQ</button>
-        @if(Auth::check())
+        @if(Auth::check() && Auth::user()->hasVerifiedEmail())
             <button class="h-btn-o" id="h-login-btn" onclick="openLg()">Profile</button>
         @else
             <button class="h-btn-muted" id="h-login-btn" onclick="openLg()">Anmelden</button>

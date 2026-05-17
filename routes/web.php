@@ -4,6 +4,12 @@ use App\Http\Controllers\PostController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
+Route::get('/login', fn () => redirect('/?login=1'))->name('login');
+
+Route::get('/email/verify', fn () => view('auth.verify-email'))
+    ->middleware('auth')
+    ->name('verification.notice');
+
 Route::get('/reset-password/{token}', function (Request $request, string $token) {
     return view('auth.reset-password', [
         'token' => $token,

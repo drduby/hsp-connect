@@ -13,8 +13,9 @@
 <body>
 
 @php
-    $authState = auth()->check()
-        ? ['name' => auth()->user()->nickname, 'ava' => strtoupper(mb_substr(auth()->user()->nickname, 0, 1))]
+    $authUser = auth()->check() && auth()->user()->hasVerifiedEmail() ? auth()->user() : null;
+    $authState = $authUser
+        ? ['name' => $authUser->nickname, 'ava' => strtoupper(mb_substr($authUser->nickname, 0, 1))]
         : null;
 @endphp
 <script>window.__AUTH__ = @json($authState);</script>
@@ -24,12 +25,23 @@
 <x-notification-panel />
 <x-profile-menu />
 
+@if(auth()->check() && ! auth()->user()->hasVerifiedEmail())
+    <div style="background:#d97706;color:#fff;text-align:center;padding:10px 16px;font-size:13.5px;font-family:var(--body);display:flex;align-items:center;justify-content:center;gap:12px">
+        <span>Bitte bestätige deine E-Mail-Adresse, um HSPConnect nutzen zu können.</span>
+        <form method="POST" action="/email/verification-notification" style="display:inline">
+            @csrf
+            <button type="submit" style="background:rgba(255,255,255,.25);border:none;color:#fff;padding:4px 12px;border-radius:20px;font-size:12.5px;cursor:pointer;font-weight:600">Erneut senden</button>
+        </form>
+    </div>
+@endif
+
 @yield('content')
 
 <x-modals.info />
 <x-modals.feedback />
 <x-modals.login />
 <x-modals.post />
+<x-modals.verified />
 
 <div id="confirm-modal-bg"
      onclick="if(event.target===this)closeConfirm()"

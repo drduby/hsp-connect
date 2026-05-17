@@ -66,6 +66,11 @@ export function openLg(tab) {
 export function closeLg() {
   document.getElementById('lmbg').classList.remove('on');
   setTimeout(function () { setLT('in'); clearLgForms(); }, 300);
+  var url = new URL(window.location);
+  if (url.searchParams.has('login')) {
+    url.searchParams.delete('login');
+    history.replaceState({}, '', url.pathname + (url.searchParams.size ? '?' + url.searchParams : ''));
+  }
 }
 
 function clearLgForms() {
@@ -84,8 +89,11 @@ export function setLT(t) {
   document.getElementById('lf-in').style.display = t === 'in' ? '' : 'none';
   document.getElementById('lf-up').style.display = t === 'up' ? '' : 'none';
   document.getElementById('lf-reset').style.display = t === 'reset' ? '' : 'none';
-  document.getElementById('lg-title').textContent = t === 'in' ? 'Willkommen zurück' : (t === 'up' ? 'Konto erstellen' : 'Passwort zurücksetzen');
-  document.getElementById('lg-sub').textContent = t === 'in' ? 'Schön, dass du wieder da bist!' : (t === 'up' ? 'Werde Teil der Community' : 'Wir senden dir einen Link per E-Mail');
+  document.getElementById('lf-verify').style.display = t === 'verify' ? '' : 'none';
+  const titles = { in: 'Willkommen zurück', up: 'Konto erstellen', reset: 'Passwort zurücksetzen', verify: 'Fast geschafft!' };
+  const subs = { in: 'Schön, dass du wieder da bist!', up: 'Werde Teil der Community', reset: 'Wir senden dir einen Link per E-Mail', verify: '' };
+  document.getElementById('lg-title').textContent = titles[t] || '';
+  document.getElementById('lg-sub').textContent = subs[t] || '';
   if (t === 'in') {
     var fn = document.getElementById('r-fn'); var ln = document.getElementById('r-ln');
     var rn = document.getElementById('r-nick'); var rp = document.getElementById('r-pw'); var rp2 = document.getElementById('r-pw2');
@@ -192,12 +200,7 @@ export async function doReg() {
       email: em, password: pw, password_confirmation: pw2,
     });
     if (ok) {
-      closeLg();
-      state.loggedIn = true;
-      state.currentUser = data.user;
-      setLoggedInUI();
-      toast('🎉 Willkommen, ' + nick + '!');
-      state.posts.forEach(applyPostState);
+      setLT('verify');
     } else {
       setRegErrors(data.errors || null);
     }

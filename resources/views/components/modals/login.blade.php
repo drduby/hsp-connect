@@ -89,5 +89,14 @@
             <button class="mbtn" onclick="doPasswordResetLink()">Reset password</button>
             <div class="mlink">Zur&#xFC;ck zum Login? <a onclick="setLT('in')">Anmelden</a></div>
         </div>
+        <div id="lf-verify" style="display:none;text-align:center;padding:8px 0 4px">
+            <div style="font-size:48px;margin-bottom:16px">&#x2709;&#xFE0F;</div>
+            <div style="font-size:15px;font-weight:700;color:var(--ink);margin-bottom:10px">Bitte bestätige deine E-Mail-Adresse</div>
+            <div style="font-size:13.5px;color:var(--muted);line-height:1.65;margin-bottom:24px">
+                Wir haben dir einen Bestätigungslink gesendet.<br>
+                Bitte klicke auf den Link in der E-Mail, damit dein Konto aktiviert werden kann.
+            </div>
+            <button class="mbtn" onclick="closeLg()">Alles klar</button>
+        </div>
     </div>
 </div>

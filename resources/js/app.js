@@ -76,12 +76,30 @@ function init() {
   if (new URLSearchParams(window.location.search).get('login') === '1') {
     openLg();
   }
+
+  if (new URLSearchParams(window.location.search).get('verified') === '1') {
+    openVerifiedModal();
+  }
 }
 
 init();
 
+function openVerifiedModal() {
+  const el = document.getElementById('verified-modal');
+  if (el) el.style.display = 'flex';
+}
+
+function closeVerifiedModal() {
+  const el = document.getElementById('verified-modal');
+  if (el) el.style.display = 'none';
+  const url = new URL(window.location);
+  url.searchParams.delete('verified');
+  history.replaceState({}, '', url.pathname + (url.searchParams.size ? '?' + url.searchParams : ''));
+}
+
 Object.assign(window, {
   state,
+  openVerifiedModal, closeVerifiedModal,
   toast, checkAuthThen,
   expand, toggleLike, toggleSave, togC, rate, addC, deletePost, deleteComment, reportPost,
   render, go, toggleTag, setTab, onComposeSrch, clearComposeSrch, filterTags, clearAll, showSaved, showMine, markNav, setActiveNav,

@@ -10,15 +10,8 @@ class RegisterResponse implements RegisterResponseContract
 {
     public function toResponse($request): JsonResponse|RedirectResponse
     {
-        $user = $request->user();
-
         if ($request->wantsJson()) {
-            return response()->json([
-                'user' => [
-                    'name' => $user->nickname,
-                    'ava' => strtoupper(mb_substr($user->nickname, 0, 1)),
-                ],
-            ], 201);
+            return response()->json(['needs_verification' => true], 201);
         }
 
         return redirect('/');
