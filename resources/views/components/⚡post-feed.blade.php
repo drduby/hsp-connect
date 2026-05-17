@@ -6,11 +6,10 @@ use Illuminate\Pagination\LengthAwarePaginator;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
 use Livewire\Component;
-use Livewire\WithoutUrlPagination;
 use Livewire\WithPagination;
 
 new class extends Component {
-    use WithPagination, WithoutUrlPagination;
+    use WithPagination;
 
     public int $latestPostId = 0;
 
