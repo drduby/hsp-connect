@@ -75,6 +75,7 @@ function init() {
 init();
 
 Object.assign(window, {
+  state,
   toast, checkAuthThen,
   expand, toggleLike, toggleSave, togC, rate, addC, deletePost, deleteComment, reportPost,
   render, go, toggleTag, setTab, onComposeSrch, clearComposeSrch, filterTags, clearAll, showSaved, showMine, markNav, setActiveNav,

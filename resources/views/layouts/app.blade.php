@@ -54,6 +54,9 @@
             if (window.__POSTS__) {
                 window.__POSTS__ = window.__POSTS__.filter(function (p) { return p.id !== event.postId; });
             }
+            if (window.state) {
+                window.state.posts = window.state.posts.filter(function (p) { return p.id !== event.postId; });
+            }
             if (typeof render === 'function') render();
         });
 
