@@ -9,7 +9,14 @@
             <label>E-Mail</label>
             <input type="email" id="l-em" placeholder="deine@email.at">
             <label>Passwort</label>
-            <input type="password" id="l-pw" placeholder="&#x2022;&#x2022;&#x2022;&#x2022;&#x2022;&#x2022;&#x2022;&#x2022;">
+            <div style="position:relative;margin-bottom:12px">
+                <input type="password" id="l-pw" placeholder="&#x2022;&#x2022;&#x2022;&#x2022;&#x2022;&#x2022;&#x2022;&#x2022;" style="padding-right:42px;width:100%;margin-bottom:0">
+                <button type="button" onclick="togglePw('l-pw',this)" tabindex="-1"
+                    style="position:absolute;right:12px;top:0;bottom:0;margin:auto 0;height:18px;background:none;border:none;cursor:pointer;color:var(--light);padding:0;display:flex;align-items:center">
+                    <svg id="l-pw-eye" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                    <svg id="l-pw-eye-off" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                </button>
+            </div>
             <div class="mlink mlink-tight">Passwort vergessen? <a onclick="setLT('reset')">Reset password</a></div>
             <div id="login-error" style="display:none;color:#c04040;font-size:12.5px;margin:-4px 0 10px;padding:8px 12px;background:rgba(192,64,64,.08);border-radius:8px;line-height:1.5"></div>
             <button class="mbtn" onclick="doLogin()">Anmelden</button>
@@ -30,10 +37,24 @@
             <input type="email" id="r-em" placeholder="deine@email.at">
             <div id="reg-err-email" class="field-error"></div>
             <label>Passwort</label>
-            <input type="password" id="r-pw" placeholder="Mindestens 8 Zeichen">
+            <div style="position:relative;margin-bottom:12px">
+                <input type="password" id="r-pw" placeholder="Mindestens 8 Zeichen" style="padding-right:42px;width:100%;margin-bottom:0">
+                <button type="button" onclick="togglePw('r-pw',this)" tabindex="-1"
+                    style="position:absolute;right:12px;top:0;bottom:0;margin:auto 0;height:18px;background:none;border:none;cursor:pointer;color:var(--light);padding:0;display:flex;align-items:center">
+                    <svg id="r-pw-eye" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                    <svg id="r-pw-eye-off" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                </button>
+            </div>
             <div id="reg-err-password" class="field-error"></div>
             <label>Passwort wiederholen</label>
-            <input type="password" id="r-pw2" placeholder="Mindestens 8 Zeichen">
+            <div style="position:relative;margin-bottom:12px">
+                <input type="password" id="r-pw2" placeholder="Mindestens 8 Zeichen" style="padding-right:42px;width:100%;margin-bottom:0">
+                <button type="button" onclick="togglePw('r-pw2',this)" tabindex="-1"
+                    style="position:absolute;right:12px;top:0;bottom:0;margin:auto 0;height:18px;background:none;border:none;cursor:pointer;color:var(--light);padding:0;display:flex;align-items:center">
+                    <svg id="r-pw2-eye" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+                    <svg id="r-pw2-eye-off" xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"/><line x1="1" y1="1" x2="23" y2="23"/></svg>
+                </button>
+            </div>
             <div id="reg-err-password_confirmation" class="field-error"></div>
             <button class="mbtn" onclick="doReg()">Konto erstellen</button>
             <div class="mlink">Bereits registriert? <a onclick="setLT('in')">Anmelden</a></div>
