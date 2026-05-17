@@ -27,6 +27,10 @@ new class extends Component {
             return;
         }
 
+        if ($this->isMine) {
+            return;
+        }
+
         $userId = auth()->id();
 
         if ($this->post->likes->contains('id', $userId)) {
@@ -67,7 +71,7 @@ new class extends Component {
             return;
         }
 
-        if ($rating < 1 || $rating > 5) {
+        if ($this->isMine || $rating < 1 || $rating > 5) {
             return;
         }
 
@@ -214,12 +218,16 @@ new class extends Component {
 
     {{-- Action bar --}}
     <div class="pacts">
-        <button class="pab {{ $this->isLiked ? 'lk' : '' }}"
-            wire:click="toggleLike"
-            wire:loading.attr="disabled">
-            {{ $this->isLiked ? '❤️' : '🤍' }}
-            {{ $post->likes->count() }}
-        </button>
+        @if($this->isMine)
+            <span class="pab" style="opacity:.3;cursor:default">🤍 {{ $post->likes->count() }}</span>
+        @else
+            <button class="pab {{ $this->isLiked ? 'lk' : '' }}"
+                wire:click="toggleLike"
+                wire:loading.attr="disabled">
+                {{ $this->isLiked ? '❤️' : '🤍' }}
+                {{ $post->likes->count() }}
+            </button>
+        @endif
 
         <button class="pab" wire:click="$toggle('showComments')">
             💬 {{ $post->comments->count() }}
@@ -240,23 +248,30 @@ new class extends Component {
             </button>
         @endif
 
-        <button class="pab"
-            wire:click="$dispatch('open-report', { postId: {{ $post->id }} })"
-            style="margin-left:auto;color:var(--light);font-size:11px">
-            ⚠ Melden
-        </button>
+        @if(! $this->isMine)
+            <button class="pab"
+                wire:click="$dispatch('open-report', { postId: {{ $post->id }} })"
+                style="margin-left:auto;color:var(--light);font-size:11px">
+                ⚠ Melden
+            </button>
+        @endif
 
-        <span class="sepv"></span>
+        <span class="sepv" @if($this->isMine) style="margin-left:auto" @endif></span>
 
-        <div class="stars">
-            @for($s = 1; $s <= 5; $s++)
-                <span class="star {{ $this->userRating >= $s ? 'on' : '' }}"
-                    wire:key="star-{{ $post->id }}-{{ $s }}"
-                    wire:click="rate({{ $s }})"
-                    style="cursor:pointer">★</span>
-            @endfor
-        </div>
-        <span class="avgr">ø {{ $avg }}</span>
+        @if($this->isMine)
+            <div class="stars" style="opacity:.3;pointer-events:none">★★★★★</div>
+            <span class="avgr" style="opacity:.5">ø {{ $avg }}</span>
+        @else
+            <div class="stars">
+                @for($s = 1; $s <= 5; $s++)
+                    <span class="star {{ $this->userRating >= $s ? 'on' : '' }}"
+                        wire:key="star-{{ $post->id }}-{{ $s }}"
+                        wire:click="rate({{ $s }})"
+                        style="cursor:pointer">★</span>
+                @endfor
+            </div>
+            <span class="avgr">ø {{ $avg }}</span>
+        @endif
     </div>
 
     {{-- Comments toggle --}}

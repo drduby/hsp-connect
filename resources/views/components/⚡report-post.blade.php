@@ -28,6 +28,12 @@ new class extends Component {
             return;
         }
 
+        $post = Post::find($postId);
+
+        if (! $post || $post->user_id === auth()->id()) {
+            return;
+        }
+
         $this->postId = $postId;
         $this->reason = '';
         $this->description = '';
