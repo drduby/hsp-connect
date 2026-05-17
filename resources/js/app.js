@@ -63,6 +63,12 @@ function init() {
     applyPostState(p);
   });
 
+  // Ensure the search input never carries over stale browser-restored state.
+  const srchEl = document.getElementById('compose-srch');
+  const srchX = document.getElementById('c-srch-x');
+  if (srchEl) { srchEl.value = ''; }
+  if (srchX) { srchX.style.display = 'none'; }
+
   render();
   updateSavedCount();
   setActiveNav('home');
