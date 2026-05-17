@@ -106,7 +106,7 @@ new class extends Component {
     {
         $comment = Comment::findOrFail($commentId);
 
-        if ($comment->user_id !== auth()->id()) {
+        if ($comment->user_id != auth()->id()) {
             return;
         }
 
@@ -273,15 +273,18 @@ new class extends Component {
 
             <div>
                 @foreach($post->comments as $comment)
+                    @php $commentIsMine = auth()->check() && (int) auth()->id() === (int) $comment->user_id; @endphp
                     <div class="cmt" wire:key="comment-{{ $comment->id }}">
                         <div class="cava">{{ strtoupper(mb_substr($comment->user->nickname, 0, 1)) }}</div>
                         <div class="cbub">
                             <div class="cname" style="display:flex;justify-content:space-between;align-items:center">
                                 {{ $comment->user->nickname }}
-                                @if(auth()->id() === $comment->user_id)
-                                    <button wire:click="deleteComment({{ $comment->id }})"
-                                        style="background:none;border:none;color:var(--light);font-size:11px;cursor:pointer;padding:0;line-height:1">
-                                        ✕
+                                @if($commentIsMine)
+                                    <button
+                                        x-on:click="openConfirm('Kommentar löschen', 'Möchtest du diesen Kommentar wirklich löschen?', () => $wire.deleteComment({{ $comment->id }}))"
+                                        style="background:none;border:none;color:var(--light);font-size:11px;cursor:pointer;padding:2px 6px;line-height:1;display:flex;align-items:center;gap:4px;border-radius:6px;transition:color .15s" onmouseover="this.style.color='#c04040'" onmouseout="this.style.color='var(--light)'">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
+                                        Löschen
                                     </button>
                                 @endif
                             </div>

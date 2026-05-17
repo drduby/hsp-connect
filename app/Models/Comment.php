@@ -10,6 +10,12 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 #[Fillable(['post_id', 'user_id', 'content', 'parent_id'])]
 class Comment extends Model
 {
+    protected $casts = [
+        'post_id' => 'integer',
+        'user_id' => 'integer',
+        'parent_id' => 'integer',
+    ];
+
     public function post(): BelongsTo
     {
         return $this->belongsTo(Post::class);
