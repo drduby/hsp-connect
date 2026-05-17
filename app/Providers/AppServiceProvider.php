@@ -7,6 +7,7 @@ use App\Http\Responses\LogoutResponse;
 use App\Http\Responses\RegisterResponse;
 use App\Http\Responses\VerifyEmailResponse;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Fortify\Contracts\LoginResponse as LoginResponseContract;
 use Laravel\Fortify\Contracts\LogoutResponse as LogoutResponseContract;
@@ -25,6 +26,10 @@ class AppServiceProvider extends ServiceProvider
 
     public function boot(): void
     {
+        if ($this->app->isProduction()) {
+            URL::forceScheme('https');
+        }
+
         Model::preventLazyLoading();
         Model::shouldBeStrict();
         Model::unguard();
