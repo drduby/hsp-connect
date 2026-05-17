@@ -42,7 +42,7 @@ export function setLoggedInUI() {
   const nb = document.getElementById('notif-btn'); if (nb) nb.style.display = 'flex';
   const flb = document.getElementById('faq-h-login-btn');
   if (flb) { flb.textContent = state.currentUser.name; flb.onclick = function () { document.dispatchEvent(new CustomEvent('app:open-profile-menu')); }; }
-  const frb = document.getElementById('faq-h-reg-btn'); if (frb) { frb.textContent = 'Abmelden'; frb.onclick = doLogout; }
+  const frb = document.getElementById('faq-h-reg-btn'); if (frb) frb.style.display = 'none';
   const alb = document.getElementById('acc-h-login-btn');
   if (alb) { alb.textContent = state.currentUser.name; alb.onclick = function () { document.dispatchEvent(new CustomEvent('app:open-profile-menu')); }; }
   const arb = document.getElementById('acc-h-reg-btn'); if (arb) { arb.textContent = 'Abmelden'; arb.onclick = doLogout; }
