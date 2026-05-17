@@ -53,6 +53,7 @@ export function setLoggedInUI() {
 /* ── Login modal ── */
 
 export function openLg(tab) {
+  clearLgForms();
   document.getElementById('lf-in').style.display = '';
   document.getElementById('lf-up').style.display = 'none';
   document.getElementById('lf-reset').style.display = 'none';
@@ -64,7 +65,19 @@ export function openLg(tab) {
 
 export function closeLg() {
   document.getElementById('lmbg').classList.remove('on');
-  setTimeout(function () { setLT('in'); }, 300);
+  setTimeout(function () { setLT('in'); clearLgForms(); }, 300);
+}
+
+function clearLgForms() {
+  ['l-em', 'l-pw', 'r-fn', 'r-ln', 'r-nick', 'r-em', 'r-pw', 'r-pw2', 'reset-em'].forEach(function (id) {
+    var el = document.getElementById(id); if (el) el.value = '';
+  });
+  ['l-pw', 'r-pw', 'r-pw2'].forEach(function (id) {
+    var el = document.getElementById(id); if (el) el.type = 'password';
+    var eye = document.getElementById(id + '-eye'); if (eye) eye.style.display = '';
+    var eyeOff = document.getElementById(id + '-eye-off'); if (eyeOff) eyeOff.style.display = 'none';
+  });
+  var pwList = document.getElementById('pw-checklist'); if (pwList) pwList.style.display = 'none';
 }
 
 export function setLT(t) {
@@ -73,8 +86,21 @@ export function setLT(t) {
   document.getElementById('lf-reset').style.display = t === 'reset' ? '' : 'none';
   document.getElementById('lg-title').textContent = t === 'in' ? 'Willkommen zurück' : (t === 'up' ? 'Konto erstellen' : 'Passwort zurücksetzen');
   document.getElementById('lg-sub').textContent = t === 'in' ? 'Schön, dass du wieder da bist!' : (t === 'up' ? 'Werde Teil der Community' : 'Wir senden dir einen Link per E-Mail');
+  if (t === 'in') {
+    var fn = document.getElementById('r-fn'); var ln = document.getElementById('r-ln');
+    var rn = document.getElementById('r-nick'); var rp = document.getElementById('r-pw'); var rp2 = document.getElementById('r-pw2');
+    if (fn) fn.value = ''; if (ln) ln.value = ''; if (rn) rn.value = ''; if (rp) rp.value = ''; if (rp2) rp2.value = '';
+    var pwList = document.getElementById('pw-checklist'); if (pwList) pwList.style.display = 'none';
+  }
+  if (t === 'up') {
+    var lem = document.getElementById('l-em'); var lpw = document.getElementById('l-pw');
+    if (lem) lem.value = ''; if (lpw) lpw.value = '';
+    var rst = document.getElementById('reset-em'); if (rst) rst.value = '';
+  }
   if (t === 'reset') {
     document.getElementById('reset-em').value = document.getElementById('l-em').value.trim();
+    var lem2 = document.getElementById('l-em'); if (lem2) lem2.value = '';
+    var lpw2 = document.getElementById('l-pw'); if (lpw2) lpw2.value = '';
   }
   setLoginError('');
   setResetMessage('');
