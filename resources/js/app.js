@@ -7,7 +7,7 @@ import { setLoggedInUI, openLg, closeLg, setLT, doLogin, doReg, doPasswordResetL
 import { renderNotifList, openNotifs, closeNotifs, markNotifRead, deleteNotif, deleteAllNotifs } from './notifications.js';
 import { openProfileMenu, closeProfileMenu, openAccountPage, closeAccountPage } from './profile.js';
 import { openFAQPage, closeFAQPage, renderFAQ, toggleFAQ, filterFAQ, showFAQForm, submitFAQQuestion } from './faq.js';
-import { openPM, closePM, openFeedback, closeFB, submitFeedback, fbFocus, fbBlur, openInfo, closeInfo } from './modals.js';
+import { openPM, closePM, openFeedback, closeFB, submitFeedback, fbFocus, fbBlur, openInfo, closeInfo, openConfirm, closeConfirm, doConfirm } from './modals.js';
 
 function init() {
   initHexBg('hexbg');
@@ -83,5 +83,5 @@ Object.assign(window, {
   openNotifs, closeNotifs, markNotifRead, deleteNotif, deleteAllNotifs, renderNotifList,
   openProfileMenu, closeProfileMenu, openAccountPage, closeAccountPage,
   openFAQPage, closeFAQPage, renderFAQ, toggleFAQ, filterFAQ, showFAQForm, submitFAQQuestion,
-  openPM, closePM, openFeedback, closeFB, submitFeedback, fbFocus, fbBlur, openInfo, closeInfo,
+  openPM, closePM, openFeedback, closeFB, submitFeedback, fbFocus, fbBlur, openInfo, closeInfo, openConfirm, closeConfirm, doConfirm,
 });

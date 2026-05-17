@@ -30,6 +30,25 @@
 <x-modals.feedback />
 <x-modals.login />
 <x-modals.post />
+
+<div id="confirm-modal-bg"
+     onclick="if(event.target===this)closeConfirm()"
+     style="display:none;position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.45);align-items:center;justify-content:center">
+    <div style="background:var(--surf);border-radius:18px;padding:28px 24px;max-width:340px;width:88%;box-shadow:0 8px 40px rgba(0,0,0,.18)">
+        <div id="confirm-modal-title" style="font-family:var(--disp);font-size:16px;font-weight:700;color:var(--ink);margin-bottom:6px"></div>
+        <div id="confirm-modal-msg" style="font-size:13.5px;color:var(--muted);line-height:1.6;margin-bottom:22px"></div>
+        <div style="display:flex;gap:10px;justify-content:flex-end">
+            <button onclick="closeConfirm()"
+                style="padding:9px 20px;border-radius:20px;border:1.5px solid var(--br);background:none;font-family:var(--body);font-size:13.5px;cursor:pointer;color:var(--muted);font-weight:500">
+                Abbrechen
+            </button>
+            <button onclick="doConfirm()"
+                style="padding:9px 20px;border-radius:20px;border:none;background:#c04040;color:#fff;font-family:var(--body);font-size:13.5px;font-weight:600;cursor:pointer">
+                Löschen
+            </button>
+        </div>
+    </div>
+</div>
 <livewire:report-post />
 
 @livewireScripts

@@ -53,6 +53,26 @@ export function submitFeedback() {
   toast(_fbType === 'idee' ? '💡 Danke für deine Idee!' : '🐛 Problem gemeldet — danke!');
 }
 
+let _confirmCallback = null;
+
+export function openConfirm(title, message, callback) {
+  _confirmCallback = callback || null;
+  document.getElementById('confirm-modal-title').textContent = title;
+  document.getElementById('confirm-modal-msg').textContent = message;
+  document.getElementById('confirm-modal-bg').style.display = 'flex';
+}
+
+export function closeConfirm() {
+  _confirmCallback = null;
+  document.getElementById('confirm-modal-bg').style.display = 'none';
+}
+
+export function doConfirm() {
+  const cb = _confirmCallback;
+  closeConfirm();
+  if (cb) cb();
+}
+
 export function fbFocus(el) { el.style.borderColor = 'var(--t)'; }
 export function fbBlur(el) { el.style.borderColor = 'rgba(10,110,122,.15)'; }
 

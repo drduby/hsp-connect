@@ -183,8 +183,7 @@ new class extends Component {
     data-type="{{ $typeLabel }}"
     data-tag="{{ $tagName }}"
     data-search="{{ strtolower($post->title . ' ' . $post->content . ' ' . $tagName) }}"
-    style="border-left:3px solid {{ $tc }}"
-    wire:poll.visible.10s>
+    style="border-left:3px solid {{ $tc }}">
 
     {{-- Post header & body --}}
     <div class="post-inner">
@@ -227,8 +226,8 @@ new class extends Component {
         </button>
 
         @if($this->isMine)
-            <button class="pab" wire:click="deletePost"
-                wire:confirm="Beitrag wirklich löschen?"
+            <button class="pab"
+                x-on:click="openConfirm('Beitrag löschen', 'Möchtest du diesen Beitrag wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.', () => $wire.deletePost())"
                 style="color:#c04040;font-size:12px">
                 🗑 Löschen
             </button>
@@ -316,5 +315,6 @@ new class extends Component {
             @enderror
         </div>
     @endif
+
 
 </div>
