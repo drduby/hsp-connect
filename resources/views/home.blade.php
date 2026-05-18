@@ -21,9 +21,12 @@
                          style="display:none;background:var(--bg3);color:var(--muted);font-size:16px;cursor:pointer"
                          onclick="if(loggedIn)openProfileMenu()"></div>
                     <div class="c-srch-wrap">
-                        <input class="c-srch-inp" id="compose-srch" type="text"
+                        <input type="text" name="fake-user" style="display:none" tabindex="-1" aria-hidden="true">
+                        <input type="password" name="fake-pass" style="display:none" tabindex="-1" aria-hidden="true">
+                        <input class="c-srch-inp" id="compose-srch" type="search"
                                placeholder="Was besch&#xE4;ftigt dich gerade?"
-                               oninput="onComposeSrch()">
+                               oninput="onComposeSrch()"
+                               autocomplete="off">
                         <button class="c-srch-x" id="c-srch-x" onclick="clearComposeSrch()" style="display:none">
                             &#xD7;
                         </button>
