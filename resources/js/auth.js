@@ -159,7 +159,9 @@ export async function doLogin() {
   if (!email || !password) { setLoginError('Bitte E-Mail und Passwort eingeben.'); return; }
   try {
     const { ok, data } = await authFetch('/login', { email, password });
-    if (ok) {
+    if (ok && data.needs_verification) {
+      setLT('verify');
+    } else if (ok) {
       closeLg();
       state.loggedIn = true;
       state.currentUser = data.user;
