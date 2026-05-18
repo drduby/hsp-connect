@@ -6,7 +6,7 @@
 
     <x-header/>
 
-    <x-hero tags-id="hero-tags"/>
+    <x-hero tags-id="hero-tags" :member-count="$memberCount" :post-count="$counts['all']" :online-count="$onlineCount"/>
 
     <div class="layout">
         <x-sidebar :tags="$tags"/>
@@ -92,7 +92,7 @@
         window.__COUNTS__ = @json($counts);
         window.__SAVED_COUNT__ = {{ $savedCount }};
         window.__MY_POST_COUNT__ = {{ $myPostCount }};
-        window.__TAGS__ = @json($tags->map(fn ($t) => ['name' => $t->name, 'color' => $t->color, 'count' => $t->posts_count]));
+        window.__TAGS__ = @json($tags->sortByDesc('posts_count')->values()->map(fn ($t) => ['name' => $t->name, 'color' => $t->color, 'count' => $t->posts_count]));
     </script>
 
 @endsection

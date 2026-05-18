@@ -19,7 +19,7 @@
         </div>
     </header>
 
-    <x-hero tags-id="acc-hero-tags" />
+    <x-hero tags-id="acc-hero-tags" :member-count="$memberCount" :post-count="$counts['all']" :online-count="$onlineCount"/>
 
     <div style="position:relative;z-index:1;background:var(--bg)">
         <div style="max-width:600px;margin:0 auto;padding:24px clamp(16px,3vw,32px) 60px">

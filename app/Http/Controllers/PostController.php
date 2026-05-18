@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Post;
 use App\Models\Tag;
+use App\Models\User;
 use Illuminate\Contracts\View\View;
 
 class PostController extends Controller
@@ -30,6 +31,9 @@ class PostController extends Controller
             ? Post::where('user_id', auth()->id())->where('is_published', true)->count()
             : 0;
 
-        return view('home', compact('counts', 'tags', 'savedCount', 'myPostCount'));
+        $memberCount = User::whereNotNull('email_verified_at')->count();
+        $onlineCount = User::where('last_seen_at', '>=', now()->subMinutes(5))->count();
+
+        return view('home', compact('counts', 'tags', 'savedCount', 'myPostCount', 'memberCount', 'onlineCount'));
     }
 }

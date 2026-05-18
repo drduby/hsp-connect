@@ -6,7 +6,9 @@ use App\Http\Responses\LoginResponse;
 use App\Http\Responses\LogoutResponse;
 use App\Http\Responses\RegisterResponse;
 use App\Http\Responses\VerifyEmailResponse;
+use Illuminate\Auth\Events\Logout;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\ServiceProvider;
 use Laravel\Fortify\Contracts\LoginResponse as LoginResponseContract;
@@ -34,5 +36,12 @@ class AppServiceProvider extends ServiceProvider
         Model::shouldBeStrict();
         Model::unguard();
         Model::preventAccessingMissingAttributes();
+
+        Event::listen(Logout::class, function (Logout $event): void {
+            if ($event->user) {
+                $event->user->updateQuietly(['last_seen_at' => null]);
+                cache()->forget("user_online_{$event->user->id}");
+            }
+        });
     }
 }

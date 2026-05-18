@@ -20,7 +20,7 @@
         </div>
     </header>
 
-    <x-hero tags-id="faq-hero-tags" />
+    <x-hero tags-id="faq-hero-tags" :member-count="$memberCount" :post-count="$counts['all']" :online-count="$onlineCount"/>
 
     <div style="position:relative;z-index:1">
         <div class="layout" style="position:relative;z-index:1">
