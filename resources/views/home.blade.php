@@ -23,7 +23,8 @@
                     <div class="c-srch-wrap">
                         <input class="c-srch-inp" id="compose-srch" type="text"
                                placeholder="Was besch&#xE4;ftigt dich gerade?"
-                               oninput="onComposeSrch()">
+                               oninput="onComposeSrch()"
+                               autocomplete="off">
                         <button class="c-srch-x" id="c-srch-x" onclick="clearComposeSrch()" style="display:none">
                             &#xD7;
                         </button>
