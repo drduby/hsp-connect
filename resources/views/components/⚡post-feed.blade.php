@@ -48,6 +48,12 @@ new class extends Component {
         $this->loadNewPosts();
     }
 
+    #[On('post-deleted')]
+    public function onPostDeleted(): void
+    {
+        $this->resetPage();
+    }
+
     #[On('livewire-filter-updated')]
     public function onFilterUpdated(string $search, string $type, array $tags, string $view = 'all'): void
     {
