@@ -23,7 +23,7 @@
                     <div class="c-srch-wrap">
                         <input type="text" name="fake-user" style="display:none" tabindex="-1" aria-hidden="true">
                         <input type="password" name="fake-pass" style="display:none" tabindex="-1" aria-hidden="true">
-                        <input class="c-srch-inp" id="compose-srch" type="search"
+                        <input class="c-srch-inp" id="compose-srch" type="text"
                                placeholder="Was besch&#xE4;ftigt dich gerade?"
                                oninput="onComposeSrch()"
                                autocomplete="off">
