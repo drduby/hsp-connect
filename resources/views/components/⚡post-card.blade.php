@@ -2,6 +2,7 @@
 
 use App\Models\Comment;
 use App\Models\Post;
+use Illuminate\Support\Facades\RateLimiter;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
@@ -94,6 +95,14 @@ new class extends Component {
             return;
         }
 
+        $key = 'add-comment:' . auth()->id();
+        if (RateLimiter::tooManyAttempts($key, maxAttempts: 10)) {
+            $this->addError('newComment', 'Zu viele Kommentare. Bitte kurz warten.');
+
+            return;
+        }
+        RateLimiter::hit($key, decaySeconds: 60);
+
         $this->validate();
 
         Comment::create([
@@ -113,7 +122,7 @@ new class extends Component {
     {
         $comment = Comment::findOrFail($commentId);
 
-        if ($comment->user_id != auth()->id()) {
+        if ((int) $comment->user_id !== (int) auth()->id()) {
             return;
         }
 
@@ -189,7 +198,6 @@ new class extends Component {
     id="post-{{ $post->id }}"
     data-type="{{ $typeLabel }}"
     data-tag="{{ $tagName }}"
-    data-search="{{ strtolower($post->title . ' ' . $post->content . ' ' . $tagName) }}"
     style="border-left:3px solid {{ $tc }}">
 
     {{-- Post header & body --}}
@@ -206,7 +214,8 @@ new class extends Component {
             @foreach($post->tags as $tag)
                 <span class="ptag"
                     style="border-color:{{ $tag->color ?? 'var(--t)' }}30;color:{{ $tag->color ?? 'var(--t)' }}"
-                    onclick="toggleTag('{{ $tag->name }}')">
+                    data-tag="{{ $tag->name }}"
+                    onclick="toggleTag(this.dataset.tag)">
                     # {{ $tag->name }}
                 </span>
             @endforeach

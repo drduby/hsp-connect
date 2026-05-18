@@ -104,27 +104,55 @@ new class extends Component {
     @endforelse
 
     {{-- Pagination --}}
-    @php $lastPage = $this->posts->lastPage(); $currentPage = $this->posts->currentPage(); @endphp
+    @php
+        $lastPage    = $this->posts->lastPage();
+        $currentPage = $this->posts->currentPage();
+        $window      = 2; // pages on each side of current
+
+        $pages = collect();
+        for ($i = 1; $i <= $lastPage; $i++) {
+            if (
+                $i === 1 ||
+                $i === $lastPage ||
+                ($i >= $currentPage - $window && $i <= $currentPage + $window)
+            ) {
+                $pages->push($i);
+            }
+        }
+
+        // Insert null as ellipsis marker where gaps exist
+        $withEllipsis = collect();
+        $prev = null;
+        foreach ($pages as $page) {
+            if ($prev !== null && $page - $prev > 1) {
+                $withEllipsis->push(null);
+            }
+            $withEllipsis->push($page);
+            $prev = $page;
+        }
+    @endphp
     @if($lastPage > 1)
         <div class="pag">
             <button class="pgb" wire:click="previousPage" @disabled($currentPage <= 1)>&#x2039;</button>
 
-            @for($i = 1; $i <= $lastPage; $i++)
-                <button class="pgb {{ $i === $currentPage ? 'on' : '' }}" wire:click="gotoPage({{ $i }})">{{ $i }}</button>
-            @endfor
+            @foreach($withEllipsis as $page)
+                @if($page === null)
+                    <span class="pgb" style="pointer-events:none;opacity:.4;cursor:default">…</span>
+                @else
+                    <button class="pgb {{ $page === $currentPage ? 'on' : '' }}" wire:click="gotoPage({{ $page }})">{{ $page }}</button>
+                @endif
+            @endforeach
 
             <button class="pgb" wire:click="nextPage" @disabled($currentPage >= $lastPage)>&#x203A;</button>
 
-            @if($lastPage > 3)
-                <span x-data="{ p: '' }"
-                    style="display:flex;align-items:center;gap:5px;margin-left:6px;font-size:12px;color:var(--muted);font-family:var(--body)">
-                    Gehe zu
-                    <input type="number" min="1" max="{{ $lastPage }}"
-                        x-model.number="p"
-                        x-on:keydown.enter="if(p >= 1 && p <= {{ $lastPage }}) { $wire.gotoPage(p); p = ''; }"
-                        style="width:44px;height:32px;border-radius:16px;border:1.5px solid rgba(10,110,122,.15);background:var(--surf);font-family:var(--body);font-size:12.5px;font-weight:700;color:var(--muted);text-align:center;outline:none;padding:0 4px">
-                </span>
-            @endif
+            <span x-data="{ p: '' }"
+                style="display:flex;align-items:center;gap:5px;margin-left:6px;font-size:12px;color:var(--muted);font-family:var(--body)">
+                Gehe zu
+                <input type="number" min="1" max="{{ $lastPage }}"
+                    x-model.number="p"
+                    x-on:keydown.enter="if(p >= 1 && p <= {{ $lastPage }}) { $wire.gotoPage(p); p = ''; }"
+                    style="width:44px;height:32px;border-radius:16px;border:1.5px solid rgba(10,110,122,.15);background:var(--surf);font-family:var(--body);font-size:12.5px;font-weight:700;color:var(--muted);text-align:center;outline:none;padding:0 4px">
+            </span>
         </div>
     @endif
 

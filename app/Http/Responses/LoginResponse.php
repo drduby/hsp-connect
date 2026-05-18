@@ -5,6 +5,7 @@ namespace App\Http\Responses;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\RateLimiter;
 use Laravel\Fortify\Contracts\LoginResponse as LoginResponseContract;
 
 class LoginResponse implements LoginResponseContract
@@ -14,7 +15,11 @@ class LoginResponse implements LoginResponseContract
         $user = $request->user();
 
         if (! $user->hasVerifiedEmail()) {
-            $user->sendEmailVerificationNotification();
+            $key = 'resend-verification:'.$user->id;
+            if (! RateLimiter::tooManyAttempts($key, maxAttempts: 2)) {
+                $user->sendEmailVerificationNotification();
+                RateLimiter::hit($key, decaySeconds: 300);
+            }
             Auth::logout();
             $request->session()->invalidate();
             $request->session()->regenerateToken();

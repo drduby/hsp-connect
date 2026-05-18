@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Middleware\ThrottleEmailRoutes;
 use App\Http\Middleware\TrackLastSeen;
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
@@ -14,6 +15,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware): void {
         $middleware->web(append: [
             TrackLastSeen::class,
+            ThrottleEmailRoutes::class,
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
