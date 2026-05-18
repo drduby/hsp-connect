@@ -1,7 +1,7 @@
-import { state, getSS } from './state.js';
+import { state } from './state.js';
 import { toast, checkAuthThen } from './utils.js';
 import { initHexBg } from './hexbg.js';
-import { applyPostState, updateSavedCount, expand, toggleLike, toggleSave, togC, rate, addC, deletePost, deleteComment, reportPost } from './posts.js';
+import { expand } from './posts.js';
 import { render, go, toggleTag, setTab, onComposeSrch, clearComposeSrch, filterTags, clearAll, showSaved, showMine, markNav, setActiveNav } from './feed.js';
 import { setLoggedInUI, openLg, closeLg, setLT, doLogin, doReg, doPasswordResetLink, doSocialLogin, doLogout, updatePwChecklist } from './auth.js';
 import { renderNotifList, openNotifs, closeNotifs, markNotifRead, deleteNotif, deleteAllNotifs } from './notifications.js';
@@ -18,16 +18,8 @@ function init() {
     setLoggedInUI();
   }
 
-  const postsPayload = window.__POSTS__ || [];
-  const posts = Array.isArray(postsPayload) ? postsPayload : (Array.isArray(postsPayload.data) ? postsPayload.data : []);
-
-  state.posts = posts.map(function (p) {
-    return Object.assign({}, p, { expanded: false, showC: false });
-  });
-
   const TAGS_DATA = window.__TAGS__ || [];
   const TAGS = TAGS_DATA.map(function (t) { return t.name; });
-  const TC = Object.fromEntries(TAGS_DATA.map(function (t) { return [t.name, t.color]; }));
 
   const ht = document.getElementById('hero-tags');
   if (ht) {
@@ -53,17 +45,7 @@ function init() {
       b.onclick = function () { toggleTag(b.dataset.tag); };
     });
   }
-  const savedR = getSS('ratings', {});
-  const savedL = getSS('likes', {});
-  const savedS = getSS('saves', {});
-  state.posts.forEach(function (p) {
-    if (savedL[p.id]) p.liked = true;
-    if (savedS[p.id]) p.saved = true;
-    if (savedR[p.id]) p.uRat = savedR[p.id];
-    applyPostState(p);
-  });
 
-  // Ensure the search input never carries over stale browser-restored state.
   const srchEl = document.getElementById('compose-srch');
   const srchX = document.getElementById('c-srch-x');
   if (srchEl) { srchEl.value = ''; }
@@ -72,8 +54,19 @@ function init() {
     if (srchEl && srchEl.value) { srchEl.value = ''; }
   }, 300);
 
+  const savedCount = window.__SAVED_COUNT__ || 0;
+  const savedCountEl = document.getElementById('nav-saved-count');
+  if (savedCountEl) savedCountEl.textContent = savedCount > 0 ? ' (' + savedCount + ')' : '';
+  const accSavedEl = document.getElementById('acc-saved-cnt');
+  if (accSavedEl) accSavedEl.textContent = savedCount;
+
+  const myPostCount = window.__MY_POST_COUNT__ || 0;
+  const mineCountEl = document.getElementById('nav-mine-count');
+  if (mineCountEl) mineCountEl.textContent = myPostCount > 0 ? ' (' + myPostCount + ')' : '';
+  const accPostsEl = document.getElementById('acc-posts');
+  if (accPostsEl) accPostsEl.textContent = myPostCount;
+
   render();
-  updateSavedCount();
   setActiveNav('home');
 
   if (new URLSearchParams(window.location.search).get('login') === '1') {
@@ -104,7 +97,7 @@ Object.assign(window, {
   state,
   openVerifiedModal, closeVerifiedModal,
   toast, checkAuthThen,
-  expand, toggleLike, toggleSave, togC, rate, addC, deletePost, deleteComment, reportPost,
+  expand,
   render, go, toggleTag, setTab, onComposeSrch, clearComposeSrch, filterTags, clearAll, showSaved, showMine, markNav, setActiveNav,
   openLg, closeLg, setLT, doLogin, doReg, doPasswordResetLink, doSocialLogin, doLogout, updatePwChecklist,
   openNotifs, closeNotifs, markNotifRead, deleteNotif, deleteAllNotifs, renderNotifList,

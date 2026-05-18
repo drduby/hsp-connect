@@ -1,6 +1,5 @@
 import { state } from './state.js';
 import { toast } from './utils.js';
-import { applyPostState } from './posts.js';
 
 /* Open login when any module fires this event (avoids circular imports) */
 document.addEventListener('app:require-login', function () { openLg(); });
@@ -167,7 +166,6 @@ export async function doLogin() {
       state.currentUser = data.user;
       setLoggedInUI();
       toast('✅ Willkommen zurück, ' + state.currentUser.name + '!');
-      state.posts.forEach(applyPostState);
     } else {
       setLoginError(authError(data));
     }

@@ -40,13 +40,6 @@ export function openAccountPage() {
   if (av) av.textContent = state.currentUser.ava;
   if (nm) nm.textContent = state.currentUser.name;
 
-  const myPosts = state.posts.filter(function (p) { return p.mine; }).length;
-  const mySaved = state.posts.filter(function (p) { return p.saved; }).length;
-  const myLikes = state.posts.filter(function (p) { return p.liked; }).length;
-  const ep = document.getElementById('acc-posts'); if (ep) ep.textContent = myPosts;
-  const es = document.getElementById('acc-saved-cnt'); if (es) es.textContent = mySaved;
-  const el = document.getElementById('acc-likes'); if (el) el.textContent = myLikes;
-
   pg.style.display = 'block';
   initHexBg('hexbg3');
 

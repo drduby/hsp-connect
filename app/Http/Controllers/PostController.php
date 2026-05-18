@@ -2,22 +2,33 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Post;
 use App\Models\Tag;
-use App\Services\PostService;
 use Illuminate\Contracts\View\View;
 
 class PostController extends Controller
 {
-    public function __construct(private PostService $postService) {}
-
     public function index(): View
     {
-        $posts = $this->postService->publishedPosts();
+        $counts = [
+            'all' => Post::where('is_published', true)->count(),
+            'experiences' => Post::where('is_published', true)->where('type', 'experience')->count(),
+            'questions' => Post::where('is_published', true)->where('type', 'question')->count(),
+        ];
+
         $tags = Tag::query()
             ->where('is_active', true)
             ->orderBy('id')
             ->get(['id', 'name', 'color']);
 
-        return view('home', compact('posts', 'tags'));
+        $savedCount = auth()->check()
+            ? Post::whereHas('saves', fn ($q) => $q->where('user_id', auth()->id()))->count()
+            : 0;
+
+        $myPostCount = auth()->check()
+            ? Post::where('user_id', auth()->id())->where('is_published', true)->count()
+            : 0;
+
+        return view('home', compact('counts', 'tags', 'savedCount', 'myPostCount'));
     }
 }

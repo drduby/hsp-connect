@@ -1,4 +1,4 @@
-import { state, PS } from './state.js';
+import { state } from './state.js';
 
 export function setActiveNav(pg) {
   ['h-home-btn', 'h-faq-btn', 'faq-h-home-btn', 'faq-h-faq-btn'].forEach(function (id) {
@@ -21,15 +21,16 @@ export function markNav(which) {
 }
 
 function updateTabCounts() {
-  if (state.activeTags.size > 0 || state.srch) {
+  const counts = window.__COUNTS__ || { all: 0, experiences: 0, questions: 0 };
+  if (state.activeTags.size > 0 || state.srch || state.curView !== 'home') {
     document.getElementById('tab-Alle').textContent = 'Alle';
     document.getElementById('tab-Erfahrung').textContent = '✨ Erfahrungen';
     document.getElementById('tab-Frage').textContent = '❓ Fragen';
     return;
   }
-  document.getElementById('tab-Alle').textContent = 'Alle (' + state.posts.length + ')';
-  document.getElementById('tab-Erfahrung').textContent = '✨ Erfahrungen (' + state.posts.filter(function (p) { return p.type === 'Erfahrung'; }).length + ')';
-  document.getElementById('tab-Frage').textContent = '❓ Fragen (' + state.posts.filter(function (p) { return p.type === 'Frage'; }).length + ')';
+  document.getElementById('tab-Alle').textContent = 'Alle (' + counts.all + ')';
+  document.getElementById('tab-Erfahrung').textContent = '✨ Erfahrungen (' + counts.experiences + ')';
+  document.getElementById('tab-Frage').textContent = '❓ Fragen (' + counts.questions + ')';
 }
 
 function dispatchToFeed() {
@@ -38,6 +39,7 @@ function dispatchToFeed() {
       search: state.srch,
       type: state.curType,
       tags: [...state.activeTags],
+      view: state.curView === 'home' ? 'all' : state.curView,
     });
   }
 }
@@ -132,15 +134,7 @@ export function showSaved() {
   state.activeTags.clear(); state.curType = 'Alle'; state.srch = ''; state.page = 1;
   document.querySelectorAll('.ft').forEach(function (e) { e.classList.remove('on'); });
   document.getElementById('tab-Alle').classList.add('on');
-
-  const savedIds = new Set(state.posts.filter(function (p) { return p.saved; }).map(function (p) { return p.id; }));
-  const feed = document.getElementById('feed');
-  const feedEmpty = document.getElementById('feed-empty');
-  feed.querySelectorAll('.post[id^="post-"], .post-client[id^="post-"]').forEach(function (el) {
-    el.style.display = savedIds.has(parseInt(el.id.replace('post-', ''), 10)) ? '' : 'none';
-  });
-  if (feedEmpty) feedEmpty.style.display = savedIds.size === 0 ? '' : 'none';
-
+  dispatchToFeed();
   const af = document.getElementById('afilter');
   af.classList.add('on');
   document.getElementById('af-txt').textContent = 'Gespeicherte Beiträge';
@@ -152,18 +146,8 @@ export function showMine() {
   state.activeTags.clear(); state.curType = 'Alle'; state.srch = ''; state.page = 1;
   document.querySelectorAll('.ft').forEach(function (e) { e.classList.remove('on'); });
   document.getElementById('tab-Alle').classList.add('on');
-
-  const myIds = new Set(state.posts.filter(function (p) { return p.mine; }).map(function (p) { return p.id; }));
-  const feed = document.getElementById('feed');
-  const feedEmpty = document.getElementById('feed-empty');
-  feed.querySelectorAll('.post[id^="post-"], .post-client[id^="post-"]').forEach(function (el) {
-    el.style.display = myIds.has(parseInt(el.id.replace('post-', ''), 10)) ? '' : 'none';
-  });
-  if (feedEmpty) feedEmpty.style.display = myIds.size === 0 ? '' : 'none';
-
+  dispatchToFeed();
   const af = document.getElementById('afilter');
   af.classList.add('on');
-  document.getElementById('af-txt').textContent = 'Meine Beiträge (' + myIds.size + ')';
-  const nm = document.getElementById('nav-mine');
-  if (nm) nm.innerHTML = '&#x270F;&#xFE0F; Meine Beitr&#xE4;ge (' + myIds.size + ')';
+  document.getElementById('af-txt').textContent = 'Meine Beiträge';
 }

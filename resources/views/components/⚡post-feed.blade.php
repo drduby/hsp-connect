@@ -21,6 +21,8 @@ new class extends Component {
 
     public array $tags = [];
 
+    public string $view = 'all';
+
     public function mount(): void
     {
         $this->latestPostId = Post::where('is_published', true)->max('id') ?? 0;
@@ -47,11 +49,12 @@ new class extends Component {
     }
 
     #[On('livewire-filter-updated')]
-    public function onFilterUpdated(string $search, string $type, array $tags): void
+    public function onFilterUpdated(string $search, string $type, array $tags, string $view = 'all'): void
     {
         $this->search = $search;
         $this->type = $type;
         $this->tags = $tags;
+        $this->view = $view;
         $this->resetPage();
     }
 
@@ -62,6 +65,7 @@ new class extends Component {
             search: $this->search,
             type: $this->type,
             tags: $this->tags,
+            view: $this->view,
         );
     }
 };

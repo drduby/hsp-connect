@@ -88,22 +88,10 @@
     @include('partials.faq-page')
     @include('partials.account-page')
 
-    {{-- Data bridge for JavaScript --}}
-    @php
-        $postsForJs = $posts->map(fn ($p) => [
-            'id'      => $p->id,
-            'type'    => $p->type->value === 'experience' ? 'Erfahrung' : 'Frage',
-            'tags'    => $p->tags->pluck('name')->toArray(),
-            'tag'     => $p->tags->first()?->name ?? '',
-            'title'   => $p->title,
-            'content' => $p->content,
-            'mine'    => $p->is_mine,
-            'saved'   => $p->user_saved,
-            'liked'   => $p->user_liked,
-        ]);
-    @endphp
     <script>
-        window.__POSTS__ = @json($postsForJs);
+        window.__COUNTS__ = @json($counts);
+        window.__SAVED_COUNT__ = {{ $savedCount }};
+        window.__MY_POST_COUNT__ = {{ $myPostCount }};
     </script>
 
 @endsection

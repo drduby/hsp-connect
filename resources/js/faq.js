@@ -1,7 +1,6 @@
 import { state } from './state.js';
 import { toggleTag, setActiveNav } from './feed.js';
 import { initHexBg } from './hexbg.js';
-import { createPostElement } from './posts.js';
 
 const FAQ_TAG_ITEMS = [
   { q: 'Was gibt es zum Thema Spastik?', a: 'Im Feed findest du viele Erfahrungen und Fragen rund um Spastik. Klicke auf den Tag # Spastik in der linken Sidebar oder im Hero-Bereich um alle Beiträge zu diesem Thema zu sehen.', tags: ['spastik'] },
@@ -143,26 +142,6 @@ export function showFAQForm() {
 export function submitFAQQuestion() {
   const txt = document.getElementById('faq-q-txt');
   if (!txt || !txt.value.trim()) return;
-  const topic2 = document.getElementById('faq-q-topic');
-  const qText = txt.value.trim();
-  const TAGS = window.__TAGS__ || [];
-  let selTopic = TAGS[0] || 'Spastik';
-  if (topic2 && topic2.value.trim()) {
-    const tv = topic2.value.split(',')[0].trim();
-    if (TAGS.indexOf(tv) >= 0) selTopic = tv;
-  }
-  const newPost = {
-    id: Date.now(), type: 'Frage', tag: selTopic,
-    author: state.loggedIn ? state.currentUser.name : 'Gast',
-    ava: state.loggedIn ? state.currentUser.ava : '?',
-    title: qText, content: qText,
-    likes: 0, liked: false, saved: false, mine: state.loggedIn,
-    rSum: 0, rCnt: 0, uRat: 0, expanded: true, showC: false, time: 'gerade eben', comments: [],
-  };
-  state.posts.unshift(newPost);
-  const feed = document.getElementById('feed');
-  const el = createPostElement(newPost);
-  feed.insertBefore(el, feed.firstChild);
   document.getElementById('faq-ask-form').style.display = 'none';
   document.getElementById('faq-ask-thanks').style.display = 'block';
   setTimeout(function () {

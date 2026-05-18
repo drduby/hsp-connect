@@ -79,24 +79,35 @@
 
         Livewire.on('close-post-modal', function () { if (typeof closePM === 'function') closePM(); });
 
-        Livewire.on('post-deleted', function (event) {
-            var el = document.getElementById('post-' + event.postId);
-            if (el) el.remove();
-            if (window.__POSTS__) {
-                window.__POSTS__ = window.__POSTS__.filter(function (p) { return p.id !== event.postId; });
+        Livewire.on('post-created', function () {
+            var mineEl = document.getElementById('nav-mine-count');
+            var accPostsEl = document.getElementById('acc-posts');
+            if (mineEl || accPostsEl) {
+                var cur = parseInt((mineEl ? mineEl.textContent.replace(/\D/g, '') : '') || (accPostsEl ? accPostsEl.textContent : '0')) || 0;
+                var next = cur + 1;
+                if (mineEl) mineEl.textContent = ' (' + next + ')';
+                if (accPostsEl) accPostsEl.textContent = next;
             }
-            if (window.state) {
-                window.state.posts = window.state.posts.filter(function (p) { return p.id !== event.postId; });
-            }
-            if (typeof render === 'function') render();
         });
 
-        Livewire.on('posts-refreshed', function (event) {
-            if (event && event.posts) {
-                window.__POSTS__ = event.posts;
-                if (window.state) window.state.posts = event.posts.map(function (p) { return Object.assign({}, p, { expanded: false, showC: false }); });
-                if (typeof render === 'function') render();
+        Livewire.on('post-deleted', function () {
+            if (typeof render === 'function') render();
+            var mineEl = document.getElementById('nav-mine-count');
+            var accPostsEl = document.getElementById('acc-posts');
+            if (mineEl || accPostsEl) {
+                var cur = parseInt((mineEl ? mineEl.textContent.replace(/\D/g, '') : '') || (accPostsEl ? accPostsEl.textContent : '0')) || 0;
+                var next = Math.max(0, cur - 1);
+                if (mineEl) mineEl.textContent = next > 0 ? ' (' + next + ')' : '';
+                if (accPostsEl) accPostsEl.textContent = next;
             }
+        });
+
+        Livewire.on('saved-count-updated', function (event) {
+            var count = event && event.count != null ? event.count : (Array.isArray(event) && event[0] ? event[0].count : 0);
+            var el = document.getElementById('nav-saved-count');
+            if (el) el.textContent = count > 0 ? ' (' + count + ')' : '';
+            var accEl = document.getElementById('acc-saved-cnt');
+            if (accEl) accEl.textContent = count;
         });
     });
 </script>

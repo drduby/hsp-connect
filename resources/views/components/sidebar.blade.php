@@ -5,9 +5,9 @@
 <aside class="lsb">
     <div class="sb-card" id="auth-nav" style="display:none">
         <div class="sb-hdg">Mein Bereich</div>
-        <button class="fb-btn" id="nav-saved" onclick="showSaved()" style="margin-bottom:6px">&#x1F516; Gespeichert
+        <button class="fb-btn" id="nav-saved" onclick="showSaved()" style="margin-bottom:6px">&#x1F516; Gespeichert<span id="nav-saved-count"></span>
         </button>
-        <button class="fb-btn" id="nav-mine" onclick="showMine()">&#x270F;&#xFE0F; Meine Beitr&#xE4;ge</button>
+        <button class="fb-btn" id="nav-mine" onclick="showMine()">&#x270F;&#xFE0F; Meine Beitr&#xE4;ge<span id="nav-mine-count"></span></button>
     </div>
     <div class="sb-card">
         <div class="sb-hdg">Themen</div>

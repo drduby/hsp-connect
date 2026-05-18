@@ -61,6 +61,9 @@ new class extends Component {
 
         $this->post->unsetRelation('saves');
         $this->post->load('saves');
+
+        $savedCount = Post::whereHas('saves', fn ($q) => $q->where('user_id', auth()->id()))->count();
+        $this->dispatch('saved-count-updated', count: $savedCount);
     }
 
     public function rate(int $rating): void
