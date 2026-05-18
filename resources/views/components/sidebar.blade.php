@@ -18,7 +18,7 @@
                         <span class="tdot" style="background:{{ $tag->color ?? 'var(--t)' }}"></span>
                         # {{ $tag->name }}
                     </span>
-                    <span class="tcnt">0</span>
+                    <span class="tcnt">{{ $tag->posts_count }}</span>
                 </button>
             @endforeach
         </div>

@@ -18,6 +18,7 @@ class PostController extends Controller
 
         $tags = Tag::query()
             ->where('is_active', true)
+            ->withCount(['posts' => fn ($q) => $q->where('is_published', true)])
             ->orderBy('id')
             ->get(['id', 'name', 'color']);
 
