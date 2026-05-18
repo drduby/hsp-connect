@@ -68,6 +68,9 @@ function init() {
   const srchX = document.getElementById('c-srch-x');
   if (srchEl) { srchEl.value = ''; }
   if (srchX) { srchX.style.display = 'none'; }
+  setTimeout(function () {
+    if (srchEl && srchEl.value) { srchEl.value = ''; }
+  }, 300);
 
   render();
   updateSavedCount();
