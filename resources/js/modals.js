@@ -21,36 +21,19 @@ export function closePM() {
   document.getElementById('pmbg').classList.remove('on');
 }
 
-let _fbType = '';
-
 export function openFeedback(type) {
-  _fbType = type;
-  document.getElementById('fb-ttl').textContent = type === 'idee' ? '💡 Idee oder Wunsch' : '🐛 Technisches Problem';
-  document.getElementById('fb-sub').textContent = type === 'idee' ? 'Was würdest du dir wünschen?' : 'Was funktioniert nicht?';
-  document.getElementById('fb-txt').value = '';
-  document.getElementById('fb-topic').value = '';
-  const emailWrap = document.getElementById('fb-email-wrap');
-  const emailNote = document.getElementById('fb-email-note');
-  if (emailWrap) emailWrap.style.display = state.loggedIn ? 'none' : 'block';
-  if (emailNote) {
-    emailNote.style.display = state.loggedIn ? 'block' : 'none';
-    if (state.currentUser) emailNote.textContent = 'Antwort geht an: ' + state.currentUser.name + '.';
+  const mapped = type === 'idee' ? 'idea' : 'bug';
+  if (typeof Livewire !== 'undefined') {
+    Livewire.dispatch('open-feedback', { type: mapped });
   }
-  document.getElementById('fbmbg').classList.add('on');
 }
 
 export function closeFB() {
-  document.getElementById('fbmbg').classList.remove('on');
+  // handled by Livewire component
 }
 
 export function submitFeedback() {
-  const txt = document.getElementById('fb-txt').value.trim();
-  if (!txt) { toast('⚠️ Bitte Beschreibung eingeben'); return; }
-  closeFB();
-  const tp = document.getElementById('fb-topic'); if (tp) tp.value = '';
-  document.getElementById('fb-txt').value = '';
-  const fe = document.getElementById('fb-email'); if (fe) fe.value = '';
-  toast(_fbType === 'idee' ? '💡 Danke für deine Idee!' : '🐛 Problem gemeldet — danke!');
+  // handled by Livewire
 }
 
 let _confirmCallback = null;

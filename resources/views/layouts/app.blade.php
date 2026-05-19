@@ -38,7 +38,7 @@
 @yield('content')
 
 <x-modals.info />
-<x-modals.feedback />
+<livewire:feedback-modal />
 <livewire:auth-modal />
 <x-modals.post />
 <x-modals.verified />
