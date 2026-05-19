@@ -7,6 +7,39 @@ use Illuminate\Pagination\LengthAwarePaginator;
 
 class PostService
 {
+    /**
+     * @return array{all: int, experiences: int, questions: int}
+     */
+    public function filteredCounts(string $search = '', array $tags = [], string $view = 'all'): array
+    {
+        $userId = auth()->id();
+
+        $base = Post::where('is_published', true);
+
+        if ($view === 'saved' && $userId) {
+            $base->whereHas('saves', fn ($q) => $q->where('user_id', $userId));
+        } elseif ($view === 'mine' && $userId) {
+            $base->where('user_id', $userId);
+        }
+
+        if ($search !== '') {
+            $base->where(function ($q) use ($search): void {
+                $q->where('title', 'like', "%{$search}%")
+                    ->orWhere('content', 'like', "%{$search}%");
+            });
+        }
+
+        if (! empty($tags)) {
+            $base->whereHas('tags', fn ($q) => $q->whereIn('name', $tags));
+        }
+
+        return [
+            'all' => (clone $base)->count(),
+            'experiences' => (clone $base)->where('type', 'experience')->count(),
+            'questions' => (clone $base)->where('type', 'question')->count(),
+        ];
+    }
+
     public function publishedPostsPaginated(string $search = '', string $type = 'Alle', array $tags = [], string $view = 'all'): LengthAwarePaginator
     {
         $userId = auth()->id();

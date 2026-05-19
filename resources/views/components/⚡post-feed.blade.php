@@ -46,12 +46,20 @@ new class extends Component {
     public function onPostCreated(): void
     {
         $this->loadNewPosts();
+        $this->dispatchCounts();
     }
 
     #[On('post-deleted')]
     public function onPostDeleted(): void
     {
         $this->resetPage();
+        $this->dispatchCounts();
+    }
+
+    private function dispatchCounts(): void
+    {
+        $counts = app(PostService::class)->filteredCounts($this->search, $this->tags, $this->view);
+        $this->dispatch('tab-counts-updated', ...$counts);
     }
 
     #[On('livewire-filter-updated')]
@@ -62,6 +70,7 @@ new class extends Component {
         $this->tags = $tags;
         $this->view = $view;
         $this->resetPage();
+        $this->dispatchCounts();
     }
 
     #[Computed]

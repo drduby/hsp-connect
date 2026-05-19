@@ -180,6 +180,9 @@ main { min-width: 0 }
 .pb-f { background: var(--g3); color: var(--g2) }
 .ptag { background: var(--bg2); border: 1px solid rgba(10,110,122,.12); color: var(--muted); padding: 2px 8px; border-radius: 20px; font-size: 10.5px; font-weight: 700; cursor: pointer; transition: all .18s }
 .ptag:hover { background: var(--t3); border-color: rgba(10,110,122,.3); color: var(--t) }
+.faq-chip { padding: 4px 11px; border-radius: 40px; border: 1.5px solid var(--bord2); background: var(--surf2); font-family: var(--body); font-size: 12px; font-weight: 600; color: var(--muted); cursor: pointer; transition: all .15s }
+.faq-chip:hover { background: var(--t3); border-color: var(--t); color: var(--t) }
+.faq-chip-on { background: var(--t3); border-color: var(--t); color: var(--t) }
 .ptitle { font-family: var(--disp); font-size: 16px; font-weight: 700; color: var(--ink); margin-bottom: 6px; line-height: 1.3; letter-spacing: -.02em }
 .pbody { font-size: 13.5px; color: var(--ink2); line-height: 1.75; font-weight: 300 }
 .pbody.cl { display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden }

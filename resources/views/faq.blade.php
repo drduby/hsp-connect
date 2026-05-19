@@ -53,12 +53,11 @@
                 </div>
 
                 {{-- Tag chips --}}
-                <div style="display:flex;flex-wrap:wrap;gap:5px;margin-top:10px">
+                <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:10px">
                     @foreach($tags as $tag)
                         <button
                             x-on:click="toggleTag('{{ strtolower($tag->name) }}')"
-                            :style="activeTags.includes('{{ strtolower($tag->name) }}') ? 'background:var(--t3);color:var(--t);border-color:var(--t)' : 'background:var(--surf2);color:var(--muted);border-color:var(--bord2)'"
-                            style="padding:4px 11px;border-radius:40px;border:1.5px solid var(--bord2);background:var(--surf2);font-family:var(--body);font-size:12px;font-weight:600;color:var(--muted);cursor:pointer;transition:all .15s">
+                            :class="activeTags.includes('{{ strtolower($tag->name) }}') ? 'faq-chip faq-chip-on' : 'faq-chip'">
                             # {{ $tag->name }}
                         </button>
                     @endforeach

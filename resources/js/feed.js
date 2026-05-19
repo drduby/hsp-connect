@@ -20,18 +20,28 @@ export function markNav(which) {
   if (navMine) navMine.classList.toggle('active-nav', which === 'mine');
 }
 
-function updateTabCounts() {
-  const counts = window.__COUNTS__ || { all: 0, experiences: 0, questions: 0 };
-  if (state.activeTags.size > 0 || state.srch || state.curView !== 'home') {
+function updateTabCounts(counts) {
+  const c = counts !== undefined ? counts
+    : (state.activeTags.size === 0 && !state.srch && state.curView === 'home' ? (window.__COUNTS__ || null) : null);
+  if (!c) {
     document.getElementById('tab-Alle').textContent = 'Alle';
     document.getElementById('tab-Erfahrung').textContent = '✨ Erfahrungen';
     document.getElementById('tab-Frage').textContent = '❓ Fragen';
     return;
   }
-  document.getElementById('tab-Alle').textContent = 'Alle (' + counts.all + ')';
-  document.getElementById('tab-Erfahrung').textContent = '✨ Erfahrungen (' + counts.experiences + ')';
-  document.getElementById('tab-Frage').textContent = '❓ Fragen (' + counts.questions + ')';
+  document.getElementById('tab-Alle').textContent = 'Alle (' + c.all + ')';
+  document.getElementById('tab-Erfahrung').textContent = '✨ Erfahrungen (' + c.experiences + ')';
+  document.getElementById('tab-Frage').textContent = '❓ Fragen (' + c.questions + ')';
 }
+
+document.addEventListener('livewire:init', function () {
+  Livewire.on('tab-counts-updated', function (counts) {
+    if (state.activeTags.size === 0 && !state.srch && state.curView === 'home') {
+      window.__COUNTS__ = counts;
+    }
+    updateTabCounts(counts);
+  });
+});
 
 function dispatchToFeed() {
   if (typeof Livewire !== 'undefined') {
