@@ -5,7 +5,6 @@ import { render, go, toggleTag, setTab, onComposeSrch, clearComposeSrch, filterT
 import { setLoggedInUI, openLg, closeLg, doSocialLogin } from './auth.js';
 import { renderNotifList, openNotifs, closeNotifs, markNotifRead, deleteNotif, deleteAllNotifs } from './notifications.js';
 import { openProfileMenu, closeProfileMenu, openAccountPage, closeAccountPage } from './profile.js';
-import { openFAQPage, closeFAQPage, renderFAQ, toggleFAQ, filterFAQ, showFAQForm, submitFAQQuestion } from './faq.js';
 import { openPM, closePM, openFeedback, closeFB, submitFeedback, fbFocus, fbBlur, openInfo, closeInfo, openConfirm, closeConfirm, doConfirm } from './modals.js';
 
 function init() {
@@ -66,7 +65,6 @@ function init() {
   if (accPostsEl) accPostsEl.textContent = myPostCount;
 
   render();
-  setActiveNav('home');
 
   if (new URLSearchParams(window.location.search).get('login') === '1') {
     openLg();
@@ -77,7 +75,7 @@ function init() {
   }
 }
 
-init();
+document.addEventListener('livewire:navigated', init);
 
 function openVerifiedModal() {
   const el = document.getElementById('verified-modal');
@@ -100,6 +98,5 @@ Object.assign(window, {
   openLg, closeLg, doSocialLogin,
   openNotifs, closeNotifs, markNotifRead, deleteNotif, deleteAllNotifs, renderNotifList,
   openProfileMenu, closeProfileMenu, openAccountPage, closeAccountPage,
-  openFAQPage, closeFAQPage, renderFAQ, toggleFAQ, filterFAQ, showFAQForm, submitFAQQuestion,
   openPM, closePM, openFeedback, closeFB, submitFeedback, fbFocus, fbBlur, openInfo, closeInfo, openConfirm, closeConfirm, doConfirm,
 });

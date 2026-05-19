@@ -14,7 +14,7 @@
                 &#x1F514;<span class="notif-dot"></span>
             </div>
             <button class="h-btn-muted" id="accp-home-btn" onclick="closeAccountPage()">Home</button>
-            <button class="h-btn-muted" id="accp-faq-btn" onclick="closeAccountPage();openFAQPage()">FAQ</button>
+            <a class="h-btn-muted" href="{{ route('faq') }}" wire:navigate>FAQ</a>
             <button class="h-btn-o" id="acc-h-login-btn" onclick="openLg()">Anmelden</button>
         </div>
     </header>

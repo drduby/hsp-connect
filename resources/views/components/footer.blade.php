@@ -18,7 +18,7 @@
         </div>
         <div>
             <div class="fh">Support</div>
-            <a class="fa" onclick="openFAQPage()">FAQ</a>
+            <a class="fa" href="{{ route('faq') }}" wire:navigate>FAQ</a>
             <a class="fa" onclick="openInfo('regeln')">Community-Regeln</a>
             <a class="fa" onclick="openInfo('kontakt')">Kontakt</a>
         </div>

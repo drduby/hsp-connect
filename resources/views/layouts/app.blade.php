@@ -19,7 +19,9 @@
         : null;
 @endphp
 <script>window.__AUTH__ = @json($authState);</script>
+@persist('hexbg')
 <canvas id="hexbg"></canvas>
+@endpersist
 <div class="toasts" id="toasts"></div>
 
 <x-notification-panel />
@@ -64,7 +66,7 @@
 <livewire:report-post />
 
 @livewireScripts
-<script>
+<script data-navigate-once>
     document.addEventListener('livewire:initialized', function () {
         Livewire.on('open-login', function () { Livewire.dispatch('open-auth-modal', { tab: 'login' }); });
 

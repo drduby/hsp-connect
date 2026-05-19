@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\FaqController;
 use App\Http\Controllers\PostController;
 use App\Models\User;
 use Illuminate\Auth\Events\Verified;
@@ -41,6 +42,7 @@ Route::get('/reset-password/{token}', function (Request $request, string $token)
 })->middleware('guest')->name('password.reset');
 
 Route::get('/', [PostController::class, 'index'])->name('home');
+Route::get('/faq', [FaqController::class, 'index'])->name('faq');
 
 Route::get('/help', function () {
     $tags = ['Spastik', 'Muskeln', 'Entspannung', 'Physiotherapie', 'Hilfsmittel', 'Alltag', 'Ernährung', 'Schlaf', 'Reha'];

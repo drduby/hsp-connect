@@ -1,4 +1,4 @@
-@props(['tagsId' => 'hero-tags', 'memberCount' => 0, 'postCount' => 0, 'onlineCount' => 0])
+@props(['tagsId' => '', 'memberCount' => 0, 'postCount' => 0, 'onlineCount' => 0])
 
 <div class="hero">
     <div class="hero-in">
@@ -9,8 +9,10 @@
             </div>
             <h1>Community f&#xFC;r Menschen<br>mit Spastik</h1>
             <div class="hero-sub">Erfahrungen teilen &middot; Fragen stellen &middot; Einander unterst&#xFC;tzen</div>
+            @if($tagsId)
             <div style="font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-top:14px;margin-bottom:6px">Top-Themen</div>
             <div class="hero-tags" id="{{ $tagsId }}"></div>
+            @endif
         </div>
         <div class="hero-r">
             <div class="hero-stats">

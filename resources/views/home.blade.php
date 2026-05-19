@@ -6,7 +6,7 @@
 
     <x-header/>
 
-    <x-hero tags-id="hero-tags" :member-count="$memberCount" :post-count="$counts['all']" :online-count="$onlineCount"/>
+    <x-hero tags-id="hero-tags" :member-count="$memberCount" :post-count="$counts['all']" :online-count="$onlineCount" />
 
     <div class="layout">
         <x-sidebar :tags="$tags"/>
@@ -19,7 +19,7 @@
                 <div class="c-srch-row">
                     <div class="ava" id="compose-ava"
                          style="display:none;background:var(--bg3);color:var(--muted);font-size:16px;cursor:pointer"
-                         onclick="if(loggedIn)openProfileMenu()"></div>
+                         onclick="if(state.loggedIn)openProfileMenu()"></div>
                     <div class="c-srch-wrap">
                         <input type="text" name="fake-user" style="display:none" tabindex="-1" aria-hidden="true">
                         <input type="password" name="fake-pass" style="display:none" tabindex="-1" aria-hidden="true">
@@ -44,8 +44,8 @@
                             Willkommen bei HSPConnect!
                         </div>
                         <div style="font-size:12px;color:var(--muted);line-height:1.65;font-weight:300">Bevor du eine
-                            Frage postest &#x2014; schau kurz in der <span onclick="openFAQPage()"
-                                                                           style="color:var(--t);font-weight:600;cursor:pointer">FAQ</span>
+                            Frage postest &#x2014; schau kurz in der <a href="{{ route('faq') }}" wire:navigate
+                                                                           style="color:var(--t);font-weight:600;text-decoration:none">FAQ</a>
                             nach. Hast du eine Erfahrung? Teile sie &#x2014; das hilft der Community!
                         </div>
                     </div>
@@ -88,7 +88,6 @@
     <x-footer/>
 
     {{-- Overlay pages --}}
-    @include('partials.faq-page')
     @include('partials.account-page')
 
     <script>
