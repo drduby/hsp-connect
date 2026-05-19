@@ -76,6 +76,7 @@ new class extends Component {
         ]);
 
         $this->submitted = true;
+        $this->dispatch('post-reported', postId: $this->postId);
     }
 };
 ?>

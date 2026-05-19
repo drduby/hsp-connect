@@ -2,8 +2,10 @@
 
 use App\Models\Comment;
 use App\Models\Post;
+use App\Models\PostReport;
 use Illuminate\Support\Facades\RateLimiter;
 use Livewire\Attributes\Computed;
+use Livewire\Attributes\On;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 
@@ -12,12 +14,26 @@ new class extends Component {
 
     public bool $showComments = false;
 
+    public bool $reported = false;
+
     #[Validate('required|string|max:1000')]
     public string $newComment = '';
 
     public function mount(Post $post): void
     {
         $this->post = $post;
+        $this->reported = auth()->check() && PostReport::where('post_id', $post->id)
+            ->where('user_id', auth()->id())
+            ->where('status', 'pending')
+            ->exists();
+    }
+
+    #[On('post-reported')]
+    public function onPostReported(int $postId): void
+    {
+        if ((int) $postId === (int) $this->post->id) {
+            $this->reported = true;
+        }
     }
 
     public function toggleLike(): void
@@ -262,11 +278,18 @@ new class extends Component {
         @endif
 
         @if(! $this->isMine)
-            <button class="pab"
-                wire:click="$dispatch('open-report', { postId: {{ $post->id }} })"
-                style="margin-left:auto;color:var(--light);font-size:11px">
-                ⚠ Melden
-            </button>
+            @if($this->reported)
+                <button class="pab" disabled
+                    style="margin-left:auto;font-size:11px;color:#c04040;cursor:default;opacity:1">
+                    ⚠ Gemeldet
+                </button>
+            @else
+                <button class="pab"
+                    wire:click="$dispatch('open-report', { postId: {{ $post->id }} })"
+                    style="margin-left:auto;color:var(--light);font-size:11px">
+                    ⚠ Melden
+                </button>
+            @endif
         @endif
 
         <span class="sepv" @if($this->isMine) style="margin-left:auto" @endif></span>
