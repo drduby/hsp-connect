@@ -39,7 +39,7 @@
 
 <x-modals.info />
 <x-modals.feedback />
-<x-modals.login />
+<livewire:auth-modal />
 <x-modals.post />
 <x-modals.verified />
 
@@ -65,17 +65,8 @@
 
 @livewireScripts
 <script>
-    function togglePw(id, btn) {
-        var inp = document.getElementById(id);
-        var isHidden = inp.type === 'password';
-        inp.type = isHidden ? 'text' : 'password';
-        document.getElementById(id + '-eye').style.display = isHidden ? 'none' : '';
-        document.getElementById(id + '-eye-off').style.display = isHidden ? '' : 'none';
-        btn.style.color = isHidden ? 'var(--t)' : 'var(--light)';
-    }
-
     document.addEventListener('livewire:initialized', function () {
-        Livewire.on('open-login', function () { if (typeof openLg === 'function') openLg(); });
+        Livewire.on('open-login', function () { Livewire.dispatch('open-auth-modal', { tab: 'login' }); });
 
         Livewire.on('close-post-modal', function () { if (typeof closePM === 'function') closePM(); });
 

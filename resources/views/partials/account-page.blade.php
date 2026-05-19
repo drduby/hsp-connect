@@ -50,7 +50,10 @@
                 <button onclick="closeAccountPage();showMine()" style="width:100%;padding:11px 14px;background:none;border:none;text-align:left;font-family:var(--body);font-size:14px;font-weight:600;color:var(--ink2);cursor:pointer;border-radius:10px;display:flex;align-items:center;gap:10px">&#x270F;&#xFE0F; Meine Beitr&#xE4;ge</button>
                 <button onclick="closeAccountPage();showSaved()" style="width:100%;padding:11px 14px;background:none;border:none;text-align:left;font-family:var(--body);font-size:14px;font-weight:600;color:var(--ink2);cursor:pointer;border-radius:10px;display:flex;align-items:center;gap:10px">&#x1F516; Gespeicherte Beitr&#xE4;ge</button>
                 <div style="height:1px;background:var(--bord);margin:4px 8px"></div>
-                <button onclick="closeAccountPage();doLogout()" style="width:100%;padding:11px 14px;background:none;border:none;text-align:left;font-family:var(--body);font-size:14px;font-weight:600;color:#c04040;cursor:pointer;border-radius:10px;display:flex;align-items:center;gap:10px">&#x21A6; Abmelden</button>
+                <form method="POST" action="/logout" style="margin:0">
+                    @csrf
+                    <button type="submit" style="width:100%;padding:11px 14px;background:none;border:none;text-align:left;font-family:var(--body);font-size:14px;font-weight:600;color:#c04040;cursor:pointer;border-radius:10px;display:flex;align-items:center;gap:10px">&#x21A6; Abmelden</button>
+                </form>
             </div>
         </div>
     </div>

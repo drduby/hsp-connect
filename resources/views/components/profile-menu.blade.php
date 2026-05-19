@@ -6,6 +6,9 @@
     <div style="padding:5px">
         <button onclick="openAccountPage()" style="width:100%;padding:9px 12px;background:none;border:none;text-align:left;font-family:var(--body);font-size:13.5px;font-weight:600;color:var(--ink2);cursor:pointer;border-radius:8px;display:flex;align-items:center;gap:8px">&#x1F464; Konto</button>
         <div style="height:1px;background:var(--bord);margin:4px 0"></div>
-        <button onclick="closeProfileMenu();doLogout()" style="width:100%;padding:9px 12px;background:none;border:none;text-align:left;font-family:var(--body);font-size:13.5px;font-weight:600;color:#c04040;cursor:pointer;border-radius:8px;display:flex;align-items:center;gap:8px">&#x21A6; Abmelden</button>
+        <form method="POST" action="/logout" style="margin:0">
+            @csrf
+            <button type="submit" style="width:100%;padding:9px 12px;background:none;border:none;text-align:left;font-family:var(--body);font-size:13.5px;font-weight:600;color:#c04040;cursor:pointer;border-radius:8px;display:flex;align-items:center;gap:8px">&#x21A6; Abmelden</button>
+        </form>
     </div>
 </div>

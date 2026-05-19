@@ -3,7 +3,7 @@ import { toast, checkAuthThen } from './utils.js';
 import { initHexBg } from './hexbg.js';
 import { expand } from './posts.js';
 import { render, go, toggleTag, setTab, onComposeSrch, clearComposeSrch, filterTags, clearAll, showSaved, showMine, markNav, setActiveNav } from './feed.js';
-import { setLoggedInUI, openLg, closeLg, setLT, doLogin, doReg, doPasswordResetLink, doSocialLogin, doLogout, updatePwChecklist } from './auth.js';
+import { setLoggedInUI, openLg, closeLg, doSocialLogin } from './auth.js';
 import { renderNotifList, openNotifs, closeNotifs, markNotifRead, deleteNotif, deleteAllNotifs } from './notifications.js';
 import { openProfileMenu, closeProfileMenu, openAccountPage, closeAccountPage } from './profile.js';
 import { openFAQPage, closeFAQPage, renderFAQ, toggleFAQ, filterFAQ, showFAQForm, submitFAQQuestion } from './faq.js';
@@ -99,7 +99,7 @@ Object.assign(window, {
   toast, checkAuthThen,
   expand,
   render, go, toggleTag, setTab, onComposeSrch, clearComposeSrch, filterTags, clearAll, showSaved, showMine, markNav, setActiveNav,
-  openLg, closeLg, setLT, doLogin, doReg, doPasswordResetLink, doSocialLogin, doLogout, updatePwChecklist,
+  openLg, closeLg, doSocialLogin,
   openNotifs, closeNotifs, markNotifRead, deleteNotif, deleteAllNotifs, renderNotifList,
   openProfileMenu, closeProfileMenu, openAccountPage, closeAccountPage,
   openFAQPage, closeFAQPage, renderFAQ, toggleFAQ, filterFAQ, showFAQForm, submitFAQQuestion,
