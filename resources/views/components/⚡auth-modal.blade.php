@@ -166,7 +166,15 @@ new class extends Component {
             'password_confirmation' => $this->regPasswordConfirmation,
         ]);
 
-        event(new Registered($user));
+        try {
+            event(new Registered($user));
+        } catch (\Exception $e) {
+            \Illuminate\Support\Facades\Log::error('Registration email failed', [
+                'user_id' => $user->id,
+                'error'   => $e->getMessage(),
+            ]);
+        }
+
         $this->tab = 'verify';
     }
 
