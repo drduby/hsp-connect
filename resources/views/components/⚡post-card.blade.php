@@ -95,9 +95,14 @@ new class extends Component {
             return;
         }
 
-        $this->post->ratings()->syncWithoutDetaching([
-            auth()->id() => ['rating' => $rating],
-        ]);
+        $userId = auth()->id();
+        $current = (int) ($this->post->ratings->where('id', $userId)->first()?->pivot->rating ?? 0);
+
+        $this->post->ratings()->detach($userId);
+
+        if ($current !== $rating) {
+            $this->post->ratings()->attach($userId, ['rating' => $rating]);
+        }
 
         $this->post->unsetRelation('ratings');
         $this->post->load('ratings');
@@ -303,6 +308,7 @@ new class extends Component {
                     <span class="star {{ $this->userRating >= $s ? 'on' : '' }}"
                         wire:key="star-{{ $post->id }}-{{ $s }}"
                         wire:click="rate({{ $s }})"
+                        title="{{ $this->userRating === $s ? 'Bewertung entfernen' : $s . ' Stern' . ($s > 1 ? 'e' : '') }}"
                         style="cursor:pointer">★</span>
                 @endfor
             </div>
