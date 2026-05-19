@@ -65,6 +65,8 @@
 </div>
 <livewire:report-post />
 
+@include('partials.cookie-banner')
+
 @livewireScripts
 <script data-navigate-once>
     document.addEventListener('livewire:initialized', function () {
