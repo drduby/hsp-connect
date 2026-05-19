@@ -217,12 +217,12 @@ new class extends Component {
             @error('email') <div class="field-error" style="margin:-8px 0 10px">{{ $message }}</div> @enderror
 
             <label>Passwort</label>
-            <div x-data="{ show: false }" style="position:relative;margin-bottom:12px">
+            <div x-data="{ show: false }" style="display:flex;align-items:center;border:1.5px solid rgba(10,110,122,.15);border-radius:10px;background:var(--surf2);margin-bottom:12px;transition:border-color .18s;padding-right:12px" @focusin="$el.style.borderColor='var(--t)'" @focusout="$el.style.borderColor='rgba(10,110,122,.15)'">
                 <input wire:model="password" :type="show ? 'text' : 'password'"
                     placeholder="••••••••" wire:keydown.enter="login"
-                    style="padding-right:42px;width:100%;margin-bottom:0">
+                    style="flex:1;padding:10px 8px 10px 13px;border:none;background:transparent;outline:none;font-family:var(--body);font-size:14px;color:var(--ink);margin-bottom:0;min-width:0">
                 <button type="button" x-on:click="show = !show" tabindex="-1"
-                    style="position:absolute;right:12px;top:0;bottom:0;margin:auto 0;height:18px;background:none;border:none;cursor:pointer;padding:0;display:flex;align-items:center"
+                    style="background:none;border:none;cursor:pointer;display:flex;align-items:center;flex-shrink:0;padding:0"
                     :style="show ? 'color:var(--t)' : 'color:var(--light)'">
                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
                 </button>
@@ -267,14 +267,14 @@ new class extends Component {
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:0 12px;align-items:start">
                 <div>
                     <label>Passwort</label>
-                    <div x-data="{ pw: '', show: false }" style="margin-bottom:4px">
-                        <div style="position:relative;margin-bottom:0">
+                    <div x-data="{ pw: '', show: false }">
+                        <div style="display:flex;align-items:center;border:1.5px solid rgba(10,110,122,.15);border-radius:10px;background:var(--surf2);margin-bottom:6px;transition:border-color .18s;padding-right:10px" @focusin="$el.style.borderColor='var(--t)'" @focusout="$el.style.borderColor='rgba(10,110,122,.15)'">
                             <input wire:model="regPassword" :type="show ? 'text' : 'password'"
                                 x-on:input="pw = $event.target.value"
                                 placeholder="Min. 8 Zeichen"
-                                style="padding-right:36px;width:100%;margin-bottom:6px">
+                                style="flex:1;padding:10px 0 10px 13px;border:none;background:transparent;outline:none;font-family:var(--body);font-size:14px;color:var(--ink);margin-bottom:0;min-width:0">
                             <button type="button" x-on:click="show = !show" tabindex="-1"
-                                style="position:absolute;right:10px;top:13px;height:18px;background:none;border:none;cursor:pointer;padding:0;display:flex;align-items:center"
+                                style="padding:0 12px 0 8px;background:none;border:none;cursor:pointer;display:flex;align-items:center;flex-shrink:0"
                                 :style="show ? 'color:var(--t)' : 'color:var(--light)'">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
                             </button>
@@ -289,12 +289,12 @@ new class extends Component {
                 </div>
                 <div>
                     <label>Wiederholen</label>
-                    <div x-data="{ show: false }" style="position:relative;margin-bottom:12px">
+                    <div x-data="{ show: false }" style="display:flex;align-items:center;border:1.5px solid rgba(10,110,122,.15);border-radius:10px;background:var(--surf2);margin-bottom:12px;transition:border-color .18s;padding-right:10px" @focusin="$el.style.borderColor='var(--t)'" @focusout="$el.style.borderColor='rgba(10,110,122,.15)'">
                         <input wire:model="regPasswordConfirmation" :type="show ? 'text' : 'password'"
                             placeholder="Min. 8 Zeichen"
-                            style="padding-right:36px;width:100%;margin-bottom:0">
+                            style="flex:1;padding:10px 0 10px 13px;border:none;background:transparent;outline:none;font-family:var(--body);font-size:14px;color:var(--ink);margin-bottom:0;min-width:0">
                         <button type="button" x-on:click="show = !show" tabindex="-1"
-                            style="position:absolute;right:10px;top:13px;height:18px;background:none;border:none;cursor:pointer;padding:0;display:flex;align-items:center"
+                            style="padding:0 12px 0 8px;background:none;border:none;cursor:pointer;display:flex;align-items:center;flex-shrink:0"
                             :style="show ? 'color:var(--t)' : 'color:var(--light)'">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
                         </button>
