@@ -222,10 +222,11 @@ new class extends Component {
         </div>
 
         <div class="ptitle">{{ $post->title }}</div>
-        <div class="pbody cl" id="pbody-{{ $post->id }}">{{ $post->content }}</div>
-        <button class="readmore" id="readmore-{{ $post->id }}" onclick="expand({{ $post->id }})">
-            Weiterlesen →
-        </button>
+        <div x-data="{ expanded: false, clamped: false }" x-init="$nextTick(() => { clamped = $refs.body.scrollHeight > $refs.body.clientHeight })">
+            <div class="pbody" :class="expanded ? '' : 'cl'" x-ref="body">{{ $post->content }}</div>
+            <button x-show="clamped && !expanded" class="readmore" x-on:click="expanded = true">Weiterlesen →</button>
+            <button x-show="expanded" class="readmore" x-on:click="expanded = false">Weniger anzeigen ↑</button>
+        </div>
     </div>
 
     {{-- Action bar --}}

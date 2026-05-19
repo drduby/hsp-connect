@@ -1,7 +1,6 @@
 import { state } from './state.js';
 import { toast, checkAuthThen } from './utils.js';
 import { initHexBg } from './hexbg.js';
-import { expand } from './posts.js';
 import { render, go, toggleTag, setTab, onComposeSrch, clearComposeSrch, filterTags, clearAll, showSaved, showMine, markNav, setActiveNav } from './feed.js';
 import { setLoggedInUI, openLg, closeLg, doSocialLogin } from './auth.js';
 import { renderNotifList, openNotifs, closeNotifs, markNotifRead, deleteNotif, deleteAllNotifs } from './notifications.js';
@@ -97,7 +96,6 @@ Object.assign(window, {
   state,
   openVerifiedModal, closeVerifiedModal,
   toast, checkAuthThen,
-  expand,
   render, go, toggleTag, setTab, onComposeSrch, clearComposeSrch, filterTags, clearAll, showSaved, showMine, markNav, setActiveNav,
   openLg, closeLg, doSocialLogin,
   openNotifs, closeNotifs, markNotifRead, deleteNotif, deleteAllNotifs, renderNotifList,
