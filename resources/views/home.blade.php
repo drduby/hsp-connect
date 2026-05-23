@@ -64,13 +64,6 @@
                 <button class="af-x" onclick="clearAll()">&#xD7;</button>
             </div>
 
-            {{-- Feed tabs --}}
-            <div class="ftabs">
-                <button class="ft on" id="tab-Alle" onclick="setTab('Alle')">Alle</button>
-                <button class="ft" id="tab-Erfahrung" onclick="setTab('Erfahrung')">&#x2728; Erfahrungen</button>
-                <button class="ft" id="tab-Frage" onclick="setTab('Frage')">&#x2753; Fragen</button>
-            </div>
-
             {{-- Post feed --}}
             <div id="feed">
                 <livewire:post-feed />

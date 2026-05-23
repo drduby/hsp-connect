@@ -20,26 +20,9 @@ export function markNav(which) {
   if (navMine) navMine.classList.toggle('active-nav', which === 'mine');
 }
 
-function updateTabCounts(counts) {
-  const c = counts !== undefined ? counts
-    : (state.activeTags.size === 0 && !state.srch && state.curView === 'home' ? (window.__COUNTS__ || null) : null);
-  if (!c) {
-    document.getElementById('tab-Alle').textContent = 'Alle';
-    document.getElementById('tab-Erfahrung').textContent = '✨ Erfahrungen';
-    document.getElementById('tab-Frage').textContent = '❓ Fragen';
-    return;
-  }
-  document.getElementById('tab-Alle').textContent = 'Alle (' + c.all + ')';
-  document.getElementById('tab-Erfahrung').textContent = '✨ Erfahrungen (' + c.experiences + ')';
-  document.getElementById('tab-Frage').textContent = '❓ Fragen (' + c.questions + ')';
-}
-
 document.addEventListener('livewire:init', function () {
-  Livewire.on('tab-counts-updated', function (counts) {
-    if (state.activeTags.size === 0 && !state.srch && state.curView === 'home') {
-      window.__COUNTS__ = counts;
-    }
-    updateTabCounts(counts);
+  Livewire.on('type-synced', function ({ type }) {
+    state.curType = type;
   });
 });
 
@@ -55,8 +38,6 @@ function dispatchToFeed() {
 }
 
 export function render() {
-  updateTabCounts();
-
   const feedEmpty = document.getElementById('feed-empty');
   if (feedEmpty && state.curView === 'home') { feedEmpty.style.display = 'none'; }
 
@@ -87,15 +68,6 @@ export function toggleTag(t) {
     const he = document.getElementById('ht-' + t); if (he) he.classList.add('on');
   }
   state.page = 1;
-  dispatchToFeed();
-  render();
-}
-
-export function setTab(t) {
-  state.curType = t; state.page = 1;
-  state.curView = 'home'; markNav('home');
-  document.querySelectorAll('.ft').forEach(function (e) { e.classList.remove('on'); });
-  document.getElementById('tab-' + t).classList.add('on');
   dispatchToFeed();
   render();
 }
@@ -131,8 +103,6 @@ export function clearAll() {
   ['compose-srch', 'tag-srch'].forEach(function (id) { const e = document.getElementById(id); if (e) e.value = ''; });
   document.getElementById('c-srch-x').style.display = 'none';
   document.querySelectorAll('.titem,.htag').forEach(function (e) { e.classList.remove('on'); });
-  document.querySelectorAll('.ft').forEach(function (e) { e.classList.remove('on'); });
-  document.getElementById('tab-Alle').classList.add('on');
   filterTags();
   dispatchToFeed();
   render();
@@ -142,8 +112,6 @@ export function showSaved() {
   if (state.curView === 'saved') { clearAll(); return; }
   state.curView = 'saved'; markNav('saved');
   state.activeTags.clear(); state.curType = 'Alle'; state.srch = ''; state.page = 1;
-  document.querySelectorAll('.ft').forEach(function (e) { e.classList.remove('on'); });
-  document.getElementById('tab-Alle').classList.add('on');
   dispatchToFeed();
   const af = document.getElementById('afilter');
   af.classList.add('on');
@@ -154,8 +122,6 @@ export function showMine() {
   if (state.curView === 'mine') { clearAll(); return; }
   state.curView = 'mine'; markNav('mine');
   state.activeTags.clear(); state.curType = 'Alle'; state.srch = ''; state.page = 1;
-  document.querySelectorAll('.ft').forEach(function (e) { e.classList.remove('on'); });
-  document.getElementById('tab-Alle').classList.add('on');
   dispatchToFeed();
   const af = document.getElementById('afilter');
   af.classList.add('on');

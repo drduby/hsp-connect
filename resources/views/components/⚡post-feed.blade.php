@@ -42,24 +42,23 @@ new class extends Component {
         $this->resetPage();
     }
 
+    public function setType(string $type): void
+    {
+        $this->type = $type;
+        $this->resetPage();
+        $this->dispatch('type-synced', type: $type);
+    }
+
     #[On('post-created')]
     public function onPostCreated(): void
     {
         $this->loadNewPosts();
-        $this->dispatchCounts();
     }
 
     #[On('post-deleted')]
     public function onPostDeleted(): void
     {
         $this->resetPage();
-        $this->dispatchCounts();
-    }
-
-    private function dispatchCounts(): void
-    {
-        $counts = app(PostService::class)->filteredCounts($this->search, $this->tags, $this->view);
-        $this->dispatch('tab-counts-updated', ...$counts);
     }
 
     #[On('livewire-filter-updated')]
@@ -70,7 +69,12 @@ new class extends Component {
         $this->tags = $tags;
         $this->view = $view;
         $this->resetPage();
-        $this->dispatchCounts();
+    }
+
+    #[Computed]
+    public function tabCounts(): array
+    {
+        return app(PostService::class)->filteredCounts($this->search, $this->tags, $this->view);
     }
 
     #[Computed]
@@ -86,83 +90,100 @@ new class extends Component {
 };
 ?>
 
-<div wire:poll.30s="checkForNew">
+<div>
 
-    {{-- New posts banner --}}
-    @if($newPostCount > 0)
-        <button
-            wire:click="loadNewPosts"
-            wire:loading.attr="disabled"
-            style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:11px 18px;margin-bottom:12px;background:var(--t);color:#fff;border:none;border-radius:12px;font-family:var(--body);font-size:13.5px;font-weight:600;cursor:pointer;box-shadow:var(--sh2);transition:background .15s">
-            <span wire:loading.remove>
-                ✨ {{ $newPostCount }} neue {{ $newPostCount === 1 ? 'Beitrag' : 'Beiträge' }} — jetzt laden
-            </span>
-            <span wire:loading>Wird geladen…</span>
+    {{-- Feed tabs --}}
+    <div class="ftabs">
+        <button class="ft {{ $type === 'Alle' ? 'on' : '' }}" wire:click="setType('Alle')">
+            Alle ({{ $this->tabCounts['all'] }})
         </button>
-    @endif
+        <button class="ft {{ $type === 'Erfahrung' ? 'on' : '' }}" wire:click="setType('Erfahrung')">
+            ✨ Erfahrungen ({{ $this->tabCounts['experiences'] }})
+        </button>
+        <button class="ft {{ $type === 'Frage' ? 'on' : '' }}" wire:click="setType('Frage')">
+            ❓ Fragen ({{ $this->tabCounts['questions'] }})
+        </button>
+    </div>
 
-    {{-- Post list --}}
-    @forelse($this->posts as $post)
-        <livewire:post-card :post="$post" wire:key="post-{{ $post->id }}"/>
-    @empty
-        <div class="empty">
-            <div class="empty-i">🌊</div>
-            <div class="empty-t">Keine Beiträge gefunden</div>
-            <p>Andere Filter oder neuen Beitrag erstellen!</p>
-        </div>
-    @endforelse
+    <div wire:poll.30s="checkForNew">
 
-    {{-- Pagination --}}
-    @php
-        $lastPage    = $this->posts->lastPage();
-        $currentPage = $this->posts->currentPage();
-        $window      = 2; // pages on each side of current
+        {{-- New posts banner --}}
+        @if($newPostCount > 0)
+            <button
+                wire:click="loadNewPosts"
+                wire:loading.attr="disabled"
+                style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:11px 18px;margin-bottom:12px;background:var(--t);color:#fff;border:none;border-radius:12px;font-family:var(--body);font-size:13.5px;font-weight:600;cursor:pointer;box-shadow:var(--sh2);transition:background .15s">
+                <span wire:loading.remove>
+                    ✨ {{ $newPostCount }} neue {{ $newPostCount === 1 ? 'Beitrag' : 'Beiträge' }} — jetzt laden
+                </span>
+                <span wire:loading>Wird geladen…</span>
+            </button>
+        @endif
 
-        $pages = collect();
-        for ($i = 1; $i <= $lastPage; $i++) {
-            if (
-                $i === 1 ||
-                $i === $lastPage ||
-                ($i >= $currentPage - $window && $i <= $currentPage + $window)
-            ) {
-                $pages->push($i);
+        {{-- Post list --}}
+        @forelse($this->posts as $post)
+            <livewire:post-card :post="$post" wire:key="post-{{ $post->id }}"/>
+        @empty
+            <div class="empty">
+                <div class="empty-i">🌊</div>
+                <div class="empty-t">Keine Beiträge gefunden</div>
+                <p>Andere Filter oder neuen Beitrag erstellen!</p>
+            </div>
+        @endforelse
+
+        {{-- Pagination --}}
+        @php
+            $lastPage    = $this->posts->lastPage();
+            $currentPage = $this->posts->currentPage();
+            $window      = 2; // pages on each side of current
+
+            $pages = collect();
+            for ($i = 1; $i <= $lastPage; $i++) {
+                if (
+                    $i === 1 ||
+                    $i === $lastPage ||
+                    ($i >= $currentPage - $window && $i <= $currentPage + $window)
+                ) {
+                    $pages->push($i);
+                }
             }
-        }
 
-        // Insert null as ellipsis marker where gaps exist
-        $withEllipsis = collect();
-        $prev = null;
-        foreach ($pages as $page) {
-            if ($prev !== null && $page - $prev > 1) {
-                $withEllipsis->push(null);
+            // Insert null as ellipsis marker where gaps exist
+            $withEllipsis = collect();
+            $prev = null;
+            foreach ($pages as $page) {
+                if ($prev !== null && $page - $prev > 1) {
+                    $withEllipsis->push(null);
+                }
+                $withEllipsis->push($page);
+                $prev = $page;
             }
-            $withEllipsis->push($page);
-            $prev = $page;
-        }
-    @endphp
-    @if($lastPage > 1)
-        <div class="pag">
-            <button class="pgb" wire:click="previousPage" @disabled($currentPage <= 1)>&#x2039;</button>
+        @endphp
+        @if($lastPage > 1)
+            <div class="pag">
+                <button class="pgb" wire:click="previousPage" @disabled($currentPage <= 1)>&#x2039;</button>
 
-            @foreach($withEllipsis as $page)
-                @if($page === null)
-                    <span class="pgb" style="pointer-events:none;opacity:.4;cursor:default">…</span>
-                @else
-                    <button class="pgb {{ $page === $currentPage ? 'on' : '' }}" wire:click="gotoPage({{ $page }})">{{ $page }}</button>
-                @endif
-            @endforeach
+                @foreach($withEllipsis as $page)
+                    @if($page === null)
+                        <span class="pgb" style="pointer-events:none;opacity:.4;cursor:default">…</span>
+                    @else
+                        <button class="pgb {{ $page === $currentPage ? 'on' : '' }}" wire:click="gotoPage({{ $page }})">{{ $page }}</button>
+                    @endif
+                @endforeach
 
-            <button class="pgb" wire:click="nextPage" @disabled($currentPage >= $lastPage)>&#x203A;</button>
+                <button class="pgb" wire:click="nextPage" @disabled($currentPage >= $lastPage)>&#x203A;</button>
 
-            <span x-data="{ p: '' }"
-                style="display:flex;align-items:center;gap:5px;margin-left:6px;font-size:12px;color:var(--muted);font-family:var(--body)">
-                Gehe zu
-                <input type="number" min="1" max="{{ $lastPage }}"
-                    x-model.number="p"
-                    x-on:keydown.enter="if(p >= 1 && p <= {{ $lastPage }}) { $wire.gotoPage(p); p = ''; }"
-                    style="width:44px;height:32px;border-radius:16px;border:1.5px solid rgba(10,110,122,.15);background:var(--surf);font-family:var(--body);font-size:12.5px;font-weight:700;color:var(--muted);text-align:center;outline:none;padding:0 4px">
-            </span>
-        </div>
-    @endif
+                <span x-data="{ p: '' }"
+                    style="display:flex;align-items:center;gap:5px;margin-left:6px;font-size:12px;color:var(--muted);font-family:var(--body)">
+                    Gehe zu
+                    <input type="number" min="1" max="{{ $lastPage }}"
+                        x-model.number="p"
+                        x-on:keydown.enter="if(p >= 1 && p <= {{ $lastPage }}) { $wire.gotoPage(p); p = ''; }"
+                        style="width:44px;height:32px;border-radius:16px;border:1.5px solid rgba(10,110,122,.15);background:var(--surf);font-family:var(--body);font-size:12.5px;font-weight:700;color:var(--muted);text-align:center;outline:none;padding:0 4px">
+                </span>
+            </div>
+        @endif
+
+    </div>
 
 </div>
