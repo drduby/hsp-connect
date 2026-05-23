@@ -14,7 +14,7 @@ new class extends Component {
     #[Validate('required|string|in:spam,harassment,misinformation,medical,offtopic,other')]
     public string $reason = '';
 
-    #[Validate('nullable|string|max:500')]
+    #[Validate('required|string|max:500')]
     public string $description = '';
 
     public bool $submitted = false;
@@ -71,7 +71,7 @@ new class extends Component {
             'post_id'     => $this->postId,
             'user_id'     => auth()->id(),
             'reason'      => $this->reason,
-            'description' => $this->description ?: null,
+            'description' => $this->description,
             'status'      => 'pending',
         ]);
 
@@ -113,7 +113,7 @@ new class extends Component {
                     <p class="form-err" style="margin-bottom:10px">Bitte einen Grund auswählen.</p>
                 @enderror
 
-                <label>Weitere Details <span style="font-size:10.5px;color:var(--light);font-weight:400">(optional)</span></label>
+                <label>Weitere Details</label>
                 <textarea wire:model="description"
                     placeholder="Beschreibe kurz, was das Problem ist…"
                     style="width:100%;padding:10px 13px;border:1.5px solid rgba(10,110,122,.15);border-radius:10px;font-family:var(--body);font-size:13.5px;outline:none;color:var(--ink);background:var(--surf2);resize:vertical;min-height:80px;margin-bottom:4px;transition:border-color .18s"></textarea>
