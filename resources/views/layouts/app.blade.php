@@ -39,6 +39,7 @@
 
 @yield('content')
 
+@include('partials.account-page')
 <x-modals.info />
 <livewire:feedback-modal />
 <livewire:auth-modal />

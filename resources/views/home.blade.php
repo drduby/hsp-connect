@@ -81,7 +81,6 @@
     <x-footer/>
 
     {{-- Overlay pages --}}
-    @include('partials.account-page')
 
     <script>
         window.__COUNTS__ = @json($counts);
