@@ -113,8 +113,7 @@ header {
 }
 
 /* ── LEFT SIDEBAR ── */
-.lsb { position: sticky; top: 88px; max-height: calc(100vh - 100px); overflow-y: auto; scrollbar-width: none; padding-top: 2px; -webkit-overflow-scrolling: touch }
-.lsb::-webkit-scrollbar { display: none }
+.lsb { position: sticky; top: 88px; padding-top: 2px; align-self: start }
 .sb-card { background: var(--surf); border: 1px solid rgba(10,110,122,.1); border-radius: var(--rlg); padding: 14px; margin-bottom: 12px; box-shadow: var(--sh) }
 .sb-hdg { font-size: 9px; font-weight: 800; letter-spacing: .2em; text-transform: uppercase; color: var(--light); margin-bottom: 10px; display: flex; align-items: center; gap: 7px }
 .sb-hdg::after { content: ''; flex: 1; height: 1px; background: var(--bord) }
@@ -123,7 +122,7 @@ header {
 .tsr:focus { border-color: var(--t) }
 .tsr::placeholder { color: var(--light) }
 .tsr-wrap::before { content: '#'; position: absolute; left: 10px; top: 50%; transform: translateY(-50%); font-size: 12px; font-weight: 800; color: var(--light) }
-.tlist { display: flex; flex-direction: column; gap: 1px; max-height: none }
+.tlist { display: flex; flex-direction: column; gap: 1px; max-height: calc(100vh - 420px); min-height: 120px; overflow-y: auto; scrollbar-width: thin; scrollbar-color: rgba(10,110,122,.2) transparent }
 .titem { display: flex; align-items: center; justify-content: space-between; padding: 6px 9px; border-radius: 8px; font-size: 13px; font-weight: 600; color: var(--muted); cursor: pointer; border: none; background: transparent; width: 100%; text-align: left; transition: all .15s; gap: 6px }
 .titem:hover { background: var(--surf2); color: var(--ink) }
 .titem.on { background: var(--t3); color: var(--t) }
