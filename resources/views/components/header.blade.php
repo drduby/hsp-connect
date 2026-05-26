@@ -15,7 +15,7 @@
             &#x1F514;<span class="notif-dot"></span>
         </div>
         @if(request()->routeIs('faq'))
-            <a href="{{ route('home') }}" wire:navigate class="h-btn-muted" style="display:flex;align-items:center;gap:5px"><span style="font-size:14px">&#x2190;</span> Home</a>
+            <a href="{{ route('home') }}" wire:navigate class="h-btn-muted">Home</a>
             <a href="{{ route('faq') }}" wire:navigate class="h-btn-muted h-active" id="h-faq-btn">FAQ</a>
         @else
             <button class="h-btn-muted" id="h-home-btn" onclick="clearAll()">Home</button>
