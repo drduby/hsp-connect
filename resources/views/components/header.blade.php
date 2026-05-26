@@ -1,5 +1,9 @@
 <header>
+    @if(request()->routeIs('home'))
     <a class="logo" onclick="clearAll()">
+    @else
+    <a class="logo" href="{{ route('home') }}" wire:navigate>
+    @endif
         <x-logo />
         <div class="logo-text">
             <div class="logo-name">HSP<span>Connect</span></div>
