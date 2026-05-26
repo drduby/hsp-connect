@@ -8,17 +8,8 @@
 
     <x-hero :member-count="$memberCount" :post-count="$postCount" :online-count="$onlineCount" />
 
-    <div class="layout" style="position:relative;z-index:1">
-        <aside class="lsb">
-            <livewire:faq-question />
-            <div class="sb-card">
-                <div class="sb-hdg">Feedback</div>
-                <button class="fb-btn" onclick="openFeedback('idee')" style="margin-bottom:6px">&#x1F4A1; Idee oder Wunsch</button>
-                <button class="fb-btn fb-btn-red" onclick="openFeedback('problem')">&#x1F41B; Technisches Problem</button>
-            </div>
-        </aside>
-
-        <main style="min-width:0"
+    <div class="layout" style="position:relative;z-index:1;grid-template-columns:1fr">
+        <main style="min-width:0;width:100%"
             x-data="{
                 search: '',
                 activeTags: [],
@@ -82,7 +73,7 @@
 
             <div x-show="filtered.length === 0"
                 style="text-align:center;padding:40px;color:var(--muted);font-size:14px">
-                Keine Einträge gefunden — stell deine Frage links!
+                Keine Einträge gefunden.
             </div>
         </main>
     </div>
