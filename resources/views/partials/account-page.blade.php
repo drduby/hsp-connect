@@ -46,6 +46,10 @@
                 </div>
             </div>
 
+            @auth
+                <livewire:profile-editor />
+            @endauth
+
             <div class="sb-card" style="padding:6px">
                 <button onclick="closeAccountPage();showMine()" style="width:100%;padding:11px 14px;background:none;border:none;text-align:left;font-family:var(--body);font-size:14px;font-weight:600;color:var(--ink2);cursor:pointer;border-radius:10px;display:flex;align-items:center;gap:10px">&#x270F;&#xFE0F; Meine Beitr&#xE4;ge</button>
                 <button onclick="closeAccountPage();showSaved()" style="width:100%;padding:11px 14px;background:none;border:none;text-align:left;font-family:var(--body);font-size:14px;font-weight:600;color:var(--ink2);cursor:pointer;border-radius:10px;display:flex;align-items:center;gap:10px">&#x1F516; Gespeicherte Beitr&#xE4;ge</button>
