@@ -32,12 +32,15 @@
             <div class="compose" style="margin-bottom:14px">
                 <div class="c-srch-row">
                     <div class="c-srch-wrap">
+                        <input type="text" name="fake-user" style="display:none" tabindex="-1" aria-hidden="true">
+                        <input type="password" name="fake-pass" style="display:none" tabindex="-1" aria-hidden="true">
                         <svg class="c-srch-icon" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
                         </svg>
                         <input x-model="search"
                             type="text"
                             placeholder="FAQ durchsuchen&#x2026;"
+                            autocomplete="off"
                             class="c-srch-inp">
                         <button x-show="search" x-on:click="search = ''" class="c-srch-x">&#xD7;</button>
                     </div>
