@@ -22,7 +22,8 @@ class FaqController extends Controller
         $memberCount = User::whereNotNull('email_verified_at')->count();
         $onlineCount = User::where('last_seen_at', '>=', now()->subMinutes(5))->count();
         $postCount = Post::where('is_published', true)->count();
+        $counts = ['all' => $postCount];
 
-        return view('faq', compact('faqItems', 'tags', 'memberCount', 'onlineCount', 'postCount'));
+        return view('faq', compact('faqItems', 'tags', 'memberCount', 'onlineCount', 'postCount', 'counts'));
     }
 }
