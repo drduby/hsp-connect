@@ -6,6 +6,7 @@ use App\Models\Post;
 use App\Models\Tag;
 use App\Models\User;
 use Illuminate\Contracts\View\View;
+use Illuminate\Support\Facades\DB;
 
 class PostController extends Controller
 {
@@ -31,9 +32,13 @@ class PostController extends Controller
             ? Post::where('user_id', auth()->id())->where('is_published', true)->count()
             : 0;
 
+        $likesGivenCount = auth()->check()
+            ? DB::table('post_likes')->where('user_id', auth()->id())->count()
+            : 0;
+
         $memberCount = User::whereNotNull('email_verified_at')->count();
         $onlineCount = User::where('last_seen_at', '>=', now()->subMinutes(5))->count();
 
-        return view('home', compact('counts', 'tags', 'savedCount', 'myPostCount', 'memberCount', 'onlineCount'));
+        return view('home', compact('counts', 'tags', 'savedCount', 'myPostCount', 'likesGivenCount', 'memberCount', 'onlineCount'));
     }
 }

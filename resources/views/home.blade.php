@@ -87,6 +87,7 @@
         window.__COUNTS__ = @json($counts);
         window.__SAVED_COUNT__ = {{ $savedCount }};
         window.__MY_POST_COUNT__ = {{ $myPostCount }};
+        window.__LIKES_GIVEN__ = {{ $likesGivenCount }};
         window.__TAGS__ = @json($tags->sortByDesc('posts_count')->values()->map(fn ($t) => ['name' => $t->name, 'color' => $t->color, 'count' => $t->posts_count]));
     </script>
 

@@ -9,7 +9,9 @@ use Livewire\Component;
 use Livewire\WithPagination;
 
 new class extends Component {
-    use WithPagination;
+    use WithPagination {
+        setPage as traitSetPage;
+    }
 
     public int $latestPostId = 0;
 
@@ -40,6 +42,12 @@ new class extends Component {
         $this->newPostCount = 0;
         $this->latestPostId = Post::where('is_published', true)->max('id') ?? 0;
         $this->resetPage();
+    }
+
+    public function setPage($page, $pageName = 'page'): void
+    {
+        $this->traitSetPage($page, $pageName);
+        $this->dispatch('page-changed');
     }
 
     public function setType(string $type): void
@@ -90,7 +98,7 @@ new class extends Component {
 };
 ?>
 
-<div>
+<div x-data x-on:page-changed.window="$nextTick(() => window.scrollTo({ top: 0, behavior: 'smooth' }))">
 
     {{-- Feed tabs --}}
     <div class="ftabs">

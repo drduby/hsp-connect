@@ -64,6 +64,10 @@ function init() {
   const accPostsEl = document.getElementById('acc-posts');
   if (accPostsEl) accPostsEl.textContent = myPostCount;
 
+  const likesGiven = window.__LIKES_GIVEN__ || 0;
+  const accLikesEl = document.getElementById('acc-likes');
+  if (accLikesEl) accLikesEl.textContent = likesGiven;
+
   render();
 
   if (new URLSearchParams(window.location.search).get('login') === '1') {
