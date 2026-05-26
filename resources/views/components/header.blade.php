@@ -22,7 +22,10 @@
             <a href="{{ route('faq') }}" wire:navigate class="h-btn-muted" id="h-faq-btn">FAQ</a>
         @endif
         @if(Auth::check() && Auth::user()->hasVerifiedEmail())
-            <button class="h-btn-o" id="h-login-btn" onclick="openLg()">Profile</button>
+            <button class="h-btn-o" id="h-login-btn" onclick="openLg()">{{ Auth::user()->nickname }}</button>
+            <span style="width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#0a6e7a,#b8762a);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;flex-shrink:0;user-select:none">
+                {{ strtoupper(mb_substr(Auth::user()->nickname, 0, 1)) }}
+            </span>
         @else
             <button class="h-btn-muted" id="h-login-btn" onclick="openLg()">Anmelden</button>
             <button class="h-btn-muted" id="h-reg-btn" onclick="openLg('up')">Registrieren</button>
