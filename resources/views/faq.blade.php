@@ -7,15 +7,15 @@
 @section('structured-data')
 <script type="application/ld+json">
 {
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
+  "@@context": "https://schema.org",
+  "@@type": "FAQPage",
   "mainEntity": [
-    @foreach($faqItems as $i => $item)
+    @foreach($faqItems as $item)
     {
-      "@type": "Question",
+      "@@type": "Question",
       "name": {{ Js::from($item->question) }},
       "acceptedAnswer": {
-        "@type": "Answer",
+        "@@type": "Answer",
         "text": {{ Js::from($item->answer) }}
       }
     }{{ !$loop->last ? ',' : '' }}
