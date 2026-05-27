@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\Password as PasswordRule;
 use Livewire\Component;
 
 new class extends Component {
@@ -58,7 +59,7 @@ new class extends Component {
     {
         $this->validate([
             'currentPassword' => ['required', 'current_password:web'],
-            'password' => ['required', 'string', 'min:8', 'same:passwordConfirmation'],
+            'password' => ['required', PasswordRule::min(8)->letters()->numbers(), 'same:passwordConfirmation'],
         ]);
 
         auth()->user()->forceFill([

@@ -38,7 +38,7 @@ new class extends Component {
 
     public function save(): void
     {
-        if (! auth()->check()) {
+        if (! auth()->check() || ! auth()->user()->hasVerifiedEmail()) {
             $this->dispatch('open-login');
 
             return;

@@ -38,9 +38,9 @@ test('a password can be reset with a valid token', function () {
     $this->postJson('/reset-password', [
         'token' => $token,
         'email' => $user->email,
-        'password' => 'new-password',
-        'password_confirmation' => 'new-password',
+        'password' => 'new-password1',
+        'password_confirmation' => 'new-password1',
     ])->assertSuccessful();
 
-    expect(Hash::check('new-password', $user->refresh()->password))->toBeTrue();
+    expect(Hash::check('new-password1', $user->refresh()->password))->toBeTrue();
 });

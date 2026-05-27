@@ -23,7 +23,7 @@ new class extends Component {
     #[On('open-report')]
     public function openModal(int $postId): void
     {
-        if (! auth()->check()) {
+        if (! auth()->check() || ! auth()->user()->hasVerifiedEmail()) {
             $this->dispatch('open-login');
 
             return;
@@ -50,7 +50,7 @@ new class extends Component {
 
     public function submit(): void
     {
-        if (! auth()->check()) {
+        if (! auth()->check() || ! auth()->user()->hasVerifiedEmail()) {
             $this->dispatch('open-login');
 
             return;

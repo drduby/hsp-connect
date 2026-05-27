@@ -38,7 +38,7 @@ new class extends Component {
 
     public function toggleLike(): void
     {
-        if (! auth()->check()) {
+        if (! auth()->check() || ! auth()->user()->hasVerifiedEmail()) {
             $this->dispatch('open-login');
 
             return;
@@ -62,7 +62,7 @@ new class extends Component {
 
     public function toggleSave(): void
     {
-        if (! auth()->check()) {
+        if (! auth()->check() || ! auth()->user()->hasVerifiedEmail()) {
             $this->dispatch('open-login');
 
             return;
@@ -85,7 +85,7 @@ new class extends Component {
 
     public function rate(int $rating): void
     {
-        if (! auth()->check()) {
+        if (! auth()->check() || ! auth()->user()->hasVerifiedEmail()) {
             $this->dispatch('open-login');
 
             return;
@@ -110,7 +110,7 @@ new class extends Component {
 
     public function addComment(): void
     {
-        if (! auth()->check()) {
+        if (! auth()->check() || ! auth()->user()->hasVerifiedEmail()) {
             $this->dispatch('open-login');
 
             return;
