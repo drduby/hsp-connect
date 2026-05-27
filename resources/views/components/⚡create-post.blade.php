@@ -1,21 +1,18 @@
 <?php
 
-use App\Enums\PostType;
 use App\Models\Tag;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Validation\Rule;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
-use Livewire\Attributes\Validate;
 use Livewire\Component;
 
 new class extends Component {
-    #[Validate('required|string|max:255')]
     public string $title = '';
 
-    #[Validate('required|string')]
     public string $content = '';
 
-    #[Validate('array|min:1')]
     public array $selectedTagIds = [];
 
     public string $type = 'experience';
@@ -41,7 +38,26 @@ new class extends Component {
 
     public function save(): void
     {
-        $this->validate();
+        if (! auth()->check()) {
+            $this->dispatch('open-login');
+
+            return;
+        }
+
+        $key = 'create-post:' . auth()->id();
+        if (RateLimiter::tooManyAttempts($key, maxAttempts: 3)) {
+            $this->addError('title', 'Zu viele Beiträge. Bitte kurz warten.');
+
+            return;
+        }
+        RateLimiter::hit($key, decaySeconds: 60);
+
+        $this->validate([
+            'title' => ['required', 'string', 'max:255'],
+            'content' => ['required', 'string'],
+            'selectedTagIds' => ['array', 'min:1'],
+            'selectedTagIds.*' => [Rule::exists('tags', 'id')->where('is_active', true)],
+        ]);
 
         $post = auth()->user()->posts()->create([
             'title' => $this->title,

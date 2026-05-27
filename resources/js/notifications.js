@@ -1,13 +1,6 @@
 import { toast } from './utils.js';
 
-const NOTIFS = [
-  { icon: '❤️', text: 'Anna K. hat deinen Beitrag "Physiotherapie hat wirklich geholfen" geliked.', time: 'vor 2 Min', read: false },
-  { icon: '💬', text: 'Ben M. hat kommentiert: "Ähnliche Erfahrungen hier — danke für den Tipp!"', time: 'vor 15 Min', read: false },
-  { icon: '⭐', text: 'Dein Beitrag hat eine neue Bewertung erhalten (4.5 ⭐).', time: 'vor 1 Std', read: false },
-  { icon: '💬', text: 'Clara F. hat auf deinen Kommentar geantwortet.', time: 'vor 2 Std', read: true },
-  { icon: '🔖', text: 'Greta L. hat deinen Beitrag gespeichert.', time: 'vor 3 Std', read: true },
-  { icon: 'LOGO', text: 'Willkommen bei HSPConnect! Stelle dich der Community vor.', time: 'heute', read: true },
-];
+const NOTIFS = [];
 
 function getNotifIcon(icon) {
   return icon === 'LOGO'

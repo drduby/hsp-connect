@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\FaqQuestion;
+use Illuminate\Support\Facades\RateLimiter;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 
@@ -17,6 +18,20 @@ new class extends Component {
 
     public function submit(): void
     {
+        if (! auth()->check()) {
+            $this->dispatch('open-login');
+
+            return;
+        }
+
+        $key = 'faq-question:' . auth()->id();
+        if (RateLimiter::tooManyAttempts($key, maxAttempts: 5)) {
+            $this->addError('question', 'Zu viele Anfragen. Bitte später erneut versuchen.');
+
+            return;
+        }
+        RateLimiter::hit($key, decaySeconds: 3600);
+
         $this->validate();
 
         FaqQuestion::create([

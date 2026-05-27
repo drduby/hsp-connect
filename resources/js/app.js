@@ -35,7 +35,21 @@ function init() {
       TAGS_DATA.forEach(function (tag) {
         const b = document.createElement('button');
         b.className = 'titem'; b.id = 'nav-' + tag.name; b.dataset.tag = tag.name;
-        b.innerHTML = '<span class="tlbl"><span class="tdot" style="background:' + tag.color + '"></span># ' + tag.name + '</span><span class="tcnt">0</span>';
+
+        const lbl = document.createElement('span');
+        lbl.className = 'tlbl';
+        const dot = document.createElement('span');
+        dot.className = 'tdot';
+        dot.style.background = tag.color;
+        lbl.appendChild(dot);
+        lbl.appendChild(document.createTextNode('# ' + tag.name));
+
+        const cnt = document.createElement('span');
+        cnt.className = 'tcnt';
+        cnt.textContent = '0';
+
+        b.appendChild(lbl);
+        b.appendChild(cnt);
         st.appendChild(b);
       });
     }

@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Feedback;
+use Illuminate\Support\Facades\RateLimiter;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
@@ -40,6 +41,14 @@ new class extends Component {
 
     public function submit(): void
     {
+        $key = 'feedback:' . (auth()->id() ?? request()->ip());
+        if (RateLimiter::tooManyAttempts($key, maxAttempts: 5)) {
+            $this->addError('description', 'Zu viele Anfragen. Bitte später erneut versuchen.');
+
+            return;
+        }
+        RateLimiter::hit($key, decaySeconds: 3600);
+
         $this->validate();
 
         Feedback::create([

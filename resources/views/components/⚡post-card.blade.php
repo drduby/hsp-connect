@@ -124,6 +124,14 @@ new class extends Component {
         }
         RateLimiter::hit($key, decaySeconds: 60);
 
+        $dailyKey = 'add-comment-daily:' . auth()->id();
+        if (RateLimiter::tooManyAttempts($dailyKey, maxAttempts: 100)) {
+            $this->addError('newComment', 'Tägliches Kommentarlimit erreicht.');
+
+            return;
+        }
+        RateLimiter::hit($dailyKey, decaySeconds: 86400);
+
         $this->validate();
 
         Comment::create([

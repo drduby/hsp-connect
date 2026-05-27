@@ -40,6 +40,10 @@ class LoginResponse implements LoginResponseContract
             ]);
         }
 
-        return redirect()->intended('/');
+        $intended = session()->pull('url.intended', '/');
+        $appUrl = rtrim(config('app.url'), '/');
+        $safe = str_starts_with($intended, $appUrl) || str_starts_with($intended, '/');
+
+        return redirect($safe ? $intended : '/');
     }
 }

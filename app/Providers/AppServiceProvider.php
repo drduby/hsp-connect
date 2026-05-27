@@ -34,7 +34,6 @@ class AppServiceProvider extends ServiceProvider
 
         Model::preventLazyLoading();
         Model::shouldBeStrict();
-        Model::unguard();
         Model::preventAccessingMissingAttributes();
 
         Event::listen(Logout::class, function (Logout $event): void {

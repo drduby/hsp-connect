@@ -2,6 +2,7 @@
 
 use App\Models\Post;
 use App\Models\PostReport;
+use Illuminate\Support\Facades\RateLimiter;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
@@ -54,6 +55,14 @@ new class extends Component {
 
             return;
         }
+
+        $key = 'report-post:' . auth()->id();
+        if (RateLimiter::tooManyAttempts($key, maxAttempts: 10)) {
+            $this->submitted = true;
+
+            return;
+        }
+        RateLimiter::hit($key, decaySeconds: 3600);
 
         $this->validate();
 
