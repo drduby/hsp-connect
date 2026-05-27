@@ -1,6 +1,29 @@
 @extends('layouts.app')
 
 @section('title', 'FAQ — HSPConnect')
+@section('description', 'Häufig gestellte Fragen rund um Hereditäre Spastische Paraplegie (HSP): Symptome, Therapien, Hilfsmittel, Alltag und Community-Unterstützung.')
+@section('canonical', route('faq'))
+
+@section('structured-data')
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    @foreach($faqItems as $i => $item)
+    {
+      "@type": "Question",
+      "name": {{ Js::from($item->question) }},
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": {{ Js::from($item->answer) }}
+      }
+    }{{ !$loop->last ? ',' : '' }}
+    @endforeach
+  ]
+}
+</script>
+@endsection
 
 @section('content')
 

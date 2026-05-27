@@ -1,6 +1,26 @@
 @extends('layouts.app')
 
 @section('title', 'HSPConnect — Community für Spastik')
+@section('description', 'Die deutschsprachige Community für Menschen mit Hereditärer Spastischer Paraplegie. Teile deine Erfahrungen, stelle Fragen und finde Unterstützung von ' . $memberCount . ' Mitgliedern.')
+@section('canonical', route('home'))
+
+@section('structured-data')
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  "name": "HSPConnect",
+  "description": "Community für Menschen mit Hereditärer Spastischer Paraplegie",
+  "url": "{{ route('home') }}",
+  "inLanguage": "de-DE",
+  "potentialAction": {
+    "@type": "SearchAction",
+    "target": "{{ route('home') }}?search={search_term_string}",
+    "query-input": "required name=search_term_string"
+  }
+}
+</script>
+@endsection
 
 @section('content')
 

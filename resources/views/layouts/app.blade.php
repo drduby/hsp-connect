@@ -5,6 +5,24 @@
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'HSPConnect — Community für Spastik')</title>
+    <meta name="description" content="@yield('description', 'HSPConnect ist die deutschsprachige Online-Community für Menschen mit Hereditärer Spastischer Paraplegie (HSP). Erfahrungen teilen, Fragen stellen, einander unterstützen.')">
+    <link rel="canonical" href="@yield('canonical', url()->current())">
+
+    {{-- Open Graph --}}
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="HSPConnect">
+    <meta property="og:title" content="@yield('title', 'HSPConnect — Community für Spastik')">
+    <meta property="og:description" content="@yield('description', 'HSPConnect ist die deutschsprachige Online-Community für Menschen mit Hereditärer Spastischer Paraplegie (HSP). Erfahrungen teilen, Fragen stellen, einander unterstützen.')">
+    <meta property="og:url" content="@yield('canonical', url()->current())">
+    <meta property="og:locale" content="de_DE">
+
+    {{-- Twitter Card --}}
+    <meta name="twitter:card" content="summary">
+    <meta name="twitter:title" content="@yield('title', 'HSPConnect — Community für Spastik')">
+    <meta name="twitter:description" content="@yield('description', 'HSPConnect ist die deutschsprachige Online-Community für Menschen mit Hereditärer Spastischer Paraplegie (HSP). Erfahrungen teilen, Fragen stellen, einander unterstützen.')">
+
+    @yield('structured-data')
+
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,500;12..96,600;12..96,700;12..96,800&family=Mulish:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     @vite(['resources/css/app.css', 'resources/js/app.js'])

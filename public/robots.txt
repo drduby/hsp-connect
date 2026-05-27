@@ -1,2 +1,7 @@
 User-agent: *
-Disallow:
+Disallow: /login
+Disallow: /email/verify
+Disallow: /reset-password
+Disallow: /help
+
+Sitemap: https://hsp-connect.com/sitemap.xml

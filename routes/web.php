@@ -44,6 +44,16 @@ Route::get('/reset-password/{token}', function (Request $request, string $token)
 Route::get('/', [PostController::class, 'index'])->name('home');
 Route::get('/faq', [FaqController::class, 'index'])->name('faq');
 
+Route::get('/sitemap.xml', function () {
+    $urls = [
+        ['loc' => route('home'), 'changefreq' => 'daily', 'priority' => '1.0'],
+        ['loc' => route('faq'), 'changefreq' => 'weekly', 'priority' => '0.8'],
+    ];
+
+    return response()->view('sitemap', compact('urls'))
+        ->header('Content-Type', 'application/xml');
+})->name('sitemap');
+
 Route::get('/help', function () {
     $tags = ['Spastik', 'Muskeln', 'Entspannung', 'Physiotherapie', 'Hilfsmittel', 'Alltag', 'Ernährung', 'Schlaf', 'Reha'];
     $tagColors = [
