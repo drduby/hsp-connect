@@ -120,7 +120,7 @@ new class extends Component
     <div class="mb-8 flex items-center justify-between">
         <div class="flex items-center gap-x-3">
             <h1 class="text-2xl font-bold text-gray-900">Users</h1>
-            <span class="inline-flex items-center rounded-full bg-gray-100 px-2.5 py-0.5 text-xs font-medium text-gray-600">
+            <span class="inline-flex items-center rounded-full bg-gray-100 px-3 py-1 text-sm font-semibold text-gray-700">
                 {{ $this->users->total() }}
             </span>
         </div>
