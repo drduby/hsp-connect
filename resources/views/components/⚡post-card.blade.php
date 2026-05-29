@@ -3,6 +3,7 @@
 use App\Models\Comment;
 use App\Models\Post;
 use App\Models\PostReport;
+use App\Notifications\CommentPosted;
 use App\Notifications\PostLiked;
 use Illuminate\Support\Facades\RateLimiter;
 use Livewire\Attributes\Computed;
@@ -141,6 +142,10 @@ new class extends Component {
             'user_id' => auth()->id(),
             'content' => $this->newComment,
         ]);
+
+        if (! $this->isMine) {
+            $this->post->user->notify(new CommentPosted(auth()->user(), $this->post));
+        }
 
         $this->newComment = '';
         $this->showComments = true;

@@ -13,13 +13,25 @@ class NotificationController extends Controller
             ->latest()
             ->take(30)
             ->get()
-            ->map(fn ($n) => [
-                'id' => $n->id,
-                'text' => $n->data['liker_nickname'].' hat deinen Beitrag „'.$n->data['post_title'].'" geliked',
-                'time' => $n->created_at->diffForHumans(),
-                'read' => ! is_null($n->read_at),
-                'icon' => '❤️',
-            ]);
+            ->map(fn ($n) => match (true) {
+                isset($n->data['liker_nickname']) => [
+                    'id' => $n->id,
+                    'text' => $n->data['liker_nickname'].' hat deinen Beitrag „'.$n->data['post_title'].'" geliked',
+                    'time' => $n->created_at->diffForHumans(),
+                    'read' => ! is_null($n->read_at),
+                    'icon' => '❤️',
+                ],
+                isset($n->data['commenter_nickname']) => [
+                    'id' => $n->id,
+                    'text' => $n->data['commenter_nickname'].' hat deinen Beitrag „'.$n->data['post_title'].'" kommentiert',
+                    'time' => $n->created_at->diffForHumans(),
+                    'read' => ! is_null($n->read_at),
+                    'icon' => '💬',
+                ],
+                default => null,
+            })
+            ->filter()
+            ->values();
 
         return response()->json($notifications);
     }
