@@ -83,7 +83,9 @@ new class extends Component
             $this->search,
             fn ($q) => $q->where(function ($q) {
                 $q->where('nickname', 'like', '%' . $this->search . '%')
-                    ->orWhere('email', 'like', '%' . $this->search . '%');
+                    ->orWhere('email', 'like', '%' . $this->search . '%')
+                    ->orWhere('first_name', 'like', '%' . $this->search . '%')
+                    ->orWhere('last_name', 'like', '%' . $this->search . '%');
             })
         )
             ->orderByDesc('created_at')
@@ -107,7 +109,7 @@ new class extends Component
         <input
             wire:model.live.debounce.300ms="search"
             type="search"
-            placeholder="Search nickname or email…"
+            placeholder="Search name, nickname or email…"
             class="block w-72 rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
         >
     </div>
