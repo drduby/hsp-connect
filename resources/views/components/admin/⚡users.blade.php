@@ -132,7 +132,7 @@ new class extends Component
         >
     </div>
 
-    <div class="overflow-hidden rounded-xl bg-white shadow ring-1 ring-gray-200">
+    <div class="overflow-x-auto rounded-xl bg-white shadow ring-1 ring-gray-200">
         <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">
                 <tr>
