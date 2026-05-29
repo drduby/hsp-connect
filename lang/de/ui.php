@@ -65,6 +65,9 @@ return [
         'login' => 'Anmelden',
         'delete' => 'Löschen',
         'too_many_comments' => 'Zu viele Kommentare. Bitte kurz warten.',
+        'translate' => 'Übersetzen',
+        'translating' => 'Wird übersetzt…',
+        'show_original' => 'Original anzeigen',
     ],
     'home' => [
         'title' => 'HSPConnect — Community für Spastik',
@@ -167,7 +170,6 @@ return [
         'verify_sent' => 'Ein neuer Bestätigungslink wurde an deine E-Mail-Adresse gesendet.',
         'resend' => 'Erneut senden',
         'logout' => 'Abmelden',
-        // Auth modal
         'welcome_back' => 'Willkommen zurück',
         'create_account' => 'Konto erstellen',
         'almost_done' => 'Fast geschafft!',

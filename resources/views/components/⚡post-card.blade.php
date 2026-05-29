@@ -8,6 +8,7 @@ use App\Notifications\CommentPosted;
 use App\Notifications\PostLiked;
 use App\Notifications\PostRated;
 use App\Notifications\UserMentioned;
+use App\Services\TranslationService;
 use Illuminate\Support\Facades\RateLimiter;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
@@ -17,6 +18,18 @@ use Livewire\Component;
 new class extends Component
 {
     public Post $post;
+
+    public string $translatedTitle = '';
+
+    public string $translatedContent = '';
+
+    public bool $showTranslation = false;
+
+    public bool $translating = false;
+
+    public array $translatedComments = [];
+
+    public array $showTranslatedComment = [];
 
     public bool $showComments = false;
 
@@ -185,6 +198,45 @@ new class extends Component
         $this->dispatch('post-deleted', postId: $this->post->id);
     }
 
+    public function translate(): void
+    {
+        if ($this->translatedContent) {
+            $this->showTranslation = ! $this->showTranslation;
+
+            return;
+        }
+
+        $this->translating = true;
+        $locale = app()->getLocale();
+        $sourceLang = 'de';
+        $targetLang = $locale === 'de' ? 'en' : 'de';
+        $service = app(TranslationService::class);
+        $this->translatedTitle = $service->translate($this->post->title, $targetLang, $sourceLang) ?? $this->post->title;
+        $this->translatedContent = $service->translate($this->post->content, $targetLang, $sourceLang) ?? $this->post->content;
+        $this->showTranslation = true;
+        $this->translating = false;
+    }
+
+    public function translateComment(int $id): void
+    {
+        if (isset($this->translatedComments[$id])) {
+            $this->showTranslatedComment[$id] = ! ($this->showTranslatedComment[$id] ?? false);
+
+            return;
+        }
+
+        $comment = $this->post->comments->firstWhere('id', $id);
+        if (! $comment) {
+            return;
+        }
+
+        $locale = app()->getLocale();
+        $targetLang = $locale === 'de' ? 'en' : 'de';
+        $result = app(TranslationService::class)->translate($comment->content, $targetLang, 'de');
+        $this->translatedComments[$id] = $result ?? $comment->content;
+        $this->showTranslatedComment[$id] = true;
+    }
+
     private function notifyMentions(string $text): void
     {
         preg_match_all('/@([a-zA-Z0-9_]+)/', $text, $matches);
@@ -276,12 +328,33 @@ new class extends Component
             @endforeach
         </div>
 
-        <div class="ptitle">{{ $post->title }}</div>
+        <div class="ptitle">{{ $showTranslation && $translatedTitle ? $translatedTitle : $post->title }}</div>
         <div x-data="{ expanded: false, clamped: false }" x-init="$nextTick(() => { clamped = $refs.body.scrollHeight > $refs.body.clientHeight })">
-            <div class="pbody" :class="expanded ? '' : 'cl'" x-ref="body">{!! preg_replace('/@([a-zA-Z0-9_]+)/', '<span class="mention">@$1</span>', e($post->content)) !!}</div>
+            <div class="pbody" :class="expanded ? '' : 'cl'" x-ref="body">
+                @if($showTranslation && $translatedContent)
+                    {!! preg_replace('/@([a-zA-Z0-9_]+)/', '<span class="mention">@$1</span>', e($translatedContent)) !!}
+                @else
+                    {!! preg_replace('/@([a-zA-Z0-9_]+)/', '<span class="mention">@$1</span>', e($post->content)) !!}
+                @endif
+            </div>
             <button x-show="clamped && !expanded" class="readmore" x-on:click="expanded = true">{{ __('ui.post.read_more') }}</button>
             <button x-show="expanded" class="readmore" x-on:click="expanded = false">{{ __('ui.post.show_less') }}</button>
         </div>
+        <button wire:click="translate" wire:loading.attr="disabled"
+            style="display:inline-flex;align-items:center;gap:5px;margin-top:6px;font-size:11.5px;color:var(--t);font-weight:600;background:none;border:none;cursor:pointer;padding:0;font-family:var(--body);opacity:.8">
+            <span wire:loading wire:target="translate" style="font-size:11px">⏳</span>
+            <span wire:loading.remove wire:target="translate">🌐</span>
+            <span wire:loading wire:target="translate">{{ __('ui.post.translating') }}</span>
+            <span wire:loading.remove wire:target="translate">
+                @if($showTranslation)
+                    {{ __('ui.post.show_original') }}
+                @elseif(app()->getLocale() === 'de')
+                    Auf Englisch übersetzen
+                @else
+                    Translate to German
+                @endif
+            </span>
+        </button>
     </div>
 
     {{-- Action bar --}}
@@ -387,7 +460,29 @@ new class extends Component
                                     </button>
                                 @endif
                             </div>
-                            <div class="ctext">{!! preg_replace('/@([a-zA-Z0-9_]+)/', '<span class="mention">@$1</span>', e($comment->content)) !!}</div>
+                            <div class="ctext">
+                                @if(!empty($showTranslatedComment[$comment->id]) && isset($translatedComments[$comment->id]))
+                                    {!! preg_replace('/@([a-zA-Z0-9_]+)/', '<span class="mention">@$1</span>', e($translatedComments[$comment->id])) !!}
+                                @else
+                                    {!! preg_replace('/@([a-zA-Z0-9_]+)/', '<span class="mention">@$1</span>', e($comment->content)) !!}
+                                @endif
+                            </div>
+                            <button wire:click="translateComment({{ $comment->id }})"
+                                wire:loading.attr="disabled" wire:target="translateComment({{ $comment->id }})"
+                                style="display:inline-flex;align-items:center;gap:5px;margin-top:4px;font-size:11.5px;color:var(--t);font-weight:600;background:none;border:none;cursor:pointer;padding:0;font-family:var(--body);opacity:.8">
+                                <span wire:loading wire:target="translateComment({{ $comment->id }})" style="font-size:11px">⏳</span>
+                                <span wire:loading.remove wire:target="translateComment({{ $comment->id }})">🌐</span>
+                                <span wire:loading wire:target="translateComment({{ $comment->id }})">{{ __('ui.post.translating') }}</span>
+                                <span wire:loading.remove wire:target="translateComment({{ $comment->id }})">
+                                    @if(!empty($showTranslatedComment[$comment->id]))
+                                        {{ __('ui.post.show_original') }}
+                                    @elseif(app()->getLocale() === 'de')
+                                        Auf Englisch übersetzen
+                                    @else
+                                        Translate to German
+                                    @endif
+                                </span>
+                            </button>
                         </div>
                     </div>
                 @endforeach
