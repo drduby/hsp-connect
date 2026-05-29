@@ -155,7 +155,6 @@ new class extends Component {
 
             return;
         }
-        RateLimiter::hit($key, 60);
 
         $user = app(CreateNewUser::class)->create([
             'first_name'            => $this->firstName,
@@ -165,6 +164,8 @@ new class extends Component {
             'password'              => $this->regPassword,
             'password_confirmation' => $this->regPasswordConfirmation,
         ]);
+
+        RateLimiter::hit($key, 60);
 
         try {
             event(new Registered($user));

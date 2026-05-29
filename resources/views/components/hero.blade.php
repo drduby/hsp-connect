@@ -9,10 +9,6 @@
             </div>
             <h1>{{ __('ui.hero.headline_line1') }}<br>{{ __('ui.hero.headline_line2') }}</h1>
             <div class="hero-sub">{{ __('ui.hero.subline') }}</div>
-            @if($tagsId)
-            <div style="font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-top:14px;margin-bottom:6px">{{ __('ui.hero.top_topics') }}</div>
-            <div class="hero-tags" id="{{ $tagsId }}"></div>
-            @endif
         </div>
         <div class="hero-r">
             <div class="hero-stats">
