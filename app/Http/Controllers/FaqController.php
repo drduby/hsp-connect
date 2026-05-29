@@ -19,8 +19,8 @@ class FaqController extends Controller
             ->orderBy('id')
             ->get(['id', 'name', 'name_en', 'slug', 'color']);
 
-        $memberCount = User::whereNotNull('email_verified_at')->count();
-        $onlineCount = User::where('last_seen_at', '>=', now()->subMinutes(5))->count();
+        $memberCount = User::whereNotNull('email_verified_at')->where('is_admin', false)->count();
+        $onlineCount = User::where('last_seen_at', '>=', now()->subMinutes(5))->where('is_admin', false)->count();
         $postCount = Post::where('is_published', true)->count();
         $counts = ['all' => $postCount];
 

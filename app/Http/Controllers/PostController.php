@@ -36,8 +36,8 @@ class PostController extends Controller
             ? DB::table('post_likes')->where('user_id', auth()->id())->count()
             : 0;
 
-        $memberCount = User::whereNotNull('email_verified_at')->count();
-        $onlineCount = User::where('last_seen_at', '>=', now()->subMinutes(5))->count();
+        $memberCount = User::whereNotNull('email_verified_at')->where('is_admin', false)->count();
+        $onlineCount = User::where('last_seen_at', '>=', now()->subMinutes(5))->where('is_admin', false)->count();
 
         return view('home', compact('counts', 'tags', 'savedCount', 'myPostCount', 'likesGivenCount', 'memberCount', 'onlineCount'));
     }
