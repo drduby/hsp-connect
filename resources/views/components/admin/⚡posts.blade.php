@@ -1,8 +1,7 @@
 <?php
 
-use App\Enums\PostType;
 use App\Models\Post;
-use Illuminate\Support\Str;
+use Illuminate\Pagination\LengthAwarePaginator;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -12,6 +11,7 @@ new class extends Component
     use WithPagination;
 
     public string $search = '';
+
     public string $filter = '';
 
     public function updatedSearch(): void
@@ -56,15 +56,15 @@ new class extends Component
     }
 
     #[Computed]
-    public function posts(): \Illuminate\Pagination\LengthAwarePaginator
+    public function posts(): LengthAwarePaginator
     {
         return Post::withTrashed()
             ->with(['user', 'tags'])
             ->when($this->search, fn ($q) => $q->where(function ($q) {
-                $q->where('title', 'like', '%' . $this->search . '%')
-                    ->orWhere('type', 'like', '%' . $this->search . '%')
-                    ->orWhereHas('user', fn ($q) => $q->where('nickname', 'like', '%' . $this->search . '%'))
-                    ->orWhereHas('tags', fn ($q) => $q->where('name', 'like', '%' . $this->search . '%'));
+                $q->where('title', 'like', '%'.$this->search.'%')
+                    ->orWhere('type', 'like', '%'.$this->search.'%')
+                    ->orWhereHas('user', fn ($q) => $q->where('nickname', 'like', '%'.$this->search.'%'))
+                    ->orWhereHas('tags', fn ($q) => $q->where('name', 'like', '%'.$this->search.'%'));
             }))
             ->when($this->filter === 'published', fn ($q) => $q->whereNull('deleted_at')->where('is_published', true))
             ->when($this->filter === 'deleted', fn ($q) => $q->onlyTrashed())
