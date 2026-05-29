@@ -87,6 +87,19 @@ new class extends Component
         }
     }
 
+    public function impersonate(int $id): void
+    {
+        $user = User::findOrFail($id);
+        abort_if($user->is_admin, 403);
+        abort_if($user->id === auth()->id(), 403);
+
+        session(['impersonating_admin_id' => auth()->id()]);
+        \Illuminate\Support\Facades\Auth::loginUsingId($user->id);
+        session()->regenerate();
+
+        $this->redirect('/', navigate: false);
+    }
+
     public function delete(int $id): void
     {
         abort_if($id === auth()->id(), 403);
@@ -186,6 +199,14 @@ new class extends Component
                                         <svg class="h-4 w-4 text-gray-400" viewBox="0 0 20 20" fill="currentColor"><path d="M2.695 14.763l-1.262 3.154a.5.5 0 0 0 .65.65l3.155-1.262a4 4 0 0 0 1.343-.885L17.5 5.5a2.121 2.121 0 0 0-3-3L3.58 13.42a4 4 0 0 0-.885 1.343Z"/></svg>
                                         Edit
                                     </button>
+
+                                    @if(! $user->is_admin && auth()->id() !== $user->id)
+                                        <button wire:click="impersonate({{ $user->id }})" wire:confirm="Log in as {{ $user->nickname }}?" @click="open = false"
+                                                class="flex w-full items-center gap-x-2 px-4 py-2 text-sm text-indigo-700 hover:bg-gray-50">
+                                            <svg class="h-4 w-4 text-indigo-400" viewBox="0 0 20 20" fill="currentColor"><path d="M10 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM3.465 14.493a1.23 1.23 0 0 0 .41 1.412A9.957 9.957 0 0 0 10 18c2.31 0 4.438-.784 6.131-2.1.43-.333.604-.903.408-1.41a7.002 7.002 0 0 0-13.074.003Z"/></svg>
+                                            Login as user
+                                        </button>
+                                    @endif
 
                                     @if(! $user->hasVerifiedEmail())
                                         <button wire:click="verifyEmail({{ $user->id }})" wire:confirm="Manually mark this user as verified?" @click="open = false"

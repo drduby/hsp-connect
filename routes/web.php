@@ -57,6 +57,15 @@ Route::post('/language/{locale}', function (string $locale) {
     return back();
 })->name('language.switch');
 
+Route::post('/impersonate/stop', function (Request $request) {
+    $adminId = $request->session()->pull('impersonating_admin_id');
+    abort_unless($adminId, 403);
+    Auth::loginUsingId($adminId);
+    $request->session()->regenerate();
+
+    return redirect()->route('admin.users.index');
+})->middleware('auth')->name('impersonate.stop');
+
 Route::get('/', [PostController::class, 'index'])->name('home');
 Route::get('/faq', [FaqController::class, 'index'])->name('faq');
 

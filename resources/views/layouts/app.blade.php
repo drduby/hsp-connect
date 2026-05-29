@@ -61,6 +61,19 @@ window.__TRANS__ = {
 <x-notification-panel />
 <x-profile-menu />
 
+@if(session('impersonating_admin_id'))
+    <div style="background:#1a1a2e;color:#fff;text-align:center;padding:10px 16px;font-size:13.5px;font-family:var(--body);display:flex;align-items:center;justify-content:center;gap:12px;position:sticky;top:0;z-index:999">
+        <svg width="16" height="16" viewBox="0 0 20 20" fill="currentColor" style="flex-shrink:0;opacity:.8"><path d="M10 8a3 3 0 1 0 0-6 3 3 0 0 0 0 6ZM3.465 14.493a1.23 1.23 0 0 0 .41 1.412A9.957 9.957 0 0 0 10 18c2.31 0 4.438-.784 6.131-2.1.43-.333.604-.903.408-1.41a7.002 7.002 0 0 0-13.074.003Z"/></svg>
+        <span>You are logged in as <strong>{{ auth()->user()->nickname }}</strong></span>
+        <form method="POST" action="{{ route('impersonate.stop') }}" style="margin:0">
+            @csrf
+            <button type="submit" style="background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);color:#fff;padding:4px 14px;border-radius:20px;font-size:12.5px;cursor:pointer;font-weight:600;font-family:var(--body);transition:background .15s" onmouseover="this.style.background='rgba(255,255,255,.25)'" onmouseout="this.style.background='rgba(255,255,255,.15)'">
+                ← Back to Admin
+            </button>
+        </form>
+    </div>
+@endif
+
 @if(auth()->check() && ! auth()->user()->hasVerifiedEmail())
     <div style="background:#d97706;color:#fff;text-align:center;padding:10px 16px;font-size:13.5px;font-family:var(--body);display:flex;align-items:center;justify-content:center;gap:12px">
         <span>{{ __('ui.layout.verify_notice') }}</span>
