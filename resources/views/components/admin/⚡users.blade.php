@@ -69,6 +69,15 @@ new class extends Component
         session()->flash('success', 'User unblocked.');
     }
 
+    public function verifyEmail(int $id): void
+    {
+        $user = User::find($id);
+        if ($user && ! $user->hasVerifiedEmail()) {
+            $user->forceFill(['email_verified_at' => now()])->save();
+            session()->flash('success', $user->nickname . ' has been manually verified.');
+        }
+    }
+
     public function sendVerificationEmail(int $id): void
     {
         $user = User::find($id);
@@ -165,8 +174,11 @@ new class extends Component
                                         class="text-sm font-medium text-indigo-600 hover:text-indigo-800">Edit</button>
 
                                 @if(! $user->hasVerifiedEmail())
+                                    <button wire:click="verifyEmail({{ $user->id }})"
+                                            wire:confirm="Manually mark this user as verified?"
+                                            class="text-sm font-medium text-green-600 hover:text-green-800">Verify</button>
                                     <button wire:click="sendVerificationEmail({{ $user->id }})"
-                                            class="text-sm font-medium text-blue-600 hover:text-blue-800">Send Verification</button>
+                                            class="text-sm font-medium text-blue-600 hover:text-blue-800">Send Email</button>
                                 @endif
 
                                 @if(auth()->id() !== $user->id)
