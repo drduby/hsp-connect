@@ -143,15 +143,15 @@ new class extends Component
                         </td>
                         <td class="px-6 py-4 text-right whitespace-nowrap">
                             @if($report->status === 'pending')
-                                <div class="relative inline-block text-left" x-data="{ open: false }" @click.outside="open = false">
-                                    <button @click="open = !open"
+                                <div class="relative inline-block text-left" x-data="{ open: false, up: false }" @click.outside="open = false">
+                                    <button @click="up = ($el.getBoundingClientRect().bottom + 150 > window.innerHeight); open = !open"
                                             class="inline-flex items-center justify-center rounded-md p-1.5 text-gray-400 hover:bg-gray-100 hover:text-gray-600">
                                         <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                                             <path d="M10 3a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM10 8.5a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM11.5 15.5a1.5 1.5 0 1 0-3 0 1.5 1.5 0 0 0 3 0Z"/>
                                         </svg>
                                     </button>
                                     <div x-show="open" x-transition
-                                         class="absolute right-0 z-20 mt-1 w-44 origin-top-right rounded-lg bg-white py-1 shadow-lg ring-1 ring-gray-200">
+                                         class="absolute right-0 z-20 w-44 rounded-lg bg-white py-1 shadow-lg ring-1 ring-gray-200" :class="up ? 'bottom-full mb-1 origin-bottom-right' : 'top-full mt-1 origin-top-right'">
                                         <button wire:click="review({{ $report->id }})" @click="open = false"
                                                 class="flex w-full items-center gap-x-2 px-4 py-2 text-sm text-indigo-700 hover:bg-gray-50">
                                             <svg class="h-4 w-4 text-indigo-400" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.403 12.652a3 3 0 0 0 0-5.304 3 3 0 0 0-3.75-3.751 3 3 0 0 0-5.305 0 3 3 0 0 0-3.751 3.75 3 3 0 0 0 0 5.305 3 3 0 0 0 3.75 3.751 3 3 0 0 0 5.305 0 3 3 0 0 0 3.751-3.75Zm-2.546-4.46a.75.75 0 0 0-1.214-.883l-3.483 4.79-1.88-1.88a.75.75 0 1 0-1.06 1.061l2.5 2.5a.75.75 0 0 0 1.137-.089l4-5.5Z" clip-rule="evenodd"/></svg>

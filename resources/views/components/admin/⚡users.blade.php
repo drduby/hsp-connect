@@ -169,8 +169,8 @@ new class extends Component
                         </td>
                         <td class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">{{ $user->created_at->format('d.m.Y') }}</td>
                         <td class="px-6 py-4 text-right whitespace-nowrap">
-                            <div class="relative inline-block text-left" x-data="{ open: false }" @click.outside="open = false">
-                                <button @click="open = !open"
+                            <div class="relative inline-block text-left" x-data="{ open: false, up: false }" @click.outside="open = false">
+                                <button @click="up = ($el.getBoundingClientRect().bottom + 220 > window.innerHeight); open = !open"
                                         class="inline-flex items-center justify-center rounded-md p-1.5 text-gray-400 hover:bg-gray-100 hover:text-gray-600">
                                     <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                                         <path d="M10 3a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM10 8.5a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM11.5 15.5a1.5 1.5 0 1 0-3 0 1.5 1.5 0 0 0 3 0Z"/>
@@ -179,7 +179,7 @@ new class extends Component
 
                                 <div x-show="open"
                                      x-transition
-                                     class="absolute right-0 z-20 mt-1 w-48 origin-top-right rounded-lg bg-white py-1 shadow-lg ring-1 ring-gray-200">
+                                     class="absolute right-0 z-20 w-48 rounded-lg bg-white py-1 shadow-lg ring-1 ring-gray-200" :class="up ? 'bottom-full mb-1 origin-bottom-right' : 'top-full mt-1 origin-top-right'">
 
                                     <button wire:click="openEdit({{ $user->id }})" @click="open = false"
                                             class="flex w-full items-center gap-x-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">

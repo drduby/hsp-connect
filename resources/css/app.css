@@ -62,7 +62,9 @@ header {
   justify-content: center; font-size: 15px; cursor: pointer; transition: all .18s; position: relative;
 }
 .h-ico-btn:hover { border-color: var(--t); background: var(--t3) }
-.notif-dot { position: absolute; top: 3px; right: 3px; width: 7px; height: 7px; border-radius: 50%; background: var(--g); border: 1.5px solid var(--bg) }
+.notif-dot { position: absolute; top: 3px; right: 3px; width: 8px; height: 8px; border-radius: 50%; background: #e53e3e; border: 1.5px solid var(--bg); display: none }
+.notif-dot::after { content: ''; position: absolute; inset: -3px; border-radius: 50%; background: rgba(229,62,62,.4); animation: notif-ping 1.5s ease-out infinite }
+@keyframes notif-ping { 0% { transform: scale(1); opacity: .8 } 100% { transform: scale(2.2); opacity: 0 } }
 .h-btn { background: var(--t); color: #fff; border: none; padding: 8px 18px; border-radius: 40px; font-family: var(--body); font-size: 13px; font-weight: 700; transition: all .2s; letter-spacing: .01em }
 .h-btn:hover { background: var(--t2); transform: translateY(-1px); box-shadow: 0 4px 14px rgba(10,110,122,.3) }
 .h-btn-o { background: transparent; color: var(--t); border: 1.5px solid var(--bord2); padding: 7px 16px; border-radius: 40px; font-family: var(--body); font-size: 13px; font-weight: 700; transition: all .18s }
