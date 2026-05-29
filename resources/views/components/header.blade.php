@@ -22,6 +22,10 @@
             <a href="{{ route('faq') }}" wire:navigate class="h-btn-muted" id="h-faq-btn">{{ __('ui.nav.faq') }}</a>
         @endif
 
+        @if(Auth::check() && Auth::user()->is_admin)
+            <a href="{{ route('admin.dashboard') }}" class="h-btn-muted">Admin</a>
+        @endif
+
         <div style="display:flex;align-items:center;gap:2px;margin:0 2px">
             <form method="POST" action="{{ route('language.switch', 'de') }}" style="margin:0">
                 @csrf
