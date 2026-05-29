@@ -88,6 +88,8 @@ return [
         'idea_sub' => 'What would you wish for?',
         'bug_sub' => 'What is not working?',
         'topic' => 'Topic',
+        'topic_placeholder' => 'e.g. Search, Posts, Profile…',
+        'email_placeholder' => 'your@email.com',
         'optional' => '(optional)',
         'description' => 'Description',
         'idea_placeholder' => 'Describe your idea or wish…',

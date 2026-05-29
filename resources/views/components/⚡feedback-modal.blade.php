@@ -106,7 +106,7 @@ new class extends Component {
                         <label>{{ __('ui.feedback.topic') }} @if($type !== 'idea')<span style="font-size:10.5px;color:var(--light);font-weight:400">{{ __('ui.feedback.optional') }}</span>@endif</label>
                         <input wire:model="topic"
                             type="text"
-                            placeholder="z.B. Suche, Beiträge, Profil…"
+                            placeholder="{{ __('ui.feedback.topic_placeholder') }}"
                             style="width:100%;padding:10px 13px;border:1.5px solid rgba(10,110,122,.15);border-radius:10px;font-family:var(--body);font-size:14px;outline:none;color:var(--ink);background:var(--surf2);transition:border-color .18s">
                         @error('topic')
                             <p class="form-err" style="margin-top:4px">{{ $message }}</p>
@@ -128,7 +128,7 @@ new class extends Component {
                             <label>{{ __('ui.feedback.email_label') }} <span style="font-size:10.5px;color:var(--light);font-weight:400">{{ __('ui.feedback.email_hint') }}</span></label>
                             <input wire:model="email"
                                 type="email"
-                                placeholder="deine@email.at"
+                                placeholder="{{ __('ui.feedback.email_placeholder') }}"
                                 style="width:100%;padding:10px 13px;border:1.5px solid rgba(10,110,122,.15);border-radius:10px;font-family:var(--body);font-size:14px;outline:none;color:var(--ink);background:var(--surf2);transition:border-color .18s">
                             @error('email')
                                 <p class="form-err" style="margin-top:4px">{{ $message }}</p>

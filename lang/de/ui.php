@@ -88,6 +88,8 @@ return [
         'idea_sub' => 'Was würdest du dir wünschen?',
         'bug_sub' => 'Was funktioniert nicht?',
         'topic' => 'Thema',
+        'topic_placeholder' => 'z.B. Suche, Beiträge, Profil…',
+        'email_placeholder' => 'deine@email.at',
         'optional' => '(optional)',
         'description' => 'Beschreibung',
         'idea_placeholder' => 'Beschreibe deine Idee oder deinen Wunsch…',
