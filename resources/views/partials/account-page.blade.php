@@ -16,7 +16,18 @@
             <button class="h-btn-muted" id="accp-home-btn" onclick="closeAccountPage()">{{ __('ui.nav.home') }}</button>
             <a class="h-btn-muted" href="{{ route('faq') }}" wire:navigate>{{ __('ui.nav.faq') }}</a>
 
-            <div style="display:flex;align-items:center;gap:2px;margin:0 2px">
+            @if(Auth::check() && Auth::user()->is_admin)
+                <a href="{{ route('admin.dashboard') }}" class="h-btn-muted">Admin</a>
+            @endif
+
+            <button class="h-btn-o" id="acc-h-login-btn" onclick="openLg()">{{ Auth::check() ? Auth::user()->nickname : __('ui.nav.login') }}</button>
+            @auth
+                <span style="width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#0a6e7a,#b8762a);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;flex-shrink:0;user-select:none">
+                    {{ strtoupper(mb_substr(Auth::user()->nickname, 0, 1)) }}
+                </span>
+            @endauth
+
+            <div style="display:flex;align-items:center;gap:2px;margin-left:4px">
                 <form method="POST" action="{{ route('language.switch', 'de') }}" style="margin:0">
                     @csrf
                     <button type="submit"
@@ -32,8 +43,6 @@
                     </button>
                 </form>
             </div>
-
-            <button class="h-btn-o" id="acc-h-login-btn" onclick="openLg()">{{ __('ui.nav.login') }}</button>
         </div>
     </header>
 
