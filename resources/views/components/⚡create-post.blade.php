@@ -46,7 +46,7 @@ new class extends Component {
 
         $key = 'create-post:' . auth()->id();
         if (RateLimiter::tooManyAttempts($key, maxAttempts: 3)) {
-            $this->addError('title', 'Zu viele Beiträge. Bitte kurz warten.');
+            $this->addError('title', __('ui.create_post.too_many'));
 
             return;
         }
@@ -86,15 +86,15 @@ new class extends Component {
     <div class="ptypes">
         <button type="button" class="ptyp {{ $type === 'experience' ? 'on' : '' }}"
                 wire:click="$set('type', 'experience')">
-            ✨ Erfahrung
+            {{ __('ui.create_post.type_experience') }}
         </button>
         <button type="button" class="ptyp {{ $type === 'question' ? 'on' : '' }}"
                 wire:click="$set('type', 'question')">
-            ❓ Frage
+            {{ __('ui.create_post.type_question') }}
         </button>
     </div>
 
-    <label>Thema</label>
+    <label>{{ __('ui.create_post.topic') }}</label>
     <div class="tag-picker">
         @foreach($this->tags as $tag)
             <button type="button"
@@ -107,23 +107,23 @@ new class extends Component {
         @endforeach
     </div>
     @error('selectedTagIds')
-        <p class="form-err">Bitte mindestens ein Thema auswählen.</p>
+        <p class="form-err">{{ __('ui.create_post.topic_required') }}</p>
     @enderror
 
-    <label>Titel</label>
-    <input type="text" wire:model="title" placeholder="Worum geht es?">
+    <label>{{ __('ui.create_post.title') }}</label>
+    <input type="text" wire:model="title" placeholder="{{ __('ui.create_post.title_placeholder') }}">
     @error('title')
         <p class="form-err">{{ $message }}</p>
     @enderror
 
-    <label>Inhalt</label>
-    <textarea wire:model="content" placeholder="Teile deine Gedanken..."></textarea>
+    <label>{{ __('ui.create_post.content') }}</label>
+    <textarea wire:model="content" placeholder="{{ __('ui.create_post.content_placeholder') }}"></textarea>
     @error('content')
         <p class="form-err">{{ $message }}</p>
     @enderror
 
     <button class="mbtn" wire:click="save" wire:loading.attr="disabled">
-        <span wire:loading.remove>Ver&#xF6;ffentlichen</span>
-        <span wire:loading>Wird gespeichert&#x2026;</span>
+        <span wire:loading.remove>{{ __('ui.create_post.publish') }}</span>
+        <span wire:loading>{{ __('ui.create_post.saving') }}</span>
     </button>
 </div>

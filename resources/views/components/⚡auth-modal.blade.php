@@ -83,21 +83,21 @@ new class extends Component {
             'email'    => ['required', 'email'],
             'password' => ['required'],
         ], [
-            'email.required'    => 'Bitte E-Mail eingeben.',
-            'email.email'       => 'Bitte eine gültige E-Mail-Adresse eingeben.',
-            'password.required' => 'Bitte Passwort eingeben.',
+            'email.required'    => __('ui.auth.err_email_required'),
+            'email.email'       => __('ui.auth.err_email_invalid'),
+            'password.required' => __('ui.auth.err_password_required'),
         ]);
 
         $key = 'login:'.strtolower($this->email).'|'.request()->ip();
         if (RateLimiter::tooManyAttempts($key, 5)) {
-            $this->addError('email', 'Zu viele Versuche. Bitte warte einen Moment.');
+            $this->addError('email', __('ui.auth.err_too_many_login'));
 
             return;
         }
 
         if (! Auth::attempt(['email' => $this->email, 'password' => $this->password])) {
             RateLimiter::hit($key, 60);
-            $this->addError('email', 'E-Mail oder Passwort ist falsch.');
+            $this->addError('email', __('ui.auth.err_credentials'));
 
             return;
         }
@@ -133,25 +133,25 @@ new class extends Component {
             'regPassword'             => ['required', PasswordRule::min(8)->letters()->numbers()],
             'regPasswordConfirmation' => ['required', 'same:regPassword'],
         ], [
-            'firstName.required'               => 'Bitte Vorname eingeben.',
-            'lastName.required'                => 'Bitte Nachname eingeben.',
-            'nickname.required'                => 'Bitte Nickname eingeben.',
-            'nickname.regex'                   => 'Der Nickname darf nur Buchstaben, Zahlen und _ enthalten.',
-            'nickname.unique'                  => 'Dieser Nickname ist bereits vergeben.',
-            'regEmail.required'                => 'Bitte E-Mail eingeben.',
-            'regEmail.email'                   => 'Bitte eine gültige E-Mail-Adresse eingeben.',
-            'regEmail.unique'                  => 'Diese E-Mail-Adresse ist bereits registriert.',
-            'regPassword.required'             => 'Bitte Passwort eingeben.',
-            'regPassword.min'                  => 'Passwort mind. 8 Zeichen.',
-            'regPassword.letters'              => 'Passwort muss mind. 1 Buchstaben enthalten.',
-            'regPassword.numbers'              => 'Passwort muss mind. 1 Zahl enthalten.',
-            'regPasswordConfirmation.required' => 'Bitte Passwort wiederholen.',
-            'regPasswordConfirmation.same'     => 'Passwörter stimmen nicht überein.',
+            'firstName.required'               => __('ui.auth.err_first_name'),
+            'lastName.required'                => __('ui.auth.err_last_name'),
+            'nickname.required'                => __('ui.auth.err_nickname_required'),
+            'nickname.regex'                   => __('ui.auth.err_nickname_format'),
+            'nickname.unique'                  => __('ui.auth.err_nickname_taken'),
+            'regEmail.required'                => __('ui.auth.err_email_required'),
+            'regEmail.email'                   => __('ui.auth.err_email_invalid'),
+            'regEmail.unique'                  => __('ui.auth.err_email_taken'),
+            'regPassword.required'             => __('ui.auth.err_password_required'),
+            'regPassword.min'                  => __('ui.auth.err_password_min'),
+            'regPassword.letters'              => __('ui.auth.err_password_letters'),
+            'regPassword.numbers'              => __('ui.auth.err_password_numbers'),
+            'regPasswordConfirmation.required' => __('ui.auth.err_confirm_required'),
+            'regPasswordConfirmation.same'     => __('ui.auth.err_confirm_mismatch'),
         ]);
 
         $key = 'register:'.request()->ip();
         if (RateLimiter::tooManyAttempts($key, 3)) {
-            $this->addError('regEmail', 'Zu viele Registrierungsversuche. Bitte warte einen Moment.');
+            $this->addError('regEmail', __('ui.auth.err_too_many_register'));
 
             return;
         }
@@ -183,15 +183,15 @@ new class extends Component {
         $this->validate([
             'resetEmail' => ['required', 'email'],
         ], [
-            'resetEmail.required' => 'Bitte E-Mail eingeben.',
-            'resetEmail.email'    => 'Bitte eine gültige E-Mail-Adresse eingeben.',
+            'resetEmail.required' => __('ui.auth.err_email_required'),
+            'resetEmail.email'    => __('ui.auth.err_email_invalid'),
         ]);
 
         $status = Password::sendResetLink(['email' => $this->resetEmail]);
 
         $this->resetMessage = $status === Password::RESET_LINK_SENT
-            ? 'Wenn ein Konto existiert, senden wir dir einen Link zum Zurücksetzen.'
-            : 'Fehler beim Senden. Bitte versuche es erneut.';
+            ? __('ui.auth.reset_sent')
+            : __('ui.auth.reset_error');
         $this->resetMessageType = $status === Password::RESET_LINK_SENT ? 'success' : 'error';
     }
 };
@@ -204,27 +204,27 @@ new class extends Component {
 
         {{-- Title --}}
         <div class="mttl">
-            @if($tab === 'login') Willkommen zurück
-            @elseif($tab === 'register') Konto erstellen
-            @elseif($tab === 'reset') Passwort zurücksetzen
-            @else Fast geschafft!
+            @if($tab === 'login') {{ __('ui.auth.welcome_back') }}
+            @elseif($tab === 'register') {{ __('ui.auth.create_account') }}
+            @elseif($tab === 'reset') {{ __('ui.auth.reset_title') }}
+            @else {{ __('ui.auth.almost_done') }}
             @endif
         </div>
         <div class="msub">
-            @if($tab === 'login') Schön, dass du wieder da bist!
-            @elseif($tab === 'register') Werde Teil der Community
-            @elseif($tab === 'reset') Wir senden dir einen Link per E-Mail
+            @if($tab === 'login') {{ __('ui.auth.sub_login') }}
+            @elseif($tab === 'register') {{ __('ui.auth.sub_register') }}
+            @elseif($tab === 'reset') {{ __('ui.auth.sub_reset') }}
             @endif
         </div>
 
         {{-- Login --}}
         @if($tab === 'login')
         <div>
-            <label>E-Mail</label>
+            <label>{{ __('ui.auth.email') }}</label>
             <input type="email" wire:model="email" placeholder="deine@email.at" wire:keydown.enter="login">
             @error('email') <div class="field-error" style="margin:-8px 0 10px">{{ $message }}</div> @enderror
 
-            <label>Passwort</label>
+            <label>{{ __('ui.auth.password') }}</label>
             <div x-data="{ show: false }" style="display:flex;align-items:center;border:1.5px solid rgba(10,110,122,.15);border-radius:10px;background:var(--surf2);margin-bottom:12px;transition:border-color .18s;padding-right:12px" @focusin="$el.style.borderColor='var(--t)'" @focusout="$el.style.borderColor='rgba(10,110,122,.15)'">
                 <input wire:model="password" :type="show ? 'text' : 'password'"
                     placeholder="••••••••" wire:keydown.enter="login"
@@ -237,13 +237,13 @@ new class extends Component {
             </div>
             @error('password') <div class="field-error" style="margin:-8px 0 10px">{{ $message }}</div> @enderror
 
-            <div class="mlink mlink-tight">Passwort vergessen? <a wire:click="switchTab('reset')" style="cursor:pointer">Reset password</a></div>
+            <div class="mlink mlink-tight">{{ __('ui.auth.forgot_password') }} <a wire:click="switchTab('reset')" style="cursor:pointer">{{ __('ui.auth.reset_title') }}</a></div>
 
             <button class="mbtn" wire:click="login" wire:loading.attr="disabled" wire:target="login">
-                <span wire:loading.remove wire:target="login">Anmelden</span>
-                <span wire:loading wire:target="login">Wird angemeldet…</span>
+                <span wire:loading.remove wire:target="login">{{ __('ui.auth.login_btn') }}</span>
+                <span wire:loading wire:target="login">{{ __('ui.auth.logging_in') }}</span>
             </button>
-            <div class="mlink">Noch kein Konto? <a wire:click="switchTab('register')" style="cursor:pointer">Registrieren</a></div>
+            <div class="mlink">{{ __('ui.auth.no_account') }} <a wire:click="switchTab('register')" style="cursor:pointer">{{ __('ui.auth.register_link') }}</a></div>
         </div>
         @endif
 
@@ -252,34 +252,34 @@ new class extends Component {
         <div>
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:0 12px">
                 <div>
-                    <label>Vorname</label>
+                    <label>{{ __('ui.auth.first_name') }}</label>
                     <input type="text" wire:model="firstName" placeholder="z.B. Maria">
                     @error('firstName') <div class="field-error" style="margin:-8px 0 10px">{{ $message }}</div> @enderror
                 </div>
                 <div>
-                    <label>Nachname</label>
+                    <label>{{ __('ui.auth.last_name') }}</label>
                     <input type="text" wire:model="lastName" placeholder="z.B. Schmidt">
                     @error('lastName') <div class="field-error" style="margin:-8px 0 10px">{{ $message }}</div> @enderror
                 </div>
             </div>
 
-            <label>Nickname <span style="font-size:11px;color:var(--light);font-weight:400">(sichtbar für alle)</span></label>
+            <label>{{ __('ui.auth.nickname') }} <span style="font-size:11px;color:var(--light);font-weight:400">{{ __('ui.auth.nickname_visible') }}</span></label>
             <input type="text" wire:model="nickname" placeholder="z.B. spastik_warrior" maxlength="30">
-            <div style="font-size:11px;color:var(--light);margin:-8px 0 4px">Nur Buchstaben, Zahlen und _ erlaubt.</div>
+            <div style="font-size:11px;color:var(--light);margin:-8px 0 4px">{{ __('ui.auth.nickname_format') }}</div>
             @error('nickname') <div class="field-error" style="margin:0 0 10px">{{ $message }}</div> @enderror
 
-            <label>E-Mail</label>
+            <label>{{ __('ui.auth.email') }}</label>
             <input type="email" wire:model="regEmail" placeholder="deine@email.at">
             @error('regEmail') <div class="field-error" style="margin:-8px 0 10px">{{ $message }}</div> @enderror
 
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:0 12px;align-items:start">
                 <div>
-                    <label>Passwort</label>
+                    <label>{{ __('ui.auth.password') }}</label>
                     <div x-data="{ pw: '', show: false }">
                         <div style="display:flex;align-items:center;border:1.5px solid rgba(10,110,122,.15);border-radius:10px;background:var(--surf2);margin-bottom:6px;transition:border-color .18s;padding-right:10px" @focusin="$el.style.borderColor='var(--t)'" @focusout="$el.style.borderColor='rgba(10,110,122,.15)'">
                             <input wire:model="regPassword" :type="show ? 'text' : 'password'"
                                 x-on:input="pw = $event.target.value"
-                                placeholder="Min. 8 Zeichen"
+                                placeholder="{{ __('ui.auth.password_min') }}"
                                 style="flex:1;padding:10px 0 10px 13px;border:none;background:transparent;outline:none;font-family:var(--body);font-size:14px;color:var(--ink);margin-bottom:0;min-width:0">
                             <button type="button" x-on:click="show = !show" tabindex="-1"
                                 style="padding:0 12px 0 8px;background:none;border:none;cursor:pointer;display:flex;align-items:center;flex-shrink:0"
@@ -288,18 +288,18 @@ new class extends Component {
                             </button>
                         </div>
                         <div x-show="pw.length > 0" style="font-size:11px;display:flex;flex-direction:column;gap:2px;margin-bottom:6px">
-                            <span :style="pw.length >= 8 ? 'color:var(--t)' : 'color:var(--light)'" x-text="(pw.length >= 8 ? '✓' : '✗') + ' Mindestens 8 Zeichen'"></span>
-                            <span :style="/[a-zA-ZäöüÄÖÜß]/.test(pw) ? 'color:var(--t)' : 'color:var(--light)'" x-text="(/[a-zA-ZäöüÄÖÜß]/.test(pw) ? '✓' : '✗') + ' Mindestens 1 Buchstabe'"></span>
-                            <span :style="/[0-9]/.test(pw) ? 'color:var(--t)' : 'color:var(--light)'" x-text="(/[0-9]/.test(pw) ? '✓' : '✗') + ' Mindestens 1 Zahl'"></span>
+                            <span :style="pw.length >= 8 ? 'color:var(--t)' : 'color:var(--light)'" x-text="(pw.length >= 8 ? '✓' : '✗') + ' {{ __('ui.auth.pw_check_length') }}'"></span>
+                            <span :style="/[a-zA-ZäöüÄÖÜß]/.test(pw) ? 'color:var(--t)' : 'color:var(--light)'" x-text="(/[a-zA-ZäöüÄÖÜß]/.test(pw) ? '✓' : '✗') + ' {{ __('ui.auth.pw_check_letter') }}'"></span>
+                            <span :style="/[0-9]/.test(pw) ? 'color:var(--t)' : 'color:var(--light)'" x-text="(/[0-9]/.test(pw) ? '✓' : '✗') + ' {{ __('ui.auth.pw_check_number') }}'"></span>
                         </div>
                     </div>
                     @error('regPassword') <div class="field-error" style="margin:0 0 10px">{{ $message }}</div> @enderror
                 </div>
                 <div>
-                    <label>Wiederholen</label>
+                    <label>{{ __('ui.auth.repeat_pwd') }}</label>
                     <div x-data="{ show: false }" style="display:flex;align-items:center;border:1.5px solid rgba(10,110,122,.15);border-radius:10px;background:var(--surf2);margin-bottom:12px;transition:border-color .18s;padding-right:10px" @focusin="$el.style.borderColor='var(--t)'" @focusout="$el.style.borderColor='rgba(10,110,122,.15)'">
                         <input wire:model="regPasswordConfirmation" :type="show ? 'text' : 'password'"
-                            placeholder="Min. 8 Zeichen"
+                            placeholder="{{ __('ui.auth.password_min') }}"
                             style="flex:1;padding:10px 0 10px 13px;border:none;background:transparent;outline:none;font-family:var(--body);font-size:14px;color:var(--ink);margin-bottom:0;min-width:0">
                         <button type="button" x-on:click="show = !show" tabindex="-1"
                             style="padding:0 12px 0 8px;background:none;border:none;cursor:pointer;display:flex;align-items:center;flex-shrink:0"
@@ -312,17 +312,17 @@ new class extends Component {
             </div>
 
             <button class="mbtn" wire:click="register" wire:loading.attr="disabled" wire:target="register">
-                <span wire:loading.remove wire:target="register">Konto erstellen</span>
-                <span wire:loading wire:target="register">Wird erstellt…</span>
+                <span wire:loading.remove wire:target="register">{{ __('ui.auth.create_account') }}</span>
+                <span wire:loading wire:target="register">{{ __('ui.auth.creating') }}</span>
             </button>
-            <div class="mlink">Bereits registriert? <a wire:click="switchTab('login')" style="cursor:pointer">Anmelden</a></div>
+            <div class="mlink">{{ __('ui.auth.already_registered') }} <a wire:click="switchTab('login')" style="cursor:pointer">{{ __('ui.auth.login_link') }}</a></div>
         </div>
         @endif
 
         {{-- Password reset --}}
         @if($tab === 'reset')
         <div>
-            <label>E-Mail</label>
+            <label>{{ __('ui.auth.email') }}</label>
             <input type="email" wire:model="resetEmail" placeholder="deine@email.at" wire:keydown.enter="sendResetLink">
             @error('resetEmail') <div class="field-error" style="margin:-8px 0 10px">{{ $message }}</div> @enderror
 
@@ -333,10 +333,10 @@ new class extends Component {
             @endif
 
             <button class="mbtn" wire:click="sendResetLink" wire:loading.attr="disabled" wire:target="sendResetLink">
-                <span wire:loading.remove wire:target="sendResetLink">Reset password</span>
-                <span wire:loading wire:target="sendResetLink">Wird gesendet…</span>
+                <span wire:loading.remove wire:target="sendResetLink">{{ __('ui.auth.reset_button') }}</span>
+                <span wire:loading wire:target="sendResetLink">{{ __('ui.auth.sending') }}</span>
             </button>
-            <div class="mlink">Zurück zum Login? <a wire:click="switchTab('login')" style="cursor:pointer">Anmelden</a></div>
+            <div class="mlink">{{ __('ui.auth.back_to_login') }} <a wire:click="switchTab('login')" style="cursor:pointer">{{ __('ui.auth.login_link') }}</a></div>
         </div>
         @endif
 
@@ -344,12 +344,12 @@ new class extends Component {
         @if($tab === 'verify')
         <div style="text-align:center;padding:8px 0 4px">
             <div style="font-size:48px;margin-bottom:16px">&#x2709;&#xFE0F;</div>
-            <div style="font-size:15px;font-weight:700;color:var(--ink);margin-bottom:10px">Bitte bestätige deine E-Mail-Adresse</div>
+            <div style="font-size:15px;font-weight:700;color:var(--ink);margin-bottom:10px">{{ __('ui.auth.verify_confirm_title') }}</div>
             <div style="font-size:13.5px;color:var(--muted);line-height:1.65;margin-bottom:24px">
-                Wir haben dir einen Bestätigungslink gesendet.<br>
-                Bitte klicke auf den Link in der E-Mail, damit dein Konto aktiviert werden kann.
+                {{ __('ui.auth.verify_confirm_text1') }}<br>
+                {{ __('ui.auth.verify_confirm_text2') }}
             </div>
-            <button class="mbtn" wire:click="closeModal">Alles klar</button>
+            <button class="mbtn" wire:click="closeModal">{{ __('ui.auth.ok') }}</button>
         </div>
         @endif
     </div>

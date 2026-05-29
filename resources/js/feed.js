@@ -108,6 +108,18 @@ export function clearAll() {
   render();
 }
 
+export function applyViewUI(view) {
+  if (view !== 'mine' && view !== 'saved') { return; }
+  state.curView = view;
+  markNav(view);
+  const af = document.getElementById('afilter');
+  if (!af) { return; }
+  af.classList.add('on');
+  const key = view === 'mine' ? 'filterMine' : 'filterSaved';
+  const fallback = view === 'mine' ? 'Meine Beiträge' : 'Gespeicherte Beiträge';
+  document.getElementById('af-txt').textContent = (window.__TRANS__ && window.__TRANS__[key]) || fallback;
+}
+
 export function showSaved() {
   if (state.curView === 'saved') { clearAll(); return; }
   state.curView = 'saved'; markNav('saved');
@@ -115,7 +127,7 @@ export function showSaved() {
   dispatchToFeed();
   const af = document.getElementById('afilter');
   af.classList.add('on');
-  document.getElementById('af-txt').textContent = 'Gespeicherte Beiträge';
+  document.getElementById('af-txt').textContent = (window.__TRANS__ && window.__TRANS__.filterSaved) || 'Gespeicherte Beiträge';
 }
 
 export function showMine() {
@@ -125,5 +137,5 @@ export function showMine() {
   dispatchToFeed();
   const af = document.getElementById('afilter');
   af.classList.add('on');
-  document.getElementById('af-txt').textContent = 'Meine Beiträge';
+  document.getElementById('af-txt').textContent = (window.__TRANS__ && window.__TRANS__.filterMine) || 'Meine Beiträge';
 }

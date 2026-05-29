@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="{{ app()->getLocale() }}">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
@@ -14,7 +14,7 @@
     <meta property="og:title" content="@yield('title', 'HSPConnect — Community für Spastik')">
     <meta property="og:description" content="@yield('description', 'HSPConnect ist die deutschsprachige Online-Community für Menschen mit Hereditärer Spastischer Paraplegie (HSP). Erfahrungen teilen, Fragen stellen, einander unterstützen.')">
     <meta property="og:url" content="@yield('canonical', url()->current())">
-    <meta property="og:locale" content="de_DE">
+    <meta property="og:locale" content="{{ app()->getLocale() === 'en' ? 'en_US' : 'de_DE' }}">
 
     {{-- Twitter Card --}}
     <meta name="twitter:card" content="summary">
@@ -36,7 +36,23 @@
         ? ['name' => $authUser->nickname, 'ava' => strtoupper(mb_substr($authUser->nickname, 0, 1))]
         : null;
 @endphp
-<script>window.__AUTH__ = @json($authState);window.__NOTIF_COUNT__ = {{ $authUser ? $authUser->unreadNotifications()->count() : 0 }};</script>
+<script>
+window.__AUTH__ = @json($authState);
+window.__NOTIF_COUNT__ = {{ $authUser ? $authUser->unreadNotifications()->count() : 0 }};
+window.__LOCALE__ = '{{ app()->getLocale() }}';
+window.__TRANS__ = {
+    notificationsTitle: @json(__('ui.notifications.title')),
+    noNotifications: @json(__('ui.notifications.none')),
+    unread: @json(__('ui.notifications.unread')),
+    close: @json(__('ui.notifications.close')),
+    filterSaved: @json(__('ui.account.saved_posts')),
+    filterMine: @json(__('ui.account.my_posts')),
+    filter: 'Filter',
+    requireLogin: @json(__('ui.layout.require_login')),
+    socialLoginSoon: @json(__('ui.layout.social_login_soon')),
+    welcomeBack: @json(__('ui.auth.welcome_back')),
+};
+</script>
 @persist('hexbg')
 <canvas id="hexbg"></canvas>
 @endpersist
@@ -47,10 +63,10 @@
 
 @if(auth()->check() && ! auth()->user()->hasVerifiedEmail())
     <div style="background:#d97706;color:#fff;text-align:center;padding:10px 16px;font-size:13.5px;font-family:var(--body);display:flex;align-items:center;justify-content:center;gap:12px">
-        <span>Bitte bestätige deine E-Mail-Adresse, um HSPConnect nutzen zu können.</span>
+        <span>{{ __('ui.layout.verify_notice') }}</span>
         <form method="POST" action="/email/verification-notification" style="display:inline">
             @csrf
-            <button type="submit" style="background:rgba(255,255,255,.25);border:none;color:#fff;padding:4px 12px;border-radius:20px;font-size:12.5px;cursor:pointer;font-weight:600">Erneut senden</button>
+            <button type="submit" style="background:rgba(255,255,255,.25);border:none;color:#fff;padding:4px 12px;border-radius:20px;font-size:12.5px;cursor:pointer;font-weight:600">{{ __('ui.layout.resend') }}</button>
         </form>
     </div>
 @endif
@@ -73,11 +89,11 @@
         <div style="display:flex;gap:10px;justify-content:flex-end">
             <button onclick="closeConfirm()"
                 style="padding:9px 20px;border-radius:20px;border:1.5px solid var(--br);background:none;font-family:var(--body);font-size:13.5px;cursor:pointer;color:var(--muted);font-weight:500">
-                Abbrechen
+                {{ __('ui.layout.cancel') }}
             </button>
             <button onclick="doConfirm()"
                 style="padding:9px 20px;border-radius:20px;border:none;background:#c04040;color:#fff;font-family:var(--body);font-size:13.5px;font-weight:600;cursor:pointer">
-                Löschen
+                {{ __('ui.layout.delete') }}
             </button>
         </div>
     </div>

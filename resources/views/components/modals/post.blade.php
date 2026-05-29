@@ -3,7 +3,7 @@
         <button class="mc" onclick="closePM()">&#x2715;</button>
         <div
             style="font-family:var(--disp);font-size:20px;font-weight:800;color:var(--ink);margin-bottom:13px;letter-spacing:-.03em">
-            Beitrag erstellen
+            {{ __('ui.create_post.modal_title') }}
         </div>
         <livewire:create-post />
     </div>

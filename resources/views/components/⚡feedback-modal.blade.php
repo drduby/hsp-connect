@@ -48,12 +48,12 @@ new class extends Component {
     public function messages(): array
     {
         return [
-            'topic.required'      => 'Bitte gib ein Thema an.',
-            'topic.max'           => 'Das Thema darf max. 200 Zeichen haben.',
-            'description.required' => 'Bitte beschreibe dein Anliegen.',
-            'description.min'     => 'Die Beschreibung muss mindestens 5 Zeichen lang sein.',
-            'description.max'     => 'Die Beschreibung darf max. 2000 Zeichen haben.',
-            'email.email'         => 'Bitte gib eine gültige E-Mail-Adresse an.',
+            'topic.required'       => __('ui.feedback.error_topic'),
+            'topic.max'            => __('ui.feedback.error_topic_max'),
+            'description.required' => __('ui.feedback.error_desc'),
+            'description.min'      => __('ui.feedback.error_desc_min'),
+            'description.max'      => __('ui.feedback.error_desc_max'),
+            'email.email'          => __('ui.feedback.error_email'),
         ];
     }
 
@@ -61,7 +61,7 @@ new class extends Component {
     {
         $key = 'feedback:' . (auth()->id() ?? request()->ip());
         if (RateLimiter::tooManyAttempts($key, maxAttempts: 5)) {
-            $this->addError('description', 'Zu viele Anfragen. Bitte später erneut versuchen.');
+            $this->addError('description', __('ui.feedback.too_many'));
 
             return;
         }
@@ -91,19 +91,19 @@ new class extends Component {
             @if($submitted)
                 <div style="text-align:center;padding:16px 0 8px">
                     <div style="font-size:36px;margin-bottom:12px">{{ $type === 'idea' ? '💡' : '✅' }}</div>
-                    <div class="mttl">{{ $type === 'idea' ? 'Danke für deine Idee!' : 'Problem gemeldet — danke!' }}</div>
+                    <div class="mttl">{{ $type === 'idea' ? __('ui.feedback.idea_success') : __('ui.feedback.bug_success') }}</div>
                     <p style="font-size:13.5px;color:var(--muted);margin-top:8px;line-height:1.6">
-                        Dein Feedback hilft uns, HSPConnect zu verbessern.
+                        {{ __('ui.feedback.success_text') }}
                     </p>
-                    <button class="mbtn" style="margin-top:20px" wire:click="close">Schließen</button>
+                    <button class="mbtn" style="margin-top:20px" wire:click="close">{{ __('ui.feedback.close') }}</button>
                 </div>
             @else
-                <div class="mttl">{{ $type === 'idea' ? '💡 Idee oder Wunsch' : '🐛 Technisches Problem' }}</div>
-                <div class="msub">{{ $type === 'idea' ? 'Was würdest du dir wünschen?' : 'Was funktioniert nicht?' }}</div>
+                <div class="mttl">{{ $type === 'idea' ? __('ui.feedback.idea_title') : __('ui.feedback.bug_title') }}</div>
+                <div class="msub">{{ $type === 'idea' ? __('ui.feedback.idea_sub') : __('ui.feedback.bug_sub') }}</div>
 
                 <div style="display:flex;flex-direction:column;gap:12px;margin-top:16px">
                     <div>
-                        <label>Thema @if($type !== 'idea')<span style="font-size:10.5px;color:var(--light);font-weight:400">(optional)</span>@endif</label>
+                        <label>{{ __('ui.feedback.topic') }} @if($type !== 'idea')<span style="font-size:10.5px;color:var(--light);font-weight:400">{{ __('ui.feedback.optional') }}</span>@endif</label>
                         <input wire:model="topic"
                             type="text"
                             placeholder="z.B. Suche, Beiträge, Profil…"
@@ -114,9 +114,9 @@ new class extends Component {
                     </div>
 
                     <div>
-                        <label>Beschreibung</label>
+                        <label>{{ __('ui.feedback.description') }}</label>
                         <textarea wire:model="description"
-                            placeholder="{{ $type === 'idea' ? 'Beschreibe deine Idee oder deinen Wunsch…' : 'Beschreibe das Problem so genau wie möglich…' }}"
+                            placeholder="{{ $type === 'idea' ? __('ui.feedback.idea_placeholder') : __('ui.feedback.bug_placeholder') }}"
                             style="width:100%;padding:10px 13px;border:1.5px solid rgba(10,110,122,.15);border-radius:10px;font-family:var(--body);font-size:13.5px;outline:none;color:var(--ink);background:var(--surf2);resize:vertical;min-height:100px;transition:border-color .18s"></textarea>
                         @error('description')
                             <p class="form-err" style="margin-top:4px">{{ $message }}</p>
@@ -125,7 +125,7 @@ new class extends Component {
 
                     @guest
                         <div>
-                            <label>E-Mail <span style="font-size:10.5px;color:var(--light);font-weight:400">(optional, für Rückfragen)</span></label>
+                            <label>{{ __('ui.feedback.email_label') }} <span style="font-size:10.5px;color:var(--light);font-weight:400">{{ __('ui.feedback.email_hint') }}</span></label>
                             <input wire:model="email"
                                 type="email"
                                 placeholder="deine@email.at"
@@ -138,19 +138,19 @@ new class extends Component {
 
                     @auth
                         <div style="font-size:12px;color:var(--t);background:var(--t3);border-radius:8px;padding:8px 12px;font-weight:500">
-                            Antwort geht an: {{ auth()->user()->nickname }}.
+                            {{ __('ui.feedback.reply_to', ['name' => auth()->user()->nickname]) }}
                         </div>
                     @endauth
                 </div>
 
                 <div style="display:flex;gap:10px;margin-top:18px">
                     <button class="mbtn" wire:click="submit" wire:loading.attr="disabled" style="flex:1">
-                        <span wire:loading.remove>Feedback senden</span>
-                        <span wire:loading>Wird gesendet…</span>
+                        <span wire:loading.remove>{{ __('ui.feedback.submit') }}</span>
+                        <span wire:loading>{{ __('ui.feedback.submitting') }}</span>
                     </button>
                     <button wire:click="close"
                         style="padding:11px 18px;border-radius:10px;border:1.5px solid var(--bord2);background:transparent;color:var(--muted);font-size:14px;font-family:var(--body);cursor:pointer">
-                        Abbrechen
+                        {{ __('ui.feedback.cancel') }}
                     </button>
                 </div>
             @endif

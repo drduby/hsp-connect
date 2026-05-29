@@ -42,6 +42,14 @@ Route::get('/reset-password/{token}', function (Request $request, string $token)
     ]);
 })->middleware('guest')->name('password.reset');
 
+Route::post('/language/{locale}', function (string $locale) {
+    if (in_array($locale, ['de', 'en'])) {
+        session(['locale' => $locale]);
+    }
+
+    return back();
+})->name('language.switch');
+
 Route::get('/', [PostController::class, 'index'])->name('home');
 Route::get('/faq', [FaqController::class, 'index'])->name('faq');
 

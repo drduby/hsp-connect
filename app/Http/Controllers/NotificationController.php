@@ -16,21 +16,25 @@ class NotificationController extends Controller
             ->map(fn ($n) => match (true) {
                 isset($n->data['liker_nickname']) => [
                     'id' => $n->id,
-                    'text' => $n->data['liker_nickname'].' hat deinen Beitrag „'.$n->data['post_title'].'" geliked',
+                    'text' => __('ui.notifications.liked', ['liker' => $n->data['liker_nickname'], 'title' => $n->data['post_title']]),
                     'time' => $n->created_at->diffForHumans(),
                     'read' => ! is_null($n->read_at),
                     'icon' => '❤️',
                 ],
                 isset($n->data['commenter_nickname']) => [
                     'id' => $n->id,
-                    'text' => $n->data['commenter_nickname'].' hat deinen Beitrag „'.$n->data['post_title'].'" kommentiert',
+                    'text' => __('ui.notifications.commented', ['commenter' => $n->data['commenter_nickname'], 'title' => $n->data['post_title']]),
                     'time' => $n->created_at->diffForHumans(),
                     'read' => ! is_null($n->read_at),
                     'icon' => '💬',
                 ],
                 isset($n->data['rater_nickname']) => [
                     'id' => $n->id,
-                    'text' => $n->data['rater_nickname'].' hat deinen Beitrag „'.$n->data['post_title'].'" mit '.str_repeat('★', $n->data['rating']).str_repeat('☆', 5 - $n->data['rating']).' bewertet',
+                    'text' => __('ui.notifications.rated', [
+                        'rater' => $n->data['rater_nickname'],
+                        'title' => $n->data['post_title'],
+                        'stars' => str_repeat('★', $n->data['rating']).str_repeat('☆', 5 - $n->data['rating']),
+                    ]),
                     'time' => $n->created_at->diffForHumans(),
                     'read' => ! is_null($n->read_at),
                     'icon' => '⭐',

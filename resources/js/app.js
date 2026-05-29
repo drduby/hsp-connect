@@ -1,7 +1,7 @@
 import { state } from './state.js';
 import { toast, checkAuthThen } from './utils.js';
 import { initHexBg } from './hexbg.js';
-import { render, go, toggleTag, onComposeSrch, clearComposeSrch, filterTags, clearAll, showSaved, showMine, markNav, setActiveNav } from './feed.js';
+import { render, go, toggleTag, onComposeSrch, clearComposeSrch, filterTags, clearAll, showSaved, showMine, markNav, setActiveNav, applyViewUI } from './feed.js';
 import { setLoggedInUI, openLg, closeLg, doSocialLogin } from './auth.js';
 import { renderNotifList, openNotifs, closeNotifs, markNotifRead, deleteNotif, deleteAllNotifs, initNotifDot } from './notifications.js';
 import { openProfileMenu, closeProfileMenu, openAccountPage, closeAccountPage } from './profile.js';
@@ -92,9 +92,23 @@ function init() {
   if (new URLSearchParams(window.location.search).get('verified') === '1') {
     openVerifiedModal();
   }
+
+  const filterParam = new URLSearchParams(window.location.search).get('filter');
+  if (filterParam === 'mine' || filterParam === 'saved') {
+    applyViewUI(filterParam);
+  }
 }
 
 document.addEventListener('livewire:navigated', init);
+
+function goToFilter(view) {
+  if (document.getElementById('afilter')) {
+    closeAccountPage();
+    if (view === 'mine') { showMine(); } else { showSaved(); }
+  } else {
+    Livewire.navigate('/?filter=' + view);
+  }
+}
 
 function openVerifiedModal() {
   const el = document.getElementById('verified-modal');
@@ -111,9 +125,9 @@ function closeVerifiedModal() {
 
 Object.assign(window, {
   state,
-  openVerifiedModal, closeVerifiedModal,
+  openVerifiedModal, closeVerifiedModal, goToFilter,
   toast, checkAuthThen,
-  render, go, toggleTag, onComposeSrch, clearComposeSrch, filterTags, clearAll, showSaved, showMine, markNav, setActiveNav,
+  render, go, toggleTag, onComposeSrch, clearComposeSrch, filterTags, clearAll, showSaved, showMine, markNav, setActiveNav, applyViewUI,
   openLg, closeLg, doSocialLogin,
   openNotifs, closeNotifs, markNotifRead, deleteNotif, deleteAllNotifs, renderNotifList, initNotifDot,
   openProfileMenu, closeProfileMenu, openAccountPage, closeAccountPage,

@@ -16,14 +16,15 @@ export function closeLg() {
 }
 
 export function doSocialLogin() {
-  if (typeof toast === 'function') toast('🚧 Social Login kommt bald!');
+  if (typeof toast === 'function') toast((window.__TRANS__ && window.__TRANS__.socialLoginSoon) || '🚧 Social Login kommt bald!');
 }
 
 export function setLoggedInUI() {
   const ca = document.getElementById('compose-ava');
   if (ca) { ca.textContent = state.currentUser.ava; ca.style.display = 'flex'; }
   const wt = document.getElementById('compose-welcome-title');
-  if (wt) wt.textContent = 'Willkommen zurück, ' + state.currentUser.name + '!';
+  const wb = (window.__TRANS__ && window.__TRANS__.welcomeBack) || 'Willkommen zurück';
+  if (wt) wt.textContent = wb + ', ' + state.currentUser.name + '!';
   const hlb = document.getElementById('h-login-btn');
   if (hlb) { hlb.textContent = state.currentUser.name; hlb.onclick = function () { document.dispatchEvent(new CustomEvent('app:open-profile-menu')); }; }
   const hrb = document.getElementById('h-reg-btn');

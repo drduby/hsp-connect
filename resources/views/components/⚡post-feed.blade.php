@@ -5,6 +5,7 @@ use App\Services\PostService;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
+use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
 
@@ -23,6 +24,7 @@ new class extends Component {
 
     public array $tags = [];
 
+    #[Url(as: 'filter', except: 'all')]
     public string $view = 'all';
 
     public function mount(): void
@@ -103,13 +105,13 @@ new class extends Component {
     {{-- Feed tabs --}}
     <div class="ftabs">
         <button class="ft {{ $type === 'Alle' ? 'on' : '' }}" wire:click="setType('Alle')">
-            Alle ({{ $this->tabCounts['all'] }})
+            {{ __('ui.feed.all', ['count' => $this->tabCounts['all']]) }}
         </button>
         <button class="ft {{ $type === 'Erfahrung' ? 'on' : '' }}" wire:click="setType('Erfahrung')">
-            ✨ Erfahrungen ({{ $this->tabCounts['experiences'] }})
+            {{ __('ui.feed.experiences', ['count' => $this->tabCounts['experiences']]) }}
         </button>
         <button class="ft {{ $type === 'Frage' ? 'on' : '' }}" wire:click="setType('Frage')">
-            ❓ Fragen ({{ $this->tabCounts['questions'] }})
+            {{ __('ui.feed.questions', ['count' => $this->tabCounts['questions']]) }}
         </button>
     </div>
 
@@ -122,9 +124,9 @@ new class extends Component {
                 wire:loading.attr="disabled"
                 style="display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:11px 18px;margin-bottom:12px;background:var(--t);color:#fff;border:none;border-radius:12px;font-family:var(--body);font-size:13.5px;font-weight:600;cursor:pointer;box-shadow:var(--sh2);transition:background .15s">
                 <span wire:loading.remove>
-                    ✨ {{ $newPostCount }} neue {{ $newPostCount === 1 ? 'Beitrag' : 'Beiträge' }} — jetzt laden
+                    {{ trans_choice('ui.feed.new_posts', $newPostCount, ['count' => $newPostCount]) }}
                 </span>
-                <span wire:loading>Wird geladen…</span>
+                <span wire:loading>{{ __('ui.feed.loading') }}</span>
             </button>
         @endif
 
@@ -134,8 +136,8 @@ new class extends Component {
         @empty
             <div class="empty">
                 <div class="empty-i">🌊</div>
-                <div class="empty-t">Keine Beiträge gefunden</div>
-                <p>Andere Filter oder neuen Beitrag erstellen!</p>
+                <div class="empty-t">{{ __('ui.feed.empty_title') }}</div>
+                <p>{{ __('ui.feed.empty_text') }}</p>
             </div>
         @endforelse
 
@@ -183,7 +185,7 @@ new class extends Component {
 
                 <span x-data="{ p: '' }"
                     style="display:flex;align-items:center;gap:5px;margin-left:6px;font-size:12px;color:var(--muted);font-family:var(--body)">
-                    Gehe zu
+                    {{ __('ui.feed.go_to') }}
                     <input type="number" min="1" max="{{ $lastPage }}"
                         x-model.number="p"
                         x-on:keydown.enter="if(p >= 1 && p <= {{ $lastPage }}) { $wire.gotoPage(p); p = ''; }"

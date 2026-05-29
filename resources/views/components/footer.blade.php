@@ -8,22 +8,22 @@
                     <span style="font-size:9px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.45)">Community</span>
                 </div>
             </div>
-            <p class="fd">Die Community f&#xFC;r Menschen mit Spastik &#x2014; teilen, fragen, verbinden.</p>
+            <p class="fd">{{ __('ui.footer.tagline') }}</p>
         </div>
         <div>
-            <div class="fh">Rechtliches</div>
-            <a class="fa" onclick="openInfo('impressum')">Impressum</a>
-            <a class="fa" onclick="openInfo('datenschutz')">Datenschutz</a>
-            <a class="fa" onclick="openInfo('nutzung')">Nutzungsbedingungen</a>
+            <div class="fh">{{ __('ui.footer.legal') }}</div>
+            <a class="fa" onclick="openInfo('impressum')">{{ __('ui.footer.imprint') }}</a>
+            <a class="fa" onclick="openInfo('datenschutz')">{{ __('ui.footer.privacy') }}</a>
+            <a class="fa" onclick="openInfo('nutzung')">{{ __('ui.footer.terms') }}</a>
         </div>
         <div>
-            <div class="fh">Support</div>
-            <a class="fa" href="{{ route('faq') }}" wire:navigate>FAQ</a>
-            <a class="fa" onclick="openInfo('regeln')">Community-Regeln</a>
-            <a class="fa" onclick="openInfo('kontakt')">Kontakt</a>
+            <div class="fh">{{ __('ui.footer.support') }}</div>
+            <a class="fa" href="{{ route('faq') }}" wire:navigate>{{ __('ui.nav.faq') }}</a>
+            <a class="fa" onclick="openInfo('regeln')">{{ __('ui.footer.rules') }}</a>
+            <a class="fa" onclick="openInfo('kontakt')">{{ __('ui.footer.contact') }}</a>
         </div>
     </div>
     <div class="fbot">
-        <span>&#xA9; 2026 HSPConnect. Alle Rechte vorbehalten.</span>
+        <span>{{ __('ui.footer.copyright') }}</span>
     </div>
 </footer>

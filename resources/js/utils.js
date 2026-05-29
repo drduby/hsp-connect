@@ -15,7 +15,7 @@ export function toast(msg) {
 /* Fires a DOM event so auth.js can open the login modal without a circular import */
 export function requireAuth(msg) {
   if (state.loggedIn) return true;
-  toast(msg || '🔒 Bitte erst anmelden!');
+  toast(msg || (window.__TRANS__ && window.__TRANS__.requireLogin) || '🔒 Bitte erst anmelden!');
   document.dispatchEvent(new CustomEvent('app:require-login'));
   return false;
 }

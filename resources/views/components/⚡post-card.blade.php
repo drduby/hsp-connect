@@ -123,7 +123,7 @@ new class extends Component {
 
         $key = 'add-comment:' . auth()->id();
         if (RateLimiter::tooManyAttempts($key, maxAttempts: 10)) {
-            $this->addError('newComment', 'Zu viele Kommentare. Bitte kurz warten.');
+            $this->addError('newComment', __('ui.post.too_many_comments'));
 
             return;
         }
@@ -225,7 +225,8 @@ new class extends Component {
     $tagName    = $firstTag?->name ?? '';
     $tc         = $firstTag?->color ?? 'var(--t)';
     $typeRaw    = $post->type->value;
-    $typeLabel  = $typeRaw === 'experience' ? 'Erfahrung' : 'Frage';
+    $typeLabel  = $typeRaw === 'experience' ? __('ui.post.experience') : __('ui.post.question');
+    $typeInternal = $typeRaw === 'experience' ? 'Erfahrung' : 'Frage';
     $author     = $post->user->nickname;
     $ava        = strtoupper(mb_substr($author, 0, 1));
     $time       = $post->published_at->diffForHumans();
@@ -246,7 +247,7 @@ new class extends Component {
                 <div class="pname">{{ $author }}</div>
                 <div class="ptime">{{ $time }}</div>
             </div>
-            <span class="pbadge {{ $typeLabel === 'Erfahrung' ? 'pb-e' : 'pb-f' }}">
+            <span class="pbadge {{ $typeInternal === 'Erfahrung' ? 'pb-e' : 'pb-f' }}">
                 {{ $typeLabel }}
             </span>
             @foreach($post->tags as $tag)
@@ -262,8 +263,8 @@ new class extends Component {
         <div class="ptitle">{{ $post->title }}</div>
         <div x-data="{ expanded: false, clamped: false }" x-init="$nextTick(() => { clamped = $refs.body.scrollHeight > $refs.body.clientHeight })">
             <div class="pbody" :class="expanded ? '' : 'cl'" x-ref="body">{{ $post->content }}</div>
-            <button x-show="clamped && !expanded" class="readmore" x-on:click="expanded = true">Weiterlesen →</button>
-            <button x-show="expanded" class="readmore" x-on:click="expanded = false">Weniger anzeigen ↑</button>
+            <button x-show="clamped && !expanded" class="readmore" x-on:click="expanded = true">{{ __('ui.post.read_more') }}</button>
+            <button x-show="expanded" class="readmore" x-on:click="expanded = false">{{ __('ui.post.show_less') }}</button>
         </div>
     </div>
 
@@ -286,16 +287,16 @@ new class extends Component {
 
         @if($this->isMine)
             <button class="pab"
-                x-on:click="openConfirm('Beitrag löschen', 'Möchtest du diesen Beitrag wirklich löschen? Diese Aktion kann nicht rückgängig gemacht werden.', () => $wire.deletePost())"
+                x-on:click="openConfirm('{{ __('ui.post.delete_title') }}', '{{ __('ui.post.delete_confirm') }}', () => $wire.deletePost())"
                 style="color:#c04040;font-size:12px">
-                🗑 Löschen
+                🗑 {{ __('ui.post.delete') }}
             </button>
         @else
             <button class="pab {{ $this->isSaved ? 'sv' : '' }}"
                 wire:click="toggleSave"
                 wire:loading.attr="disabled">
                 {{ $this->isSaved ? '🔖' : '🏷️' }}
-                {{ $this->isSaved ? 'Gespeichert' : 'Speichern' }}
+                {{ $this->isSaved ? __('ui.post.saved') : __('ui.post.save') }}
             </button>
         @endif
 
@@ -303,13 +304,13 @@ new class extends Component {
             @if($this->reported)
                 <button class="pab" disabled
                     style="margin-left:auto;font-size:11px;color:#c04040;cursor:default;opacity:1">
-                    ⚠ Gemeldet
+                    ⚠ {{ __('ui.post.reported') }}
                 </button>
             @else
                 <button class="pab"
                     wire:click="$dispatch('open-report', { postId: {{ $post->id }} })"
                     style="margin-left:auto;color:var(--light);font-size:11px">
-                    ⚠ Melden
+                    ⚠ {{ __('ui.post.report') }}
                 </button>
             @endif
         @endif
@@ -325,7 +326,7 @@ new class extends Component {
                     <span class="star {{ $this->userRating >= $s ? 'on' : '' }}"
                         wire:key="star-{{ $post->id }}-{{ $s }}"
                         wire:click="rate({{ $s }})"
-                        title="{{ $this->userRating === $s ? 'Bewertung entfernen' : $s . ' Stern' . ($s > 1 ? 'e' : '') }}"
+                        title="{{ $this->userRating === $s ? __('ui.post.remove_rating') : ($s . ' ' . ($s > 1 ? __('ui.post.stars') : __('ui.post.star'))) }}"
                         style="cursor:pointer">★</span>
                 @endfor
             </div>
@@ -336,14 +337,14 @@ new class extends Component {
     {{-- Comments toggle --}}
     @if($post->comments->count() > 0 && ! $showComments)
         <button class="read-cmts-btn" wire:click="$set('showComments', true)">
-            ▼ Kommentare anzeigen ({{ $post->comments->count() }})
+            {{ __('ui.post.show_comments', ['count' => $post->comments->count()]) }}
         </button>
     @endif
 
     {{-- Comments section --}}
     @if($showComments)
         <div class="cmts">
-            <button class="togcmt" wire:click="$set('showComments', false)">▲ Kommentare ausblenden</button>
+            <button class="togcmt" wire:click="$set('showComments', false)">{{ __('ui.post.hide_comments') }}</button>
 
             <div>
                 @foreach($post->comments as $comment)
@@ -355,10 +356,10 @@ new class extends Component {
                                 {{ $comment->user->nickname }}
                                 @if($commentIsMine)
                                     <button
-                                        x-on:click="openConfirm('Kommentar löschen', 'Möchtest du diesen Kommentar wirklich löschen?', () => $wire.deleteComment({{ $comment->id }}))"
+                                        x-on:click="openConfirm('{{ __('ui.post.delete_comment_title') }}', '{{ __('ui.post.delete_comment_confirm') }}', () => $wire.deleteComment({{ $comment->id }}))"
                                         style="background:none;border:none;color:var(--light);font-size:11px;cursor:pointer;padding:2px 6px;line-height:1;display:flex;align-items:center;gap:4px;border-radius:6px;transition:color .15s" onmouseover="this.style.color='#c04040'" onmouseout="this.style.color='var(--light)'">
                                         <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6"/><path d="M14 11v6"/><path d="M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>
-                                        Löschen
+                                        {{ __('ui.post.delete') }}
                                     </button>
                                 @endif
                             </div>
@@ -368,23 +369,23 @@ new class extends Component {
                 @endforeach
             </div>
 
-            <div class="cmt-write-label">Kommentar schreiben</div>
+            <div class="cmt-write-label">{{ __('ui.post.write_comment') }}</div>
             <div class="cform">
                 @auth
                     <div class="cava">{{ strtoupper(mb_substr(auth()->user()->nickname, 0, 1)) }}</div>
                     <input class="cinp"
                         wire:model="newComment"
                         wire:keydown.enter="addComment"
-                        placeholder="Kommentar eingeben…">
-                    <button class="csend" wire:click="addComment" wire:loading.attr="disabled">Senden</button>
+                        placeholder="{{ __('ui.post.comment_placeholder') }}">
+                    <button class="csend" wire:click="addComment" wire:loading.attr="disabled">{{ __('ui.post.send') }}</button>
                 @else
                     <div class="cava">?</div>
                     <input class="cinp"
-                        placeholder="Anmelden zum Kommentieren"
+                        placeholder="{{ __('ui.post.login_to_comment') }}"
                         readonly
                         style="cursor:pointer"
                         onclick="openLg()">
-                    <button class="csend" onclick="openLg()">Anmelden</button>
+                    <button class="csend" onclick="openLg()">{{ __('ui.post.login') }}</button>
                 @endauth
             </div>
             @error('newComment')

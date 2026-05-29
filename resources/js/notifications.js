@@ -46,11 +46,13 @@ export function renderNotifList() {
   const uc = document.getElementById('notif-unread-count');
   if (!list) { return; }
   const unread = NOTIFS.filter(function (n) { return !n.read; }).length;
-  if (uc) { uc.textContent = unread > 0 ? unread + ' ungelesen' : 'Benachrichtigungen'; }
+  const t = window.__TRANS__ || {};
+  if (uc) { uc.textContent = unread > 0 ? (t.unread || ':count ungelesen').replace(':count', unread) : (t.notificationsTitle || 'Benachrichtigungen'); }
   if (!NOTIFS.length) {
+    const t = window.__TRANS__ || {};
     list.innerHTML = '<div style="padding:28px 16px 20px;text-align:center">'
-      + '<div style="color:var(--light);font-size:13.5px;font-style:italic;margin-bottom:14px">Keine Benachrichtigungen</div>'
-      + '<button onclick="event.stopPropagation();closeNotifs()" style="background:var(--t);color:#fff;border:none;padding:8px 22px;border-radius:40px;font-family:var(--body);font-size:13px;font-weight:700;cursor:pointer">Schlie&#xDF;en</button>'
+      + '<div style="color:var(--light);font-size:13.5px;font-style:italic;margin-bottom:14px">' + (t.noNotifications || 'Keine Benachrichtigungen') + '</div>'
+      + '<button onclick="event.stopPropagation();closeNotifs()" style="background:var(--t);color:#fff;border:none;padding:8px 22px;border-radius:40px;font-family:var(--body);font-size:13px;font-weight:700;cursor:pointer">' + (t.close || 'Schließen') + '</button>'
       + '</div>';
     return;
   }

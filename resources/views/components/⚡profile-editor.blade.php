@@ -50,8 +50,8 @@ new class extends Component {
         }
 
         $this->profileSuccess = $emailChanged
-            ? 'Profildaten gespeichert. Bitte bestätige deine neue E-Mail-Adresse.'
-            : 'Profildaten gespeichert.';
+            ? __('ui.profile_editor.profile_saved_email')
+            : __('ui.profile_editor.profile_saved');
         $this->passwordSuccess = '';
     }
 
@@ -69,7 +69,7 @@ new class extends Component {
         $this->currentPassword = '';
         $this->password = '';
         $this->passwordConfirmation = '';
-        $this->passwordSuccess = 'Passwort erfolgreich geändert.';
+        $this->passwordSuccess = __('ui.profile_editor.password_changed');
         $this->profileSuccess = '';
     }
 };
@@ -80,18 +80,18 @@ new class extends Component {
     {{-- Profile info form --}}
     <div class="sb-card" style="padding:20px 22px">
         <div style="font-size:11px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--light);margin-bottom:16px">
-            Profildaten
+            {{ __('ui.profile_editor.profile_data') }}
         </div>
 
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
             <div>
-                <label style="font-size:11.5px;font-weight:600;color:var(--muted);display:block;margin-bottom:5px">Vorname</label>
+                <label style="font-size:11.5px;font-weight:600;color:var(--muted);display:block;margin-bottom:5px">{{ __('ui.profile_editor.first_name') }}</label>
                 <input wire:model="firstName" type="text"
                     style="width:100%;padding:9px 12px;border:1.5px solid var(--bord2);border-radius:10px;font-family:var(--body);font-size:13.5px;color:var(--ink);background:var(--bg);outline:none;box-sizing:border-box">
                 @error('firstName') <span style="font-size:11px;color:#c04040">{{ $message }}</span> @enderror
             </div>
             <div>
-                <label style="font-size:11.5px;font-weight:600;color:var(--muted);display:block;margin-bottom:5px">Nachname</label>
+                <label style="font-size:11.5px;font-weight:600;color:var(--muted);display:block;margin-bottom:5px">{{ __('ui.profile_editor.last_name') }}</label>
                 <input wire:model="lastName" type="text"
                     style="width:100%;padding:9px 12px;border:1.5px solid var(--bord2);border-radius:10px;font-family:var(--body);font-size:13.5px;color:var(--ink);background:var(--bg);outline:none;box-sizing:border-box">
                 @error('lastName') <span style="font-size:11px;color:#c04040">{{ $message }}</span> @enderror
@@ -99,14 +99,14 @@ new class extends Component {
         </div>
 
         <div style="margin-bottom:12px">
-            <label style="font-size:11.5px;font-weight:600;color:var(--muted);display:block;margin-bottom:5px">Benutzername</label>
+            <label style="font-size:11.5px;font-weight:600;color:var(--muted);display:block;margin-bottom:5px">{{ __('ui.profile_editor.username') }}</label>
             <input wire:model="nickname" type="text"
                 style="width:100%;padding:9px 12px;border:1.5px solid var(--bord2);border-radius:10px;font-family:var(--body);font-size:13.5px;color:var(--ink);background:var(--bg);outline:none;box-sizing:border-box">
             @error('nickname') <span style="font-size:11px;color:#c04040">{{ $message }}</span> @enderror
         </div>
 
         <div style="margin-bottom:16px">
-            <label style="font-size:11.5px;font-weight:600;color:var(--muted);display:block;margin-bottom:5px">E-Mail</label>
+            <label style="font-size:11.5px;font-weight:600;color:var(--muted);display:block;margin-bottom:5px">{{ __('ui.profile_editor.email') }}</label>
             <input wire:model="email" type="email"
                 style="width:100%;padding:9px 12px;border:1.5px solid var(--bord2);border-radius:10px;font-family:var(--body);font-size:13.5px;color:var(--ink);background:var(--bg);outline:none;box-sizing:border-box">
             @error('email') <span style="font-size:11px;color:#c04040">{{ $message }}</span> @enderror
@@ -118,33 +118,33 @@ new class extends Component {
 
         <button wire:click="saveProfile" wire:loading.attr="disabled"
             style="width:100%;padding:11px;background:var(--t);color:#fff;border:none;border-radius:10px;font-family:var(--body);font-size:13.5px;font-weight:700;cursor:pointer">
-            <span wire:loading.remove>Speichern</span>
-            <span wire:loading>Wird gespeichert…</span>
+            <span wire:loading.remove>{{ __('ui.profile_editor.save') }}</span>
+            <span wire:loading>{{ __('ui.profile_editor.saving') }}</span>
         </button>
     </div>
 
     {{-- Password form --}}
     <div class="sb-card" style="padding:20px 22px">
         <div style="font-size:11px;font-weight:800;letter-spacing:.18em;text-transform:uppercase;color:var(--light);margin-bottom:16px">
-            Passwort ändern
+            {{ __('ui.profile_editor.change_password') }}
         </div>
 
         <div style="margin-bottom:12px">
-            <label style="font-size:11.5px;font-weight:600;color:var(--muted);display:block;margin-bottom:5px">Aktuelles Passwort</label>
+            <label style="font-size:11.5px;font-weight:600;color:var(--muted);display:block;margin-bottom:5px">{{ __('ui.profile_editor.current_password') }}</label>
             <input wire:model="currentPassword" type="password"
                 style="width:100%;padding:9px 12px;border:1.5px solid var(--bord2);border-radius:10px;font-family:var(--body);font-size:13.5px;color:var(--ink);background:var(--bg);outline:none;box-sizing:border-box">
             @error('currentPassword') <span style="font-size:11px;color:#c04040">{{ $message }}</span> @enderror
         </div>
 
         <div style="margin-bottom:12px">
-            <label style="font-size:11.5px;font-weight:600;color:var(--muted);display:block;margin-bottom:5px">Neues Passwort</label>
+            <label style="font-size:11.5px;font-weight:600;color:var(--muted);display:block;margin-bottom:5px">{{ __('ui.profile_editor.new_password') }}</label>
             <input wire:model="password" type="password"
                 style="width:100%;padding:9px 12px;border:1.5px solid var(--bord2);border-radius:10px;font-family:var(--body);font-size:13.5px;color:var(--ink);background:var(--bg);outline:none;box-sizing:border-box">
             @error('password') <span style="font-size:11px;color:#c04040">{{ $message }}</span> @enderror
         </div>
 
         <div style="margin-bottom:16px">
-            <label style="font-size:11.5px;font-weight:600;color:var(--muted);display:block;margin-bottom:5px">Passwort bestätigen</label>
+            <label style="font-size:11.5px;font-weight:600;color:var(--muted);display:block;margin-bottom:5px">{{ __('ui.profile_editor.confirm_password') }}</label>
             <input wire:model="passwordConfirmation" type="password"
                 style="width:100%;padding:9px 12px;border:1.5px solid var(--bord2);border-radius:10px;font-family:var(--body);font-size:13.5px;color:var(--ink);background:var(--bg);outline:none;box-sizing:border-box">
         </div>
@@ -155,8 +155,8 @@ new class extends Component {
 
         <button wire:click="savePassword" wire:loading.attr="disabled"
             style="width:100%;padding:11px;background:var(--t);color:#fff;border:none;border-radius:10px;font-family:var(--body);font-size:13.5px;font-weight:700;cursor:pointer">
-            <span wire:loading.remove>Passwort ändern</span>
-            <span wire:loading>Wird gespeichert…</span>
+            <span wire:loading.remove>{{ __('ui.profile_editor.change_password') }}</span>
+            <span wire:loading>{{ __('ui.profile_editor.saving') }}</span>
         </button>
     </div>
 

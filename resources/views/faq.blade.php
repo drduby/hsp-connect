@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
-@section('title', 'FAQ — HSPConnect')
-@section('description', 'Häufig gestellte Fragen rund um Hereditäre Spastische Paraplegie (HSP): Symptome, Therapien, Hilfsmittel, Alltag und Community-Unterstützung.')
+@section('title', __('ui.faq.title'))
+@section('description', __('ui.faq.description'))
 @section('canonical', route('faq'))
 
 @section('structured-data')
@@ -62,7 +62,7 @@
                         </svg>
                         <input x-model="search"
                             type="text"
-                            placeholder="FAQ durchsuchen&#x2026;"
+                            placeholder="{{ __('ui.faq.search_placeholder') }}"
                             autocomplete="off"
                             class="c-srch-inp">
                         <button x-show="search" x-on:click="search = ''" class="c-srch-x">&#xD7;</button>
@@ -99,7 +99,7 @@
 
             <div x-show="filtered.length === 0"
                 style="text-align:center;padding:40px;color:var(--muted);font-size:14px">
-                Keine Einträge gefunden.
+                {{ __('ui.faq.no_results') }}
             </div>
         </main>
     </div>
