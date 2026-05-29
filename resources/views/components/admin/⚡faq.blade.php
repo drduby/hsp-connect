@@ -3,9 +3,11 @@
 use App\Models\FaqItem;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 new class extends Component
 {
+    use WithPagination;
     public bool $showModal = false;
     public ?int $editingId = null;
     public string $question = '';
@@ -74,9 +76,9 @@ new class extends Component
     }
 
     #[Computed]
-    public function items(): \Illuminate\Database\Eloquent\Collection
+    public function items(): \Illuminate\Pagination\LengthAwarePaginator
     {
-        return FaqItem::orderBy('sort_order')->get();
+        return FaqItem::orderBy('sort_order')->paginate(10);
     }
 };
 ?>
@@ -142,6 +144,12 @@ new class extends Component
             </tbody>
         </table>
     </div>
+
+    @if($this->items->hasPages())
+        <div class="mt-6">
+            {{ $this->items->links('admin.pagination') }}
+        </div>
+    @endif
 
     {{-- Create / Edit Modal --}}
     <div x-show="$wire.showModal"

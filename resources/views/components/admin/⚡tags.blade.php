@@ -4,9 +4,11 @@ use App\Models\Tag;
 use Illuminate\Support\Str;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
+use Livewire\WithPagination;
 
 new class extends Component
 {
+    use WithPagination;
     public bool $showModal = false;
     public ?int $editingId = null;
     public string $name = '';
@@ -69,11 +71,11 @@ new class extends Component
     }
 
     #[Computed]
-    public function tags(): \Illuminate\Database\Eloquent\Collection
+    public function tags(): \Illuminate\Pagination\LengthAwarePaginator
     {
         return Tag::withCount(['posts' => fn ($q) => $q->where('is_published', true)])
             ->orderBy('id')
-            ->get();
+            ->paginate(10);
     }
 };
 ?>
@@ -138,6 +140,12 @@ new class extends Component
             </tbody>
         </table>
     </div>
+
+    @if($this->tags->hasPages())
+        <div class="mt-6">
+            {{ $this->tags->links('admin.pagination') }}
+        </div>
+    @endif
 
     {{-- Create / Edit Modal --}}
     <div x-show="$wire.showModal"

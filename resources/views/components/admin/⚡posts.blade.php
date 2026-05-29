@@ -60,13 +60,18 @@ new class extends Component
     {
         return Post::withTrashed()
             ->with(['user', 'tags'])
-            ->when($this->search, fn ($q) => $q->where('title', 'like', '%' . $this->search . '%'))
+            ->when($this->search, fn ($q) => $q->where(function ($q) {
+                $q->where('title', 'like', '%' . $this->search . '%')
+                    ->orWhere('type', 'like', '%' . $this->search . '%')
+                    ->orWhereHas('user', fn ($q) => $q->where('nickname', 'like', '%' . $this->search . '%'))
+                    ->orWhereHas('tags', fn ($q) => $q->where('name', 'like', '%' . $this->search . '%'));
+            }))
             ->when($this->filter === 'published', fn ($q) => $q->whereNull('deleted_at')->where('is_published', true))
             ->when($this->filter === 'draft', fn ($q) => $q->whereNull('deleted_at')->where('is_published', false))
             ->when($this->filter === 'deleted', fn ($q) => $q->onlyTrashed())
             ->when($this->filter === '', fn ($q) => $q->whereNull('deleted_at'))
             ->orderByDesc('created_at')
-            ->paginate(20);
+            ->paginate(10);
     }
 };
 ?>
@@ -86,8 +91,8 @@ new class extends Component
         <input
             wire:model.live.debounce.300ms="search"
             type="search"
-            placeholder="Search by title…"
-            class="block w-72 rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+            placeholder="Search by title, author or tag…"
+            class="block w-72 rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm placeholder:text-gray-500 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
         >
     </div>
 
@@ -177,7 +182,7 @@ new class extends Component
 
     @if($this->posts->hasPages())
         <div class="mt-6">
-            {{ $this->posts->links() }}
+            {{ $this->posts->links('admin.pagination') }}
         </div>
     @endif
 </div>

@@ -51,7 +51,7 @@ new class extends Component
             ->when($this->status, fn ($q) => $q->where('status', $this->status))
             ->orderByRaw("FIELD(status,'pending','reviewed','dismissed')")
             ->orderByDesc('created_at')
-            ->paginate(20);
+            ->paginate(10);
     }
 };
 ?>
@@ -170,7 +170,7 @@ new class extends Component
 
     @if($this->reports->hasPages())
         <div class="mt-6">
-            {{ $this->reports->links() }}
+            {{ $this->reports->links('admin.pagination') }}
         </div>
     @endif
 </div>

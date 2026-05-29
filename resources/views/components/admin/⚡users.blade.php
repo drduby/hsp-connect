@@ -69,6 +69,15 @@ new class extends Component
         session()->flash('success', 'User unblocked.');
     }
 
+    public function sendVerificationEmail(int $id): void
+    {
+        $user = User::find($id);
+        if ($user && ! $user->hasVerifiedEmail()) {
+            $user->sendEmailVerificationNotification();
+            session()->flash('success', 'Verification email sent to ' . $user->email . '.');
+        }
+    }
+
     public function delete(int $id): void
     {
         abort_if($id === auth()->id(), 403);
@@ -89,7 +98,7 @@ new class extends Component
             })
         )
             ->orderByDesc('created_at')
-            ->paginate(20);
+            ->paginate(10);
     }
 };
 ?>
@@ -109,8 +118,8 @@ new class extends Component
         <input
             wire:model.live.debounce.300ms="search"
             type="search"
-            placeholder="Search name, nickname or email…"
-            class="block w-72 rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
+            placeholder="Search by name, nickname or email…"
+            class="block w-72 rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm placeholder:text-gray-500 focus:border-indigo-500 focus:outline-none focus:ring-1 focus:ring-indigo-500"
         >
     </div>
 
@@ -143,6 +152,8 @@ new class extends Component
                         <td class="px-6 py-4 text-sm whitespace-nowrap">
                             @if($user->isBlocked())
                                 <span class="inline-flex items-center rounded-full bg-red-100 px-2.5 py-0.5 text-xs font-medium text-red-700">Blocked</span>
+                            @elseif(! $user->hasVerifiedEmail())
+                                <span class="inline-flex items-center rounded-full bg-yellow-100 px-2.5 py-0.5 text-xs font-medium text-yellow-700">Unverified</span>
                             @else
                                 <span class="inline-flex items-center rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-medium text-green-700">Active</span>
                             @endif
@@ -152,6 +163,11 @@ new class extends Component
                             <div class="flex items-center justify-end gap-x-3">
                                 <button wire:click="openEdit({{ $user->id }})"
                                         class="text-sm font-medium text-indigo-600 hover:text-indigo-800">Edit</button>
+
+                                @if(! $user->hasVerifiedEmail())
+                                    <button wire:click="sendVerificationEmail({{ $user->id }})"
+                                            class="text-sm font-medium text-blue-600 hover:text-blue-800">Send Verification</button>
+                                @endif
 
                                 @if(auth()->id() !== $user->id)
                                     @if($user->isBlocked())
@@ -180,7 +196,7 @@ new class extends Component
 
     @if($this->users->hasPages())
         <div class="mt-6">
-            {{ $this->users->links() }}
+            {{ $this->users->links('admin.pagination') }}
         </div>
     @endif
 
