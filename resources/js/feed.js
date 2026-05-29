@@ -42,7 +42,10 @@ export function render() {
   if (feedEmpty && state.curView === 'home') { feedEmpty.style.display = 'none'; }
 
   const af = document.getElementById('afilter'), parts = [];
-  if (state.activeTags.size > 0) parts.push([...state.activeTags].map(function (t) { return '# ' + t; }).join(', '));
+  if (state.activeTags.size > 0) parts.push([...state.activeTags].map(function (t) {
+    const btn = document.getElementById('nav-' + t);
+    return '# ' + (btn && btn.dataset.label ? btn.dataset.label : t);
+  }).join(', '));
   if (state.srch) parts.push('"' + state.srch + '"');
   if (parts.length) {
     af.classList.add('on');

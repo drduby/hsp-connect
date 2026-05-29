@@ -13,7 +13,7 @@
         <div class="sb-hdg">{{ __('ui.sidebar.topics') }}</div>
         <div class="tlist" id="sb-tags">
             @foreach($tags as $tag)
-                <button class="titem" id="nav-{{ $tag->name }}" data-tag="{{ $tag->name }}">
+                <button class="titem" id="nav-{{ $tag->name }}" data-tag="{{ $tag->name }}" data-label="{{ $tag->localizedName }}">
                     <span class="tlbl">
                         <span class="tdot" style="background:{{ $tag->color ?? 'var(--t)' }}"></span>
                         # {{ $tag->localizedName }}

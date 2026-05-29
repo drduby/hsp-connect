@@ -270,7 +270,7 @@ new class extends Component {
                     style="border-color:{{ $tag->color ?? 'var(--t)' }}30;color:{{ $tag->color ?? 'var(--t)' }}"
                     data-tag="{{ $tag->name }}"
                     onclick="toggleTag(this.dataset.tag)">
-                    # {{ $tag->name }}
+                    # {{ $tag->localizedName }}
                 </span>
             @endforeach
         </div>
