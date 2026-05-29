@@ -14,7 +14,8 @@ use Livewire\Attributes\On;
 use Livewire\Attributes\Validate;
 use Livewire\Component;
 
-new class extends Component {
+new class extends Component
+{
     public Post $post;
 
     public bool $showComments = false;
@@ -123,7 +124,7 @@ new class extends Component {
             return;
         }
 
-        $key = 'add-comment:' . auth()->id();
+        $key = 'add-comment:'.auth()->id();
         if (RateLimiter::tooManyAttempts($key, maxAttempts: 10)) {
             $this->addError('newComment', __('ui.post.too_many_comments'));
 
@@ -131,7 +132,7 @@ new class extends Component {
         }
         RateLimiter::hit($key, decaySeconds: 60);
 
-        $dailyKey = 'add-comment-daily:' . auth()->id();
+        $dailyKey = 'add-comment-daily:'.auth()->id();
         if (RateLimiter::tooManyAttempts($dailyKey, maxAttempts: 100)) {
             $this->addError('newComment', 'Tägliches Kommentarlimit erreicht.');
 
@@ -332,13 +333,21 @@ new class extends Component {
 
         <span class="sepv" @if($this->isMine) style="margin-left:auto" @endif></span>
 
+        @php
+            $avgRounded = (int) round($this->averageRating ?? 0);
+            $displayStars = $this->isMine ? $avgRounded : ($this->userRating ?: $avgRounded);
+        @endphp
         @if($this->isMine)
-            <div class="stars" style="opacity:.3;pointer-events:none">★★★★★</div>
+            <div class="stars" style="pointer-events:none">
+                @for($s = 1; $s <= 5; $s++)
+                    <span class="star {{ $displayStars >= $s ? 'on' : '' }}" style="opacity:.6">★</span>
+                @endfor
+            </div>
             <span class="avgr" style="opacity:.5">ø {{ $avg }}</span>
         @else
             <div class="stars">
                 @for($s = 1; $s <= 5; $s++)
-                    <span class="star {{ $this->userRating >= $s ? 'on' : '' }}"
+                    <span class="star {{ $displayStars >= $s ? 'on' : '' }}"
                         wire:key="star-{{ $post->id }}-{{ $s }}"
                         wire:click="rate({{ $s }})"
                         title="{{ $this->userRating === $s ? __('ui.post.remove_rating') : ($s . ' ' . ($s > 1 ? __('ui.post.stars') : __('ui.post.star'))) }}"
