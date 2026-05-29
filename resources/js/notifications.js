@@ -57,11 +57,11 @@ export function renderNotifList() {
     return;
   }
   list.innerHTML = NOTIFS.map(function (n) {
-    return '<div style="display:flex;gap:10px;padding:11px 14px;border-bottom:1px solid var(--bord);background:' + (n.read ? 'transparent' : 'rgba(10,110,122,.04)') + '">'
+    return '<div style="display:flex;gap:10px;padding:11px 14px;border-bottom:1px solid var(--bord);background:' + (n.read ? 'transparent' : 'rgba(10,110,122,.08)') + ';border-left:' + (n.read ? '3px solid transparent' : '3px solid var(--t)') + '">'
       + '<span style="font-size:20px;flex-shrink:0;margin-top:2px">' + getNotifIcon(n.icon) + '</span>'
       + '<div style="flex:1;min-width:0">'
-      + '<div style="font-size:12.5px;line-height:1.55;font-weight:' + (n.read ? 300 : 500) + ';color:' + (n.read ? 'var(--muted)' : 'var(--ink2)') + '">' + n.text + '</div>'
-      + '<div style="font-size:11px;color:var(--light);margin-top:3px">' + n.time + '</div>'
+      + '<div style="font-size:13px;line-height:1.55;font-weight:' + (n.read ? 400 : 700) + ';color:' + (n.read ? 'var(--muted)' : 'var(--ink)') + '">' + n.text + '</div>'
+      + '<div style="font-size:11px;color:' + (n.read ? 'var(--light)' : 'var(--t)') + ';margin-top:3px;font-weight:' + (n.read ? 400 : 600) + '">' + n.time + '</div>'
       + '</div>'
       + '<button onclick="event.stopPropagation();deleteNotif(\'' + n.id + '\')" style="background:none;border:none;color:var(--light);cursor:pointer;font-size:16px;line-height:1;padding:2px 4px;flex-shrink:0;align-self:flex-start">&#x2715;</button>'
       + '</div>';
@@ -74,6 +74,9 @@ export async function openNotifs() {
   if (notifsOpen) { closeNotifs(); return; }
   notifsOpen = true;
   await fetchNotifs();
+  renderNotifList();
+  document.getElementById('notif-panel').style.display = 'flex';
+  setTimeout(function () { document.addEventListener('click', outsideNotif); }, 10);
   NOTIFS.filter(function (n) { return !n.read; }).forEach(function (n) {
     n.read = true;
     fetch('/notifications/' + n.id + '/read', {
@@ -82,9 +85,6 @@ export async function openNotifs() {
     });
   });
   updateNotifDot();
-  renderNotifList();
-  document.getElementById('notif-panel').style.display = 'flex';
-  setTimeout(function () { document.addEventListener('click', outsideNotif); }, 10);
 }
 
 function outsideNotif(e) {
