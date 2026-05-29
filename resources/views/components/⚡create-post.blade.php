@@ -1,6 +1,8 @@
 <?php
 
 use App\Models\Tag;
+use App\Models\User;
+use App\Notifications\UserMentioned;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Validation\Rule;
@@ -68,10 +70,22 @@ new class extends Component {
         ]);
 
         $post->tags()->sync($this->selectedTagIds);
+        $this->notifyMentions($this->content, $post);
 
         $this->dispatch('post-created');
         $this->dispatch('close-post-modal');
         $this->reset(['title', 'content', 'selectedTagIds']);
+    }
+
+    private function notifyMentions(string $text, \App\Models\Post $post): void
+    {
+        preg_match_all('/@([a-zA-Z0-9_]+)/', $text, $matches);
+        foreach (array_unique($matches[1]) as $nickname) {
+            $user = User::where('nickname', $nickname)->first();
+            if ($user && $user->id !== auth()->id()) {
+                $user->notify(new UserMentioned(auth()->user(), $post));
+            }
+        }
     }
 
     #[Computed]
@@ -117,7 +131,50 @@ new class extends Component {
     @enderror
 
     <label>{{ __('ui.create_post.content') }}</label>
-    <textarea wire:model="content" placeholder="{{ __('ui.create_post.content_placeholder') }}"></textarea>
+    <div x-data="{
+        open: false, suggestions: [], active: 0, mentionStart: 0, timer: null,
+        detect(el) {
+            const m = el.value.slice(0, el.selectionStart).match(/@([a-zA-Z0-9_]{1,30})$/);
+            if (!m) { this.open = false; return; }
+            clearTimeout(this.timer);
+            this.timer = setTimeout(async () => {
+                const r = await fetch('/users/search?q=' + encodeURIComponent(m[1]));
+                this.suggestions = await r.json();
+                this.mentionStart = el.selectionStart - m[1].length - 1;
+                this.active = 0;
+                this.open = this.suggestions.length > 0;
+            }, 200);
+        },
+        pick(nick) {
+            const el = this.$refs.ta;
+            const before = el.value.slice(0, this.mentionStart);
+            const after = el.value.slice(el.selectionStart);
+            const val = before + '@' + nick + ' ' + after;
+            $wire.set('content', val);
+            this.open = false;
+            this.$nextTick(() => { el.focus(); const p = before.length + nick.length + 2; el.setSelectionRange(p, p); });
+        }
+    }" @click.outside="open = false" style="position:relative">
+        <textarea x-ref="ta"
+            wire:model="content"
+            x-on:input="detect($el)"
+            x-on:keydown.arrow-down.prevent="if(open) active = (active+1) % suggestions.length"
+            x-on:keydown.arrow-up.prevent="if(open) active = (active-1+suggestions.length) % suggestions.length"
+            x-on:keydown.enter="if(open) { $event.preventDefault(); pick(suggestions[active]); }"
+            x-on:keydown.escape="open = false"
+            placeholder="{{ __('ui.create_post.content_placeholder') }}"></textarea>
+        <div x-show="open" x-cloak class="mention-drop" style="top:calc(100% - 8px);bottom:auto">
+            <template x-for="(u, i) in suggestions" :key="u">
+                <button type="button"
+                        @mousedown.prevent="pick(u)"
+                        :class="{ 'mention-opt': true, 'sel': i === active }"
+                        @mouseenter="active = i">
+                    <span class="mention-ava" x-text="u[0].toUpperCase()"></span>
+                    <span>@<span x-text="u"></span></span>
+                </button>
+            </template>
+        </div>
+    </div>
     @error('content')
         <p class="form-err">{{ $message }}</p>
     @enderror

@@ -212,6 +212,11 @@ main { min-width: 0 }
 .cinp { flex: 1; padding: 8px 13px; border-radius: 40px; border: 1.5px solid rgba(10,110,122,.15); background: var(--surf); font-family: var(--body); font-size: 12.5px; outline: none; transition: border-color .18s; color: var(--ink) }
 .cinp:focus { border-color: var(--t) }
 .cinp::placeholder { color: var(--light) }
+.mention { color: var(--t); font-weight: 600 }
+.mention-drop { position: absolute; bottom: calc(100% + 6px); left: 0; z-index: 300; background: var(--surf); border: 1px solid var(--bord2); border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,.12); min-width: 180px; overflow: hidden; padding: 4px 0 }
+.mention-opt { display: flex; align-items: center; gap: 8px; padding: 7px 14px; font-size: 13px; font-weight: 500; color: var(--ink); cursor: pointer; transition: background .12s; border: none; background: none; width: 100%; text-align: left; font-family: var(--body) }
+.mention-opt:hover, .mention-opt.sel { background: var(--t3); color: var(--t) }
+.mention-ava { width: 22px; height: 22px; border-radius: 50%; background: var(--t3); color: var(--t); font-size: 11px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0 }
 .csend { padding: 7px 15px; border-radius: 40px; background: var(--t); color: #fff; border: none; font-family: var(--body); font-size: 12px; font-weight: 700; cursor: pointer; transition: background .18s }
 .csend:hover { background: var(--t2) }
 .togcmt { font-size: 12px; font-weight: 700; color: var(--t); cursor: pointer; background: none; border: none; padding: 0; margin-bottom: 8px; display: block; transition: opacity .15s }

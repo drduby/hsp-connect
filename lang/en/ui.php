@@ -119,6 +119,7 @@ return [
         'liked' => ':liker liked your post ":title"',
         'commented' => ':commenter commented on your post ":title"',
         'rated' => ':rater rated your post ":title" with :stars',
+        'mentioned' => ':mentioner mentioned you in a post: ":title"',
     ],
     'account' => [
         'member_since' => 'Member since :year',

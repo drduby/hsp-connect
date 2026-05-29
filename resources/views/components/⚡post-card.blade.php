@@ -3,9 +3,11 @@
 use App\Models\Comment;
 use App\Models\Post;
 use App\Models\PostReport;
+use App\Models\User;
 use App\Notifications\CommentPosted;
 use App\Notifications\PostLiked;
 use App\Notifications\PostRated;
+use App\Notifications\UserMentioned;
 use Illuminate\Support\Facades\RateLimiter;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
@@ -149,6 +151,8 @@ new class extends Component {
             $this->post->user->notify(new CommentPosted(auth()->user(), $this->post));
         }
 
+        $this->notifyMentions($this->newComment);
+
         $this->newComment = '';
         $this->showComments = true;
 
@@ -178,6 +182,17 @@ new class extends Component {
 
         $this->post->delete();
         $this->dispatch('post-deleted', postId: $this->post->id);
+    }
+
+    private function notifyMentions(string $text): void
+    {
+        preg_match_all('/@([a-zA-Z0-9_]+)/', $text, $matches);
+        foreach (array_unique($matches[1]) as $nickname) {
+            $user = User::where('nickname', $nickname)->first();
+            if ($user && $user->id !== auth()->id()) {
+                $user->notify(new UserMentioned(auth()->user(), $this->post));
+            }
+        }
     }
 
     #[Computed]
@@ -262,7 +277,7 @@ new class extends Component {
 
         <div class="ptitle">{{ $post->title }}</div>
         <div x-data="{ expanded: false, clamped: false }" x-init="$nextTick(() => { clamped = $refs.body.scrollHeight > $refs.body.clientHeight })">
-            <div class="pbody" :class="expanded ? '' : 'cl'" x-ref="body">{{ $post->content }}</div>
+            <div class="pbody" :class="expanded ? '' : 'cl'" x-ref="body">{!! preg_replace('/@([a-zA-Z0-9_]+)/', '<span class="mention">@$1</span>', e($post->content)) !!}</div>
             <button x-show="clamped && !expanded" class="readmore" x-on:click="expanded = true">{{ __('ui.post.read_more') }}</button>
             <button x-show="expanded" class="readmore" x-on:click="expanded = false">{{ __('ui.post.show_less') }}</button>
         </div>
@@ -363,7 +378,7 @@ new class extends Component {
                                     </button>
                                 @endif
                             </div>
-                            <div class="ctext">{{ $comment->content }}</div>
+                            <div class="ctext">{!! preg_replace('/@([a-zA-Z0-9_]+)/', '<span class="mention">@$1</span>', e($comment->content)) !!}</div>
                         </div>
                     </div>
                 @endforeach
@@ -373,10 +388,51 @@ new class extends Component {
             <div class="cform">
                 @auth
                     <div class="cava">{{ strtoupper(mb_substr(auth()->user()->nickname, 0, 1)) }}</div>
-                    <input class="cinp"
-                        wire:model="newComment"
-                        wire:keydown.enter="addComment"
-                        placeholder="{{ __('ui.post.comment_placeholder') }}">
+                    <div x-data="{
+                        open: false, suggestions: [], active: 0, mentionStart: 0, timer: null,
+                        detect(el) {
+                            const m = el.value.slice(0, el.selectionStart).match(/@([a-zA-Z0-9_]{1,30})$/);
+                            if (!m) { this.open = false; return; }
+                            clearTimeout(this.timer);
+                            this.timer = setTimeout(async () => {
+                                const r = await fetch('/users/search?q=' + encodeURIComponent(m[1]));
+                                this.suggestions = await r.json();
+                                this.mentionStart = el.selectionStart - m[1].length - 1;
+                                this.active = 0;
+                                this.open = this.suggestions.length > 0;
+                            }, 200);
+                        },
+                        pick(nick) {
+                            const el = this.$refs.cinp;
+                            const before = el.value.slice(0, this.mentionStart);
+                            const after = el.value.slice(el.selectionStart);
+                            const val = before + '@' + nick + ' ' + after;
+                            $wire.set('newComment', val);
+                            this.open = false;
+                            this.$nextTick(() => { el.focus(); const p = before.length + nick.length + 2; el.setSelectionRange(p, p); });
+                        }
+                    }" @click.outside="open = false" style="position:relative;flex:1;display:flex">
+                        <input class="cinp"
+                            x-ref="cinp"
+                            wire:model="newComment"
+                            x-on:input="detect($el)"
+                            x-on:keydown.arrow-down.prevent="if(open) active = (active+1) % suggestions.length"
+                            x-on:keydown.arrow-up.prevent="if(open) active = (active-1+suggestions.length) % suggestions.length"
+                            x-on:keydown.enter.prevent="open ? pick(suggestions[active]) : $wire.addComment()"
+                            x-on:keydown.escape="open = false"
+                            placeholder="{{ __('ui.post.comment_placeholder') }}">
+                        <div x-show="open" x-cloak class="mention-drop">
+                            <template x-for="(u, i) in suggestions" :key="u">
+                                <button type="button"
+                                        @mousedown.prevent="pick(u)"
+                                        :class="{ 'mention-opt': true, 'sel': i === active }"
+                                        @mouseenter="active = i">
+                                    <span class="mention-ava" x-text="u[0].toUpperCase()"></span>
+                                    <span>@<span x-text="u"></span></span>
+                                </button>
+                            </template>
+                        </div>
+                    </div>
                     <button class="csend" wire:click="addComment" wire:loading.attr="disabled">{{ __('ui.post.send') }}</button>
                 @else
                     <div class="cava">?</div>

@@ -119,6 +119,7 @@ return [
         'liked' => ':liker hat deinen Beitrag „:title" geliked',
         'commented' => ':commenter hat deinen Beitrag „:title" kommentiert',
         'rated' => ':rater hat deinen Beitrag „:title" mit :stars bewertet',
+        'mentioned' => ':mentioner hat dich in einem Beitrag erwähnt: „:title"',
     ],
     'account' => [
         'member_since' => 'Mitglied seit :year',

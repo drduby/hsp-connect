@@ -39,6 +39,16 @@ class NotificationController extends Controller
                     'read' => ! is_null($n->read_at),
                     'icon' => '⭐',
                 ],
+                isset($n->data['mentioner_nickname']) => [
+                    'id' => $n->id,
+                    'text' => __('ui.notifications.mentioned', [
+                        'mentioner' => $n->data['mentioner_nickname'],
+                        'title' => $n->data['post_title'],
+                    ]),
+                    'time' => $n->created_at->diffForHumans(),
+                    'read' => ! is_null($n->read_at),
+                    'icon' => '@',
+                ],
                 default => null,
             })
             ->filter()

@@ -97,6 +97,22 @@ Route::prefix('admin')->name('admin.')->group(function () {
     });
 });
 
+Route::get('/users/search', function (Request $request) {
+    $q = mb_substr($request->query('q', ''), 0, 30);
+    if (mb_strlen($q) < 1) {
+        return response()->json([]);
+    }
+
+    return response()->json(
+        User::where('nickname', 'like', $q.'%')
+            ->where('id', '!=', auth()->id())
+            ->whereNotNull('email_verified_at')
+            ->where('is_admin', false)
+            ->limit(5)
+            ->pluck('nickname')
+    );
+})->middleware('auth')->name('users.search');
+
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/notifications', [NotificationController::class, 'index']);
     Route::post('/notifications/{id}/read', [NotificationController::class, 'markRead']);
