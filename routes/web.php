@@ -1,5 +1,12 @@
 <?php
 
+use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
+use App\Http\Controllers\Admin\FaqController as AdminFaqController;
+use App\Http\Controllers\Admin\LoginController as AdminLoginController;
+use App\Http\Controllers\Admin\PostsController as AdminPostsController;
+use App\Http\Controllers\Admin\ReportsController as AdminReportsController;
+use App\Http\Controllers\Admin\TagsController as AdminTagsController;
+use App\Http\Controllers\Admin\UsersController as AdminUsersController;
 use App\Http\Controllers\FaqController;
 use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PostController;
@@ -52,6 +59,30 @@ Route::post('/language/{locale}', function (string $locale) {
 
 Route::get('/', [PostController::class, 'index'])->name('home');
 Route::get('/faq', [FaqController::class, 'index'])->name('faq');
+
+Route::prefix('admin')->name('admin.')->group(function () {
+    Route::get('/login', [AdminLoginController::class, 'show'])->name('login');
+    Route::post('/login', [AdminLoginController::class, 'store'])->name('login.post');
+
+    Route::middleware('admin')->group(function () {
+        Route::get('/', [AdminDashboardController::class, 'index'])->name('dashboard');
+
+        // Users
+        Route::get('/users', [AdminUsersController::class, 'index'])->name('users.index');
+
+        // Tags
+        Route::get('/tags', [AdminTagsController::class, 'index'])->name('tags.index');
+
+        // FAQ
+        Route::get('/faq', [AdminFaqController::class, 'index'])->name('faq.index');
+
+        // Reports
+        Route::get('/reports', [AdminReportsController::class, 'index'])->name('reports.index');
+
+        // Posts
+        Route::get('/posts', [AdminPostsController::class, 'index'])->name('posts.index');
+    });
+});
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/notifications', [NotificationController::class, 'index']);

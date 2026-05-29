@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
-#[Fillable(['first_name', 'last_name', 'nickname', 'email', 'password', 'email_verified_at', 'last_seen_at', 'last_login_at'])]
+#[Fillable(['first_name', 'last_name', 'nickname', 'email', 'is_admin', 'blocked_at', 'password', 'email_verified_at', 'last_seen_at', 'last_login_at'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable implements MustVerifyEmail
 {
@@ -23,6 +23,11 @@ class User extends Authenticatable implements MustVerifyEmail
         return $this->hasMany(Post::class);
     }
 
+    public function isBlocked(): bool
+    {
+        return ! is_null($this->blocked_at);
+    }
+
     /**
      * @return array<string, string>
      */
@@ -31,7 +36,9 @@ class User extends Authenticatable implements MustVerifyEmail
         return [
             'email_verified_at' => 'datetime',
             'last_login_at' => 'datetime',
+            'blocked_at' => 'datetime',
             'password' => 'hashed',
+            'is_admin' => 'boolean',
         ];
     }
 }
