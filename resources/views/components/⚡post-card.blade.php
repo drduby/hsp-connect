@@ -5,6 +5,7 @@ use App\Models\Post;
 use App\Models\PostReport;
 use App\Notifications\CommentPosted;
 use App\Notifications\PostLiked;
+use App\Notifications\PostRated;
 use Illuminate\Support\Facades\RateLimiter;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
@@ -105,6 +106,7 @@ new class extends Component {
 
         if ($current !== $rating) {
             $this->post->ratings()->attach($userId, ['rating' => $rating]);
+            $this->post->user->notify(new PostRated(auth()->user(), $this->post, $rating));
         }
 
         $this->post->unsetRelation('ratings');

@@ -28,6 +28,13 @@ class NotificationController extends Controller
                     'read' => ! is_null($n->read_at),
                     'icon' => '💬',
                 ],
+                isset($n->data['rater_nickname']) => [
+                    'id' => $n->id,
+                    'text' => $n->data['rater_nickname'].' hat deinen Beitrag „'.$n->data['post_title'].'" mit '.str_repeat('★', $n->data['rating']).str_repeat('☆', 5 - $n->data['rating']).' bewertet',
+                    'time' => $n->created_at->diffForHumans(),
+                    'read' => ! is_null($n->read_at),
+                    'icon' => '⭐',
+                ],
                 default => null,
             })
             ->filter()
