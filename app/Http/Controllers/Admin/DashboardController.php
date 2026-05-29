@@ -14,9 +14,9 @@ class DashboardController extends Controller
     {
         $stats = [
             'users' => User::count(),
+            'online' => User::where('last_seen_at', '>=', now()->subMinutes(5))->where('is_admin', false)->count(),
             'posts' => Post::where('is_published', true)->count(),
             'reports' => PostReport::where('status', 'pending')->count(),
-            'admins' => User::where('is_admin', true)->count(),
         ];
 
         return view('admin.dashboard', compact('stats'));
