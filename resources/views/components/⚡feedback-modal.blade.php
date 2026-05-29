@@ -11,13 +11,10 @@ new class extends Component {
 
     public string $type = 'idea';
 
-    #[Validate('nullable|string|max:200')]
     public string $topic = '';
 
-    #[Validate('required|string|min:5|max:2000')]
     public string $description = '';
 
-    #[Validate('nullable|email|max:255')]
     public string $email = '';
 
     public bool $submitted = false;
@@ -37,6 +34,27 @@ new class extends Component {
     public function close(): void
     {
         $this->open = false;
+    }
+
+    public function rules(): array
+    {
+        return [
+            'topic'       => $this->type === 'idea' ? 'required|string|max:200' : 'nullable|string|max:200',
+            'description' => 'required|string|min:5|max:2000',
+            'email'       => 'nullable|email|max:255',
+        ];
+    }
+
+    public function messages(): array
+    {
+        return [
+            'topic.required'      => 'Bitte gib ein Thema an.',
+            'topic.max'           => 'Das Thema darf max. 200 Zeichen haben.',
+            'description.required' => 'Bitte beschreibe dein Anliegen.',
+            'description.min'     => 'Die Beschreibung muss mindestens 5 Zeichen lang sein.',
+            'description.max'     => 'Die Beschreibung darf max. 2000 Zeichen haben.',
+            'email.email'         => 'Bitte gib eine gültige E-Mail-Adresse an.',
+        ];
     }
 
     public function submit(): void
@@ -85,7 +103,7 @@ new class extends Component {
 
                 <div style="display:flex;flex-direction:column;gap:12px;margin-top:16px">
                     <div>
-                        <label>Thema <span style="font-size:10.5px;color:var(--light);font-weight:400">(optional)</span></label>
+                        <label>Thema @if($type !== 'idea')<span style="font-size:10.5px;color:var(--light);font-weight:400">(optional)</span>@endif</label>
                         <input wire:model="topic"
                             type="text"
                             placeholder="z.B. Suche, Beiträge, Profil…"
