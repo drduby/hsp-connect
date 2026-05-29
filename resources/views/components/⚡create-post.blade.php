@@ -102,7 +102,7 @@ new class extends Component {
                     class="tag-pill {{ in_array($tag->id, $selectedTagIds) ? 'on' : '' }}"
                     wire:click="toggleTag({{ $tag->id }})">
                 <span class="tag-pill-dot" style="background:{{ $tag->color ?? 'var(--t)' }}"></span>
-                # {{ $tag->name }}
+                # {{ $tag->localizedName }}
             </button>
         @endforeach
     </div>

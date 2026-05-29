@@ -169,31 +169,61 @@ new class extends Component
                         </td>
                         <td class="px-6 py-4 text-sm text-gray-500 whitespace-nowrap">{{ $user->created_at->format('d.m.Y') }}</td>
                         <td class="px-6 py-4 text-right whitespace-nowrap">
-                            <div class="flex items-center justify-end gap-x-3">
-                                <button wire:click="openEdit({{ $user->id }})"
-                                        class="text-sm font-medium text-indigo-600 hover:text-indigo-800">Edit</button>
+                            <div class="relative inline-block text-left" x-data="{ open: false }" @click.outside="open = false">
+                                <button @click="open = !open"
+                                        class="inline-flex items-center justify-center rounded-md p-1.5 text-gray-400 hover:bg-gray-100 hover:text-gray-600">
+                                    <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                        <path d="M10 3a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM10 8.5a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM11.5 15.5a1.5 1.5 0 1 0-3 0 1.5 1.5 0 0 0 3 0Z"/>
+                                    </svg>
+                                </button>
 
-                                @if(! $user->hasVerifiedEmail())
-                                    <button wire:click="verifyEmail({{ $user->id }})"
-                                            wire:confirm="Manually mark this user as verified?"
-                                            class="text-sm font-medium text-green-600 hover:text-green-800">Verify</button>
-                                    <button wire:click="sendVerificationEmail({{ $user->id }})"
-                                            class="text-sm font-medium text-blue-600 hover:text-blue-800">Send Email</button>
-                                @endif
+                                <div x-show="open"
+                                     x-transition
+                                     class="absolute right-0 z-20 mt-1 w-48 origin-top-right rounded-lg bg-white py-1 shadow-lg ring-1 ring-gray-200">
 
-                                @if(auth()->id() !== $user->id)
-                                    @if($user->isBlocked())
-                                        <button wire:click="unblock({{ $user->id }})"
-                                                class="text-sm font-medium text-gray-600 hover:text-gray-800">Unblock</button>
-                                    @else
-                                        <button wire:click="block({{ $user->id }})"
-                                                class="text-sm font-medium text-yellow-600 hover:text-yellow-800">Block</button>
+                                    <button wire:click="openEdit({{ $user->id }})" @click="open = false"
+                                            class="flex w-full items-center gap-x-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
+                                        <svg class="h-4 w-4 text-gray-400" viewBox="0 0 20 20" fill="currentColor"><path d="M2.695 14.763l-1.262 3.154a.5.5 0 0 0 .65.65l3.155-1.262a4 4 0 0 0 1.343-.885L17.5 5.5a2.121 2.121 0 0 0-3-3L3.58 13.42a4 4 0 0 0-.885 1.343Z"/></svg>
+                                        Edit
+                                    </button>
+
+                                    @if(! $user->hasVerifiedEmail())
+                                        <button wire:click="verifyEmail({{ $user->id }})" wire:confirm="Manually mark this user as verified?" @click="open = false"
+                                                class="flex w-full items-center gap-x-2 px-4 py-2 text-sm text-green-700 hover:bg-gray-50">
+                                            <svg class="h-4 w-4 text-green-500" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.403 12.652a3 3 0 0 0 0-5.304 3 3 0 0 0-3.75-3.751 3 3 0 0 0-5.305 0 3 3 0 0 0-3.751 3.75 3 3 0 0 0 0 5.305 3 3 0 0 0 3.75 3.751 3 3 0 0 0 5.305 0 3 3 0 0 0 3.751-3.75Zm-2.546-4.46a.75.75 0 0 0-1.214-.883l-3.483 4.79-1.88-1.88a.75.75 0 1 0-1.06 1.061l2.5 2.5a.75.75 0 0 0 1.137-.089l4-5.5Z" clip-rule="evenodd"/></svg>
+                                            Verify manually
+                                        </button>
+                                        <button wire:click="sendVerificationEmail({{ $user->id }})" @click="open = false"
+                                                class="flex w-full items-center gap-x-2 px-4 py-2 text-sm text-blue-700 hover:bg-gray-50">
+                                            <svg class="h-4 w-4 text-blue-400" viewBox="0 0 20 20" fill="currentColor"><path d="M3 4a2 2 0 0 0-2 2v1.161l8.441 4.221a1.25 1.25 0 0 0 1.118 0L19 7.162V6a2 2 0 0 0-2-2H3Z"/><path d="m19 8.839-7.77 3.885a2.75 2.75 0 0 1-2.46 0L1 8.839V14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.839Z"/></svg>
+                                            Send verification email
+                                        </button>
                                     @endif
 
-                                    <button wire:click="delete({{ $user->id }})"
-                                            wire:confirm="Are you sure you want to delete this user?"
-                                            class="text-sm font-medium text-red-600 hover:text-red-800">Delete</button>
-                                @endif
+                                    @if(auth()->id() !== $user->id)
+                                        <div class="my-1 border-t border-gray-100"></div>
+
+                                        @if($user->isBlocked())
+                                            <button wire:click="unblock({{ $user->id }})" @click="open = false"
+                                                    class="flex w-full items-center gap-x-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
+                                                <svg class="h-4 w-4 text-gray-400" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16Zm3.857-9.809a.75.75 0 0 0-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 1 0-1.06 1.061l2.5 2.5a.75.75 0 0 0 1.137-.089l4-5.5Z" clip-rule="evenodd"/></svg>
+                                                Unblock
+                                            </button>
+                                        @else
+                                            <button wire:click="block({{ $user->id }})" @click="open = false"
+                                                    class="flex w-full items-center gap-x-2 px-4 py-2 text-sm text-yellow-700 hover:bg-gray-50">
+                                                <svg class="h-4 w-4 text-yellow-500" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16ZM8.28 7.22a.75.75 0 0 0-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 1 0 1.06 1.06L10 11.06l1.72 1.72a.75.75 0 1 0 1.06-1.06L11.06 10l1.72-1.72a.75.75 0 0 0-1.06-1.06L10 8.94 8.28 7.22Z" clip-rule="evenodd"/></svg>
+                                                Block
+                                            </button>
+                                        @endif
+
+                                        <button wire:click="delete({{ $user->id }})" wire:confirm="Are you sure you want to delete this user?" @click="open = false"
+                                                class="flex w-full items-center gap-x-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50">
+                                            <svg class="h-4 w-4 text-red-400" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M8.75 1A2.75 2.75 0 0 0 6 3.75v.443c-.795.077-1.584.176-2.365.298a.75.75 0 1 0 .23 1.482l.149-.022.841 10.518A2.75 2.75 0 0 0 7.596 19h4.807a2.75 2.75 0 0 0 2.742-2.53l.841-10.52.149.023a.75.75 0 0 0 .23-1.482A41.03 41.03 0 0 0 14 4.193V3.75A2.75 2.75 0 0 0 11.25 1h-2.5ZM10 4c.84 0 1.673.025 2.5.075V3.75c0-.69-.56-1.25-1.25-1.25h-2.5c-.69 0-1.25.56-1.25 1.25v.325C8.327 4.025 9.16 4 10 4ZM8.58 7.72a.75.75 0 0 0-1.5.06l.3 7.5a.75.75 0 1 0 1.5-.06l-.3-7.5Zm4.34.06a.75.75 0 1 0-1.5-.06l-.3 7.5a.75.75 0 1 0 1.5.06l.3-7.5Z" clip-rule="evenodd"/></svg>
+                                            Delete
+                                        </button>
+                                    @endif
+                                </div>
                             </div>
                         </td>
                     </tr>
