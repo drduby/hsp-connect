@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\FaqController as AdminFaqController;
+use App\Http\Controllers\Admin\FeedbackController as AdminFeedbackController;
 use App\Http\Controllers\Admin\LoginController as AdminLoginController;
 use App\Http\Controllers\Admin\PostsController as AdminPostsController;
 use App\Http\Controllers\Admin\ReportsController as AdminReportsController;
@@ -87,6 +88,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         // Reports
         Route::get('/reports', [AdminReportsController::class, 'index'])->name('reports.index');
+
+        // Feedback
+        Route::get('/feedback', [AdminFeedbackController::class, 'index'])->name('feedback.index');
 
         // Posts
         Route::get('/posts', [AdminPostsController::class, 'index'])->name('posts.index');
