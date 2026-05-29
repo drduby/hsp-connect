@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\FaqController;
+use App\Http\Controllers\NotificationController;
 use App\Http\Controllers\PostController;
 use App\Models\User;
 use Illuminate\Auth\Events\Verified;
@@ -43,6 +44,13 @@ Route::get('/reset-password/{token}', function (Request $request, string $token)
 
 Route::get('/', [PostController::class, 'index'])->name('home');
 Route::get('/faq', [FaqController::class, 'index'])->name('faq');
+
+Route::middleware(['auth', 'verified'])->group(function () {
+    Route::get('/notifications', [NotificationController::class, 'index']);
+    Route::post('/notifications/{id}/read', [NotificationController::class, 'markRead']);
+    Route::delete('/notifications/{id}', [NotificationController::class, 'destroy']);
+    Route::delete('/notifications', [NotificationController::class, 'destroyAll']);
+});
 
 Route::get('/sitemap.xml', function () {
     $urls = [

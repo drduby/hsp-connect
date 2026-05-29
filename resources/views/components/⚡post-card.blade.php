@@ -3,6 +3,7 @@
 use App\Models\Comment;
 use App\Models\Post;
 use App\Models\PostReport;
+use App\Notifications\PostLiked;
 use Illuminate\Support\Facades\RateLimiter;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
@@ -54,6 +55,7 @@ new class extends Component {
             $this->post->likes()->detach($userId);
         } else {
             $this->post->likes()->attach($userId);
+            $this->post->user->notify(new PostLiked(auth()->user(), $this->post));
         }
 
         $this->post->unsetRelation('likes');

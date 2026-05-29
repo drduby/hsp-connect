@@ -36,7 +36,7 @@
         ? ['name' => $authUser->nickname, 'ava' => strtoupper(mb_substr($authUser->nickname, 0, 1))]
         : null;
 @endphp
-<script>window.__AUTH__ = @json($authState);</script>
+<script>window.__AUTH__ = @json($authState);window.__NOTIF_COUNT__ = {{ $authUser ? $authUser->unreadNotifications()->count() : 0 }};</script>
 @persist('hexbg')
 <canvas id="hexbg"></canvas>
 @endpersist

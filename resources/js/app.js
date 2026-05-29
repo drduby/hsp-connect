@@ -3,7 +3,7 @@ import { toast, checkAuthThen } from './utils.js';
 import { initHexBg } from './hexbg.js';
 import { render, go, toggleTag, onComposeSrch, clearComposeSrch, filterTags, clearAll, showSaved, showMine, markNav, setActiveNav } from './feed.js';
 import { setLoggedInUI, openLg, closeLg, doSocialLogin } from './auth.js';
-import { renderNotifList, openNotifs, closeNotifs, markNotifRead, deleteNotif, deleteAllNotifs } from './notifications.js';
+import { renderNotifList, openNotifs, closeNotifs, markNotifRead, deleteNotif, deleteAllNotifs, initNotifDot } from './notifications.js';
 import { openProfileMenu, closeProfileMenu, openAccountPage, closeAccountPage } from './profile.js';
 import { openPM, closePM, openFeedback, closeFB, submitFeedback, fbFocus, fbBlur, openInfo, closeInfo, openConfirm, closeConfirm, doConfirm } from './modals.js';
 
@@ -14,6 +14,7 @@ function init() {
     state.loggedIn = true;
     state.currentUser = window.__AUTH__;
     setLoggedInUI();
+    initNotifDot();
   }
 
   const TAGS_DATA = window.__TAGS__ || [];
@@ -114,7 +115,7 @@ Object.assign(window, {
   toast, checkAuthThen,
   render, go, toggleTag, onComposeSrch, clearComposeSrch, filterTags, clearAll, showSaved, showMine, markNav, setActiveNav,
   openLg, closeLg, doSocialLogin,
-  openNotifs, closeNotifs, markNotifRead, deleteNotif, deleteAllNotifs, renderNotifList,
+  openNotifs, closeNotifs, markNotifRead, deleteNotif, deleteAllNotifs, renderNotifList, initNotifDot,
   openProfileMenu, closeProfileMenu, openAccountPage, closeAccountPage,
   openPM, closePM, openFeedback, closeFB, submitFeedback, fbFocus, fbBlur, openInfo, closeInfo, openConfirm, closeConfirm, doConfirm,
 });
