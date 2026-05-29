@@ -7,6 +7,7 @@ use App\Http\Controllers\Admin\LoginController as AdminLoginController;
 use App\Http\Controllers\Admin\PostsController as AdminPostsController;
 use App\Http\Controllers\Admin\ReportsController as AdminReportsController;
 use App\Http\Controllers\Admin\TagsController as AdminTagsController;
+use App\Http\Controllers\Admin\TranslationsController as AdminTranslationsController;
 use App\Http\Controllers\Admin\UsersController as AdminUsersController;
 use App\Http\Controllers\FaqController;
 use App\Http\Controllers\NotificationController;
@@ -94,6 +95,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         // Posts
         Route::get('/posts', [AdminPostsController::class, 'index'])->name('posts.index');
+
+        // Translations
+        Route::get('/translations', [AdminTranslationsController::class, 'index'])->name('translations.index');
     });
 });
 
