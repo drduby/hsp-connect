@@ -96,7 +96,7 @@ new class extends Component
         </button>
     </div>
 
-    <div class="overflow-hidden rounded-xl bg-white shadow ring-1 ring-gray-200">
+    <div class="overflow-x-auto rounded-xl bg-white shadow ring-1 ring-gray-200">
         <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">
                 <tr>
@@ -142,21 +142,39 @@ new class extends Component
                             {{ $report->created_at->format('d.m.Y') }}
                         </td>
                         <td class="px-6 py-4 text-right whitespace-nowrap">
-                            <div class="flex items-center justify-end gap-x-3">
-                                @if($report->status === 'pending')
-                                    <button wire:click="review({{ $report->id }})"
-                                            class="text-sm font-medium text-indigo-600 hover:text-indigo-800">Review</button>
-                                    <button wire:click="dismiss({{ $report->id }})"
-                                            class="text-sm font-medium text-gray-600 hover:text-gray-800">Dismiss</button>
-                                    @if($report->post)
-                                        <button wire:click="deletePost({{ $report->id }})"
-                                                wire:confirm="Are you sure you want to delete this post?"
-                                                class="text-sm font-medium text-red-600 hover:text-red-800">Delete Post</button>
-                                    @endif
-                                @else
-                                    <span class="text-sm text-gray-400">—</span>
-                                @endif
-                            </div>
+                            @if($report->status === 'pending')
+                                <div class="relative inline-block text-left" x-data="{ open: false }" @click.outside="open = false">
+                                    <button @click="open = !open"
+                                            class="inline-flex items-center justify-center rounded-md p-1.5 text-gray-400 hover:bg-gray-100 hover:text-gray-600">
+                                        <svg class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                                            <path d="M10 3a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM10 8.5a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3ZM11.5 15.5a1.5 1.5 0 1 0-3 0 1.5 1.5 0 0 0 3 0Z"/>
+                                        </svg>
+                                    </button>
+                                    <div x-show="open" x-transition
+                                         class="absolute right-0 z-20 mt-1 w-44 origin-top-right rounded-lg bg-white py-1 shadow-lg ring-1 ring-gray-200">
+                                        <button wire:click="review({{ $report->id }})" @click="open = false"
+                                                class="flex w-full items-center gap-x-2 px-4 py-2 text-sm text-indigo-700 hover:bg-gray-50">
+                                            <svg class="h-4 w-4 text-indigo-400" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.403 12.652a3 3 0 0 0 0-5.304 3 3 0 0 0-3.75-3.751 3 3 0 0 0-5.305 0 3 3 0 0 0-3.751 3.75 3 3 0 0 0 0 5.305 3 3 0 0 0 3.75 3.751 3 3 0 0 0 5.305 0 3 3 0 0 0 3.751-3.75Zm-2.546-4.46a.75.75 0 0 0-1.214-.883l-3.483 4.79-1.88-1.88a.75.75 0 1 0-1.06 1.061l2.5 2.5a.75.75 0 0 0 1.137-.089l4-5.5Z" clip-rule="evenodd"/></svg>
+                                            Mark reviewed
+                                        </button>
+                                        <button wire:click="dismiss({{ $report->id }})" @click="open = false"
+                                                class="flex w-full items-center gap-x-2 px-4 py-2 text-sm text-gray-700 hover:bg-gray-50">
+                                            <svg class="h-4 w-4 text-gray-400" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M10 18a8 8 0 1 0 0-16 8 8 0 0 0 0 16ZM8.28 7.22a.75.75 0 0 0-1.06 1.06L8.94 10l-1.72 1.72a.75.75 0 1 0 1.06 1.06L10 11.06l1.72 1.72a.75.75 0 1 0 1.06-1.06L11.06 10l1.72-1.72a.75.75 0 0 0-1.06-1.06L10 8.94 8.28 7.22Z" clip-rule="evenodd"/></svg>
+                                            Dismiss
+                                        </button>
+                                        @if($report->post)
+                                            <div class="my-1 border-t border-gray-100"></div>
+                                            <button wire:click="deletePost({{ $report->id }})" wire:confirm="Are you sure you want to delete this post?" @click="open = false"
+                                                    class="flex w-full items-center gap-x-2 px-4 py-2 text-sm text-red-600 hover:bg-red-50">
+                                                <svg class="h-4 w-4 text-red-400" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M8.75 1A2.75 2.75 0 0 0 6 3.75v.443c-.795.077-1.584.176-2.365.298a.75.75 0 1 0 .23 1.482l.149-.022.841 10.518A2.75 2.75 0 0 0 7.596 19h4.807a2.75 2.75 0 0 0 2.742-2.53l.841-10.52.149.023a.75.75 0 0 0 .23-1.482A41.03 41.03 0 0 0 14 4.193V3.75A2.75 2.75 0 0 0 11.25 1h-2.5ZM10 4c.84 0 1.673.025 2.5.075V3.75c0-.69-.56-1.25-1.25-1.25h-2.5c-.69 0-1.25.56-1.25 1.25v.325C8.327 4.025 9.16 4 10 4ZM8.58 7.72a.75.75 0 0 0-1.5.06l.3 7.5a.75.75 0 1 0 1.5-.06l-.3-7.5Zm4.34.06a.75.75 0 1 0-1.5-.06l-.3 7.5a.75.75 0 1 0 1.5.06l.3-7.5Z" clip-rule="evenodd"/></svg>
+                                                Delete post
+                                            </button>
+                                        @endif
+                                    </div>
+                                </div>
+                            @else
+                                <span class="text-sm text-gray-400">—</span>
+                            @endif
                         </td>
                     </tr>
                 @empty
