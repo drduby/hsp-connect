@@ -16,7 +16,7 @@
                 <button class="titem" id="nav-{{ $tag->name }}" data-tag="{{ $tag->name }}">
                     <span class="tlbl">
                         <span class="tdot" style="background:{{ $tag->color ?? 'var(--t)' }}"></span>
-                        # {{ $tag->name }}
+                        # {{ $tag->localizedName }}
                     </span>
                     <span class="tcnt">{{ $tag->posts_count }}</span>
                 </button>

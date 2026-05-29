@@ -13,10 +13,10 @@
     @foreach($faqItems as $item)
     {
       "@@type": "Question",
-      "name": {{ Js::from($item->question) }},
+      "name": {{ Js::from($item->localizedQuestion) }},
       "acceptedAnswer": {
         "@@type": "Answer",
-        "text": {{ Js::from($item->answer) }}
+        "text": {{ Js::from($item->localizedAnswer) }}
       }
     }{{ !$loop->last ? ',' : '' }}
     @endforeach
@@ -36,7 +36,7 @@
             x-data="{
                 search: '',
                 activeTags: [],
-                items: {{ Js::from($faqItems->map(fn ($f) => ['q' => $f->question, 'a' => $f->answer, 'tags' => $f->tags ?? []])->values()) }},
+                items: {{ Js::from($faqItems->map(fn ($f) => ['q' => $f->localizedQuestion, 'a' => $f->localizedAnswer, 'tags' => $f->tags ?? []])->values()) }},
                 get filtered() {
                     return this.items.filter(item => {
                         const q = this.search.toLowerCase();
@@ -75,7 +75,7 @@
                         <button
                             x-on:click="toggleTag('{{ strtolower($tag->name) }}')"
                             :class="activeTags.includes('{{ strtolower($tag->name) }}') ? 'faq-chip faq-chip-on' : 'faq-chip'">
-                            # {{ $tag->name }}
+                            # {{ $tag->localizedName }}
                         </button>
                     @endforeach
                 </div>

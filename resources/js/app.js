@@ -19,13 +19,15 @@ function init() {
 
   const TAGS_DATA = window.__TAGS__ || [];
   const TAGS = TAGS_DATA.map(function (t) { return t.name; });
+  const isEn = window.__LOCALE__ === 'en';
 
   const ht = document.getElementById('hero-tags');
   if (ht) {
-    TAGS.slice(0, 5).forEach(function (t) {
+    TAGS_DATA.slice(0, 5).forEach(function (tag) {
       const b = document.createElement('button');
-      b.className = 'htag'; b.id = 'ht-' + t; b.textContent = '# ' + t;
-      b.onclick = function () { toggleTag(t); };
+      const displayName = isEn && tag.name_en ? tag.name_en : tag.name;
+      b.className = 'htag'; b.id = 'ht-' + tag.name; b.textContent = '# ' + displayName;
+      b.onclick = function () { toggleTag(tag.name); };
       ht.appendChild(b);
     });
   }
@@ -43,7 +45,8 @@ function init() {
         dot.className = 'tdot';
         dot.style.background = tag.color;
         lbl.appendChild(dot);
-        lbl.appendChild(document.createTextNode('# ' + tag.name));
+        const displayName = isEn && tag.name_en ? tag.name_en : tag.name;
+        lbl.appendChild(document.createTextNode('# ' + displayName));
 
         const cnt = document.createElement('span');
         cnt.className = 'tcnt';
