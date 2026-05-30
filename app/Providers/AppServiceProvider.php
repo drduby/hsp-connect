@@ -6,6 +6,8 @@ use App\Http\Responses\LoginResponse;
 use App\Http\Responses\LogoutResponse;
 use App\Http\Responses\RegisterResponse;
 use App\Http\Responses\VerifyEmailResponse;
+use App\Services\ActivityLogger;
+use Illuminate\Auth\Events\Failed;
 use Illuminate\Auth\Events\Logout;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Event;
@@ -38,9 +40,15 @@ class AppServiceProvider extends ServiceProvider
 
         Event::listen(Logout::class, function (Logout $event): void {
             if ($event->user) {
+                ActivityLogger::log('logout', 'User logged out: '.$event->user->nickname, $event->user->id);
                 $event->user->updateQuietly(['last_seen_at' => null]);
                 cache()->forget("user_online_{$event->user->id}");
             }
+        });
+
+        Event::listen(Failed::class, function (Failed $event): void {
+            $email = $event->credentials['email'] ?? 'unknown';
+            ActivityLogger::log('login.failed', 'Failed login attempt for: '.$email, null);
         });
     }
 }
