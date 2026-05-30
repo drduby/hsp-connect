@@ -15,6 +15,8 @@ function init() {
     state.currentUser = window.__AUTH__;
     setLoggedInUI();
     initNotifDot();
+    var mobAuth = document.getElementById('mob-auth-nav');
+    if (mobAuth) mobAuth.style.display = 'block';
   }
 
   const TAGS_DATA = window.__TAGS__ || [];
@@ -59,6 +61,14 @@ function init() {
     }
     st.querySelectorAll('.titem[data-tag]').forEach(function (b) {
       b.onclick = function () { toggleTag(b.dataset.tag); };
+    });
+  }
+
+  // Wire mobile drawer tag buttons
+  var mobTags = document.getElementById('mob-tags');
+  if (mobTags) {
+    mobTags.querySelectorAll('.titem[data-tag]').forEach(function (b) {
+      b.onclick = function () { toggleTag(b.dataset.tag); closeMobDrawer(); };
     });
   }
 

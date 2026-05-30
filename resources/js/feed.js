@@ -63,11 +63,13 @@ export function toggleTag(t) {
   if (state.activeTags.has(t)) {
     state.activeTags.delete(t);
     const el = document.getElementById('nav-' + t); if (el) el.classList.remove('on');
+    const mob = document.getElementById('mob-nav-' + t); if (mob) mob.classList.remove('on');
     const he = document.getElementById('ht-' + t); if (he) he.classList.remove('on');
   } else {
     state.activeTags.add(t);
     const navAlle = document.getElementById('nav-Alle'); if (navAlle) navAlle.classList.remove('on');
     const el = document.getElementById('nav-' + t); if (el) el.classList.add('on');
+    const mob = document.getElementById('mob-nav-' + t); if (mob) mob.classList.add('on');
     const he = document.getElementById('ht-' + t); if (he) he.classList.add('on');
   }
   state.page = 1;
