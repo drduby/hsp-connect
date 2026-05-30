@@ -20,6 +20,7 @@ class DatabaseSeeder extends Seeder
             PostSeeder::class,
             FaqItemSeeder::class,
             DummyUserSeeder::class,
+            AdminUserSeeder::class,
         ]);
     }
 }
