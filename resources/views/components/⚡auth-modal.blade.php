@@ -1,6 +1,7 @@
 <?php
 
 use App\Actions\Fortify\CreateNewUser;
+use App\Services\ActivityLogger;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Password;
@@ -104,6 +105,8 @@ new class extends Component {
 
         RateLimiter::clear($key);
         $user = Auth::user();
+
+        ActivityLogger::log('login.success', 'User logged in: '.$user->nickname, $user->id);
 
         if (! $user->hasVerifiedEmail()) {
             $resendKey = 'resend-verification:'.$user->id;
