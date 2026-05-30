@@ -201,30 +201,54 @@
 
     </div>
 
-    {{-- Today's Health --}}
-    <div class="mt-6 overflow-hidden rounded-lg bg-white shadow">
-        <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
-            <h2 class="text-sm font-semibold text-gray-900">Today's Activity</h2>
-            <span class="text-xs text-gray-400">{{ now()->format('d M Y') }}</span>
+    {{-- Activity Widget --}}
+    @php
+        $activityMeta = [
+            ['key' => 'registrations', 'label' => 'Registrations', 'color' => 'text-indigo-600', 'bg' => 'bg-indigo-50', 'alert' => false],
+            ['key' => 'logins',        'label' => 'Logins',        'color' => 'text-green-600',  'bg' => 'bg-green-50',  'alert' => false],
+            ['key' => 'failed_logins', 'label' => 'Failed Logins', 'color' => 'text-red-600',    'bg' => 'bg-red-50',    'alert' => true],
+            ['key' => 'posts',         'label' => 'Posts',         'color' => 'text-blue-600',   'bg' => 'bg-blue-50',   'alert' => false],
+            ['key' => 'comments',      'label' => 'Comments',      'color' => 'text-purple-600', 'bg' => 'bg-purple-50', 'alert' => false],
+            ['key' => 'reports',       'label' => 'Reports',       'color' => 'text-orange-600', 'bg' => 'bg-orange-50', 'alert' => true],
+            ['key' => 'feedback',      'label' => 'Feedback',      'color' => 'text-teal-600',   'bg' => 'bg-teal-50',   'alert' => false],
+        ];
+        $tabs = [
+            ['key' => 'today', 'label' => 'Today',   'sub' => now()->format('d M Y')],
+            ['key' => 'month', 'label' => 'Monthly', 'sub' => now()->format('F Y')],
+            ['key' => 'year',  'label' => 'Yearly',  'sub' => now()->format('Y')],
+        ];
+    @endphp
+    <div class="mt-6 overflow-hidden rounded-lg bg-white shadow" x-data="{ tab: 'today' }">
+        <div class="px-6 py-4 border-b border-gray-100 flex flex-wrap items-center justify-between gap-3">
+            <h2 class="text-sm font-semibold text-gray-900">Activity</h2>
+            <div class="flex rounded-lg border border-gray-200 overflow-hidden text-xs font-medium">
+                @foreach($tabs as $t)
+                    <button @click="tab = '{{ $t['key'] }}'"
+                            :class="tab === '{{ $t['key'] }}' ? 'bg-indigo-600 text-white' : 'bg-white text-gray-600 hover:bg-gray-50'"
+                            class="px-4 py-1.5 transition-colors">
+                        {{ $t['label'] }}
+                    </button>
+                @endforeach
+            </div>
         </div>
-        <div class="grid grid-cols-2 divide-x divide-y divide-gray-100 sm:grid-cols-4 lg:grid-cols-7">
-            @php
-                $healthItems = [
-                    ['label' => 'Registrations',   'value' => $health['registrations_today'],  'color' => 'text-indigo-600', 'bg' => 'bg-indigo-50'],
-                    ['label' => 'Logins',           'value' => $health['logins_today'],         'color' => 'text-green-600',  'bg' => 'bg-green-50'],
-                    ['label' => 'Failed Logins',    'value' => $health['failed_logins_today'],  'color' => $health['failed_logins_today'] > 0 ? 'text-red-600' : 'text-gray-400', 'bg' => $health['failed_logins_today'] > 0 ? 'bg-red-50' : 'bg-gray-50'],
-                    ['label' => 'Posts',            'value' => $health['posts_today'],          'color' => 'text-blue-600',   'bg' => 'bg-blue-50'],
-                    ['label' => 'Comments',         'value' => $health['comments_today'],       'color' => 'text-purple-600', 'bg' => 'bg-purple-50'],
-                    ['label' => 'Reports',          'value' => $health['reports_today'],        'color' => $health['reports_today'] > 0 ? 'text-orange-600' : 'text-gray-400', 'bg' => $health['reports_today'] > 0 ? 'bg-orange-50' : 'bg-gray-50'],
-                    ['label' => 'Feedback',         'value' => $health['feedback_today'],       'color' => $health['feedback_today'] > 0 ? 'text-teal-600' : 'text-gray-400',   'bg' => $health['feedback_today'] > 0 ? 'bg-teal-50' : 'bg-gray-50'],
-                ];
-            @endphp
-            @foreach($healthItems as $item)
-                <div class="flex flex-col items-center justify-center px-4 py-5 {{ $item['bg'] }} gap-1">
-                    <span class="text-2xl font-bold {{ $item['color'] }}">{{ $item['value'] }}</span>
-                    <span class="text-xs font-medium text-gray-500">{{ $item['label'] }}</span>
+
+        @foreach($tabs as $t)
+            <div x-show="tab === '{{ $t['key'] }}'" x-cloak>
+                <div class="px-6 py-2 text-xs text-gray-400 border-b border-gray-50">{{ $t['sub'] }}</div>
+                <div class="grid grid-cols-2 divide-x divide-y divide-gray-100 sm:grid-cols-4 lg:grid-cols-7">
+                    @foreach($activityMeta as $item)
+                        @php
+                            $val = $activity[$t['key']][$item['key']];
+                            $color = ($item['alert'] && $val === 0) ? 'text-gray-400' : $item['color'];
+                            $bg    = ($item['alert'] && $val === 0) ? 'bg-gray-50'    : $item['bg'];
+                        @endphp
+                        <div class="flex flex-col items-center justify-center px-4 py-5 {{ $bg }} gap-1">
+                            <span class="text-2xl font-bold {{ $color }}">{{ $val }}</span>
+                            <span class="text-xs font-medium text-gray-500">{{ $item['label'] }}</span>
+                        </div>
+                    @endforeach
                 </div>
-            @endforeach
-        </div>
+            </div>
+        @endforeach
     </div>
 @endsection
