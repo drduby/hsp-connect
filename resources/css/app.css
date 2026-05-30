@@ -331,3 +331,49 @@ footer {
   footer { padding: 28px 14px 18px }
   .fg { grid-template-columns: 1fr 1fr }
 }
+
+/* Mobile nav */
+.h-hamburger {
+  display: none;
+  align-items: center; justify-content: center;
+  width: 38px; height: 38px; border-radius: 50%;
+  background: none; border: 1.5px solid var(--bord2);
+  cursor: pointer; flex-shrink: 0; color: var(--t);
+  transition: background .15s;
+}
+.h-hamburger:hover { background: var(--surf2) }
+.h-mobile-menu {
+  display: none;
+  position: absolute; top: 76px; left: 0; right: 0; z-index: 299;
+  background: rgba(243,237,228,.97);
+  backdrop-filter: blur(24px) saturate(1.6);
+  border-bottom: 1px solid var(--bord);
+  box-shadow: 0 8px 24px rgba(0,0,0,.08);
+  padding: 12px 16px 16px;
+  flex-direction: column; gap: 6px;
+}
+.h-mobile-menu.is-open { display: flex }
+.h-mobile-item {
+  display: flex; align-items: center;
+  padding: 11px 14px; border-radius: 12px;
+  font-family: var(--body); font-size: 14px; font-weight: 600;
+  color: var(--muted); background: none; border: none;
+  cursor: pointer; text-decoration: none; width: 100%; text-align: left;
+  transition: background .15s, color .15s;
+}
+.h-mobile-item:hover, .h-mobile-item.h-active { background: var(--t3); color: var(--t) }
+.h-mobile-sep { height: 1px; background: var(--bord); margin: 4px 0 }
+.h-mobile-lang {
+  display: flex; align-items: center; gap: 6px;
+  padding: 8px 14px;
+}
+
+@media (max-width: 700px) {
+  .h-acts { gap: 6px }
+  .h-acts .h-btn-muted,
+  .h-acts .h-btn-o,
+  .h-acts .h-btn,
+  .h-acts > div:last-child { display: none }
+  .h-hamburger { display: flex }
+  .logo-sub { display: none }
+}
