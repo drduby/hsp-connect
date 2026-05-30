@@ -29,8 +29,9 @@ class PostService
             });
         }
 
-        if (! empty($tags)) {
-            $base->whereHas('tags', fn ($q) => $q->whereIn('name', $tags));
+        $flatTags = array_values(array_filter($tags, 'is_string'));
+        if (! empty($flatTags)) {
+            $base->whereHas('tags', fn ($q) => $q->whereIn('name', $flatTags));
         }
 
         return [
@@ -66,8 +67,9 @@ class PostService
             $query->where('type', $type === 'Erfahrung' ? 'experience' : 'question');
         }
 
-        if (! empty($tags)) {
-            $query->whereHas('tags', fn ($q) => $q->whereIn('name', $tags));
+        $flatTags = array_values(array_filter($tags, 'is_string'));
+        if (! empty($flatTags)) {
+            $query->whereHas('tags', fn ($q) => $q->whereIn('name', $flatTags));
         }
 
         $paginator = $query->paginate(10);

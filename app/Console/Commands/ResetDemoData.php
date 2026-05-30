@@ -57,6 +57,12 @@ class ResetDemoData extends Command
 
         DB::statement('SET FOREIGN_KEY_CHECKS=1');
 
+        $logFile = storage_path('logs/laravel.log');
+        if (file_exists($logFile)) {
+            file_put_contents($logFile, '');
+            $this->line('  Cleared: storage/logs/laravel.log');
+        }
+
         $this->newLine();
         $this->info('Done. Tags, FAQ, and admin accounts are untouched.');
 
