@@ -5,6 +5,7 @@ use App\Http\Controllers\Admin\FaqController as AdminFaqController;
 use App\Http\Controllers\Admin\FeedbackController as AdminFeedbackController;
 use App\Http\Controllers\Admin\LoginController as AdminLoginController;
 use App\Http\Controllers\Admin\LogsController as AdminLogsController;
+use App\Http\Controllers\Admin\PasswordController as AdminPasswordController;
 use App\Http\Controllers\Admin\PostsController as AdminPostsController;
 use App\Http\Controllers\Admin\ReportsController as AdminReportsController;
 use App\Http\Controllers\Admin\TagsController as AdminTagsController;
@@ -102,6 +103,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         // Logs
         Route::get('/logs', [AdminLogsController::class, 'index'])->name('logs.index');
+
+        // Password
+        Route::get('/password', [AdminPasswordController::class, 'index'])->name('password.index');
     });
 });
 
