@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Feedback;
+use App\Services\ActivityLogger;
 use Illuminate\Support\Facades\RateLimiter;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Validate;
@@ -76,6 +77,10 @@ new class extends Component {
             'description' => $this->description,
             'email'       => auth()->check() ? null : ($this->email ?: null),
         ]);
+
+        $action = $this->type === 'bug' ? 'feedback.bug' : 'feedback.idea';
+        $label  = $this->topic ?: mb_substr($this->description, 0, 60);
+        ActivityLogger::log($action, 'Feedback submitted: "'.$label.'"');
 
         $this->submitted = true;
     }

@@ -200,4 +200,31 @@
         </div>
 
     </div>
+
+    {{-- Today's Health --}}
+    <div class="mt-6 overflow-hidden rounded-lg bg-white shadow">
+        <div class="px-6 py-4 border-b border-gray-100 flex items-center justify-between">
+            <h2 class="text-sm font-semibold text-gray-900">Today's Activity</h2>
+            <span class="text-xs text-gray-400">{{ now()->format('d M Y') }}</span>
+        </div>
+        <div class="grid grid-cols-2 divide-x divide-y divide-gray-100 sm:grid-cols-4 lg:grid-cols-7">
+            @php
+                $healthItems = [
+                    ['label' => 'Registrations',   'value' => $health['registrations_today'],  'color' => 'text-indigo-600', 'bg' => 'bg-indigo-50'],
+                    ['label' => 'Logins',           'value' => $health['logins_today'],         'color' => 'text-green-600',  'bg' => 'bg-green-50'],
+                    ['label' => 'Failed Logins',    'value' => $health['failed_logins_today'],  'color' => $health['failed_logins_today'] > 0 ? 'text-red-600' : 'text-gray-400', 'bg' => $health['failed_logins_today'] > 0 ? 'bg-red-50' : 'bg-gray-50'],
+                    ['label' => 'Posts',            'value' => $health['posts_today'],          'color' => 'text-blue-600',   'bg' => 'bg-blue-50'],
+                    ['label' => 'Comments',         'value' => $health['comments_today'],       'color' => 'text-purple-600', 'bg' => 'bg-purple-50'],
+                    ['label' => 'Reports',          'value' => $health['reports_today'],        'color' => $health['reports_today'] > 0 ? 'text-orange-600' : 'text-gray-400', 'bg' => $health['reports_today'] > 0 ? 'bg-orange-50' : 'bg-gray-50'],
+                    ['label' => 'Feedback',         'value' => $health['feedback_today'],       'color' => $health['feedback_today'] > 0 ? 'text-teal-600' : 'text-gray-400',   'bg' => $health['feedback_today'] > 0 ? 'bg-teal-50' : 'bg-gray-50'],
+                ];
+            @endphp
+            @foreach($healthItems as $item)
+                <div class="flex flex-col items-center justify-center px-4 py-5 {{ $item['bg'] }} gap-1">
+                    <span class="text-2xl font-bold {{ $item['color'] }}">{{ $item['value'] }}</span>
+                    <span class="text-xs font-medium text-gray-500">{{ $item['label'] }}</span>
+                </div>
+            @endforeach
+        </div>
+    </div>
 @endsection

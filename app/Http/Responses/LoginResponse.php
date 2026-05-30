@@ -13,9 +13,9 @@ class LoginResponse implements LoginResponseContract
 {
     public function toResponse($request): JsonResponse|RedirectResponse
     {
-        $user = $request->user();
+        $user = Auth::user() ?? $request->user();
 
-        ActivityLogger::log('login.success', 'User logged in: '.$user->nickname, $user->id);
+        ActivityLogger::log('login.success', 'User logged in: '.($user?->nickname ?? 'unknown'), $user?->id);
 
         if (! $user->hasVerifiedEmail()) {
             $key = 'resend-verification:'.$user->id;
