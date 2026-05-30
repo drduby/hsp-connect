@@ -92,12 +92,13 @@
                              x-transition:leave="transition ease-in duration-75"
                              x-transition:leave-start="transform opacity-100 scale-100"
                              x-transition:leave-end="transform opacity-0 scale-95"
-                             class="absolute right-0 z-10 mt-2 w-32 origin-top-right rounded-md bg-white py-2 shadow-lg ring-1 ring-gray-900/5"
+                             class="absolute right-0 z-10 mt-2 w-44 origin-top-right rounded-md bg-white py-2 shadow-lg ring-1 ring-gray-900/5"
                              x-cloak>
-                            <a href="{{ route('home') }}" class="block px-3 py-1 text-sm/6 text-gray-900 hover:bg-gray-50">Back to site</a>
+                            <a href="{{ route('admin.password.index') }}" class="block px-3 py-1 text-sm/6 text-gray-900 hover:bg-gray-50">Change password</a>
+                            <div class="my-1 border-t border-gray-100"></div>
                             <form method="POST" action="{{ route('logout') ?? '#' }}">
                                 @csrf
-                                <button type="submit" class="block w-full px-3 py-1 text-left text-sm/6 text-gray-900 hover:bg-gray-50">Sign out</button>
+                                <button type="submit" class="block w-full px-3 py-1 text-left text-sm/6 text-red-600 hover:bg-gray-50">Sign out</button>
                             </form>
                         </div>
                     </div>
