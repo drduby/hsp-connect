@@ -10,6 +10,11 @@
             <div class="logo-sub">Community</div>
         </div>
     </a>
+    @if(!app()->isProduction())
+        <span style="margin-left:6px;padding:2px 8px;border-radius:6px;font-size:10px;font-weight:700;letter-spacing:.04em;background:#fef3c7;color:#b45309;border:1px solid #fde68a;line-height:1.6">
+            {{ strtoupper(app()->environment()) }}
+        </span>
+    @endif
 
     <div class="h-acts">
         <div class="h-ico-btn" id="notif-btn" onclick="openNotifs()" style="display:none">

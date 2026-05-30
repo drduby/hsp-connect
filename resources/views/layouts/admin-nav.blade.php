@@ -52,6 +52,12 @@
     <a href="{{ route('home') }}" class="flex items-center gap-x-2">
         <span class="flex size-8 items-center justify-center rounded-lg bg-indigo-600 text-xs font-bold text-white">H</span>
         <span class="text-sm font-semibold text-gray-900">HSPConnect <span class="text-gray-400 font-normal">Admin</span></span>
+        @if(!app()->isProduction())
+            <span class="ml-1 inline-flex items-center rounded-md px-2 py-0.5 text-xs font-bold ring-1 ring-inset
+                {{ app()->environment('local') ? 'bg-amber-50 text-amber-700 ring-amber-600/20' : 'bg-blue-50 text-blue-700 ring-blue-600/20' }}">
+                {{ strtoupper(app()->environment()) }}
+            </span>
+        @endif
     </a>
 </div>
 
