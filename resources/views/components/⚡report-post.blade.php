@@ -2,6 +2,7 @@
 
 use App\Models\Post;
 use App\Models\PostReport;
+use App\Services\ActivityLogger;
 use Illuminate\Support\Facades\RateLimiter;
 use Livewire\Attributes\On;
 use Livewire\Attributes\Validate;
@@ -83,6 +84,8 @@ new class extends Component {
             'description' => $this->description,
             'status'      => 'pending',
         ]);
+
+        ActivityLogger::log('report.submitted', 'Post #'.$this->postId.' reported for: '.$this->reason);
 
         $this->submitted = true;
         $this->dispatch('post-reported', postId: $this->postId);

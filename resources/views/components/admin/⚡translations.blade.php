@@ -1,5 +1,6 @@
 <?php
 
+use App\Services\ActivityLogger;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Arr;
 use Livewire\Attributes\Computed;
@@ -48,6 +49,8 @@ new class extends Component
             opcache_invalidate(base_path('lang/de/ui.php'), true);
             opcache_invalidate(base_path('lang/en/ui.php'), true);
         }
+
+        ActivityLogger::log('admin.translation.saved', 'Translation key updated: '.$this->editKey);
 
         $this->editKey = '';
         session()->flash('success', 'Translation saved.');

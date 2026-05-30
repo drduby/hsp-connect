@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\DashboardController as AdminDashboardController;
 use App\Http\Controllers\Admin\FaqController as AdminFaqController;
 use App\Http\Controllers\Admin\FeedbackController as AdminFeedbackController;
 use App\Http\Controllers\Admin\LoginController as AdminLoginController;
+use App\Http\Controllers\Admin\LogsController as AdminLogsController;
 use App\Http\Controllers\Admin\PostsController as AdminPostsController;
 use App\Http\Controllers\Admin\ReportsController as AdminReportsController;
 use App\Http\Controllers\Admin\TagsController as AdminTagsController;
@@ -98,6 +99,9 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
         // Translations
         Route::get('/translations', [AdminTranslationsController::class, 'index'])->name('translations.index');
+
+        // Logs
+        Route::get('/logs', [AdminLogsController::class, 'index'])->name('logs.index');
     });
 });
 

@@ -3,6 +3,7 @@
 use App\Models\Tag;
 use App\Models\User;
 use App\Notifications\UserMentioned;
+use App\Services\ActivityLogger;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Validation\Rule;
@@ -71,6 +72,8 @@ new class extends Component {
 
         $post->tags()->sync($this->selectedTagIds);
         $this->notifyMentions($this->content, $post);
+
+        ActivityLogger::log('post.created', 'Post created: "'.$post->title.'"');
 
         $this->dispatch('post-created');
         $this->dispatch('close-post-modal');

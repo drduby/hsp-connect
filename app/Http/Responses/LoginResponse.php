@@ -2,6 +2,7 @@
 
 namespace App\Http\Responses;
 
+use App\Services\ActivityLogger;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
@@ -13,6 +14,8 @@ class LoginResponse implements LoginResponseContract
     public function toResponse($request): JsonResponse|RedirectResponse
     {
         $user = $request->user();
+
+        ActivityLogger::log('login.success', 'User logged in: '.$user->nickname, $user->id);
 
         if (! $user->hasVerifiedEmail()) {
             $key = 'resend-verification:'.$user->id;

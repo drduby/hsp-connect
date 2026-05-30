@@ -8,6 +8,7 @@ use App\Notifications\CommentPosted;
 use App\Notifications\PostLiked;
 use App\Notifications\PostRated;
 use App\Notifications\UserMentioned;
+use App\Services\ActivityLogger;
 use Illuminate\Support\Facades\RateLimiter;
 use Livewire\Attributes\Computed;
 use Livewire\Attributes\On;
@@ -169,6 +170,8 @@ new class extends Component
             return;
         }
 
+        ActivityLogger::log('comment.deleted', 'Comment deleted on post: "'.$this->post->title.'"');
+
         $comment->delete();
 
         $this->post->unsetRelation('comments');
@@ -180,6 +183,8 @@ new class extends Component
         if ($this->post->user_id !== auth()->id()) {
             return;
         }
+
+        ActivityLogger::log('post.deleted', 'Post deleted: "'.$this->post->title.'"');
 
         $this->post->delete();
         $this->dispatch('post-deleted', postId: $this->post->id);

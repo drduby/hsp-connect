@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\Post;
+use App\Services\ActivityLogger;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
@@ -39,19 +40,31 @@ new class extends Component
 
     public function delete(int $id): void
     {
-        Post::find($id)?->delete();
+        $post = Post::find($id);
+        $post?->delete();
+        if ($post) {
+            ActivityLogger::log('admin.post.deleted', 'Admin deleted post #'.$id.': "'.$post->title.'"');
+        }
         session()->flash('success', 'Post deleted.');
     }
 
     public function restore(int $id): void
     {
-        Post::withTrashed()->find($id)?->restore();
+        $post = Post::withTrashed()->find($id);
+        $post?->restore();
+        if ($post) {
+            ActivityLogger::log('admin.post.restored', 'Admin restored post #'.$id.': "'.$post->title.'"');
+        }
         session()->flash('success', 'Post restored.');
     }
 
     public function forceDelete(int $id): void
     {
-        Post::withTrashed()->find($id)?->forceDelete();
+        $post = Post::withTrashed()->find($id);
+        $post?->forceDelete();
+        if ($post) {
+            ActivityLogger::log('admin.post.force_deleted', 'Admin permanently deleted post #'.$id.': "'.$post->title.'"');
+        }
         session()->flash('success', 'Post permanently deleted.');
     }
 

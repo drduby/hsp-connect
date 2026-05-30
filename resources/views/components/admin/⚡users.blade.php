@@ -1,6 +1,7 @@
 <?php
 
 use App\Models\User;
+use App\Services\ActivityLogger;
 use Livewire\Attributes\Computed;
 use Livewire\Component;
 use Livewire\WithPagination;
@@ -59,13 +60,21 @@ new class extends Component
 
     public function block(int $id): void
     {
-        User::find($id)?->update(['blocked_at' => now()]);
+        $user = User::find($id);
+        $user?->update(['blocked_at' => now()]);
+        if ($user) {
+            ActivityLogger::log('user.blocked', 'User blocked: '.$user->nickname.' ('.$user->email.')');
+        }
         session()->flash('success', 'User blocked.');
     }
 
     public function unblock(int $id): void
     {
-        User::find($id)?->update(['blocked_at' => null]);
+        $user = User::find($id);
+        $user?->update(['blocked_at' => null]);
+        if ($user) {
+            ActivityLogger::log('user.unblocked', 'User unblocked: '.$user->nickname.' ('.$user->email.')');
+        }
         session()->flash('success', 'User unblocked.');
     }
 
