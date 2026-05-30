@@ -30,7 +30,7 @@
 
         @if(Auth::check() && Auth::user()->hasVerifiedEmail())
             <button class="h-btn-o" id="h-login-btn" onclick="openLg()">{{ Auth::user()->nickname }}</button>
-            <span style="width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#0a6e7a,#b8762a);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;flex-shrink:0;user-select:none">
+            <span class="h-avatar" style="width:34px;height:34px;border-radius:50%;background:linear-gradient(135deg,#0a6e7a,#b8762a);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#fff;flex-shrink:0;user-select:none">
                 {{ strtoupper(mb_substr(Auth::user()->nickname, 0, 1)) }}
             </span>
         @else
@@ -38,7 +38,7 @@
             <button class="h-btn-muted" id="h-reg-btn" onclick="openLg('up')">{{ __('ui.nav.register') }}</button>
         @endif
 
-        <div style="display:flex;align-items:center;gap:2px;margin-left:4px">
+        <div class="h-lang" style="display:flex;align-items:center;gap:2px;margin-left:4px">
             <form method="POST" action="{{ route('language.switch', 'de') }}" style="margin:0">
                 @csrf
                 <button type="submit" style="padding:4px 7px;border-radius:6px;border:none;font-family:var(--body);font-size:11.5px;font-weight:700;cursor:pointer;transition:background .15s;background:{{ app()->getLocale() === 'de' ? 'var(--t)' : 'transparent' }};color:{{ app()->getLocale() === 'de' ? '#fff' : 'var(--muted)' }}">DE</button>

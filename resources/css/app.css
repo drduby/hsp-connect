@@ -373,7 +373,8 @@ footer {
   .h-acts .h-btn-muted,
   .h-acts .h-btn-o,
   .h-acts .h-btn,
-  .h-acts > div:last-child { display: none }
+  .h-avatar,
+  .h-lang { display: none !important }
   .h-hamburger { display: flex }
   .logo-sub { display: none }
 }
