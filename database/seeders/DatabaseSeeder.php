@@ -19,6 +19,7 @@ class DatabaseSeeder extends Seeder
             MainUserSeeder::class,
             PostSeeder::class,
             FaqItemSeeder::class,
+            DummyUserSeeder::class,
         ]);
     }
 }
