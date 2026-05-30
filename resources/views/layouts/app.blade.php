@@ -87,6 +87,7 @@ window.__TRANS__ = {
 @yield('content')
 
 @include('partials.account-page')
+<x-modals.beta />
 <x-modals.info />
 <livewire:feedback-modal />
 <livewire:auth-modal />
