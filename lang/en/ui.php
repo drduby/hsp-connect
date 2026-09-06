@@ -307,4 +307,30 @@ return [
         'reason_offtopic' => 'Not community-appropriate',
         'reason_other' => 'Other',
     ],
+    'legal' => [
+        'impressum' => [
+            'title' => 'Imprint',
+            'body' => '<h3>Legal Notice pursuant to § 5 ECG (Austria)</h3><p><strong>HSPConnect</strong><br>Musterstraße 1<br>1010 Vienna, Austria</p><p>Email: hallo@hspconnect.at</p><h3>Disclaimer</h3><p>All content is created by community members and does not constitute medical advice. HSPConnect is not a substitute for professional medical consultation.</p>',
+        ],
+        'datenschutz' => [
+            'title' => 'Privacy Policy',
+            'body' => '<h3>Controller</h3><p>HSPConnect — hallo@hspconnect.at</p><h3>Data Collected</h3><ul><li>Name, email, password (encrypted)</li><li>Posts, comments, ratings</li></ul><h3>Your Rights (GDPR)</h3><ul><li>Access, rectification, erasure</li><li>Data portability</li></ul><p>Requests: hallo@hspconnect.at</p><h3>Cookies</h3><p>Only technically necessary session cookies. No tracking.</p>',
+        ],
+        'nutzung' => [
+            'title' => 'Terms of Use',
+            'body' => '<h3>Scope</h3><p>By registering you agree to these terms.</p><h3>Prohibited Content</h3><ul><li>Medical advice without qualification</li><li>Insults, discrimination</li><li>Spam and advertising</li></ul><div class="warn-box"><strong>⚕️ Important:</strong> HSPConnect is not a substitute for a doctor\'s visit.</div>',
+        ],
+        'regeln' => [
+            'title' => 'Community Guidelines',
+            'body' => '<h3>Core Values</h3><p>Respect, understanding and support.</p><div class="warn-box"><strong>⚕️ Medical Content:</strong> Share only personal experiences. "X helped me" is allowed. Diagnoses or promises of a cure are prohibited.</div><h3>✅ Welcome</h3><ul><li>Sharing personal experiences</li><li>Asking questions</li><li>Supporting others</li></ul><h3>🚫 Prohibited</h3><ul><li>Medical advice without qualification</li><li>Insults and discrimination</li><li>Spam and advertising</li></ul>',
+        ],
+        'faq' => [
+            'title' => 'FAQ',
+            'body' => '<h3>What is HSPConnect?</h3><p>A community for people with HSP and spasticity.</p><h3>Is it free?</h3><p>Yes, completely free.</p><h3>Is content medically verified?</h3><p>No — personal experience reports, not medical advice.</p><h3>Delete account?</h3><p>Email hallo@hspconnect.at.</p>',
+        ],
+        'kontakt' => [
+            'title' => 'Contact',
+            'body' => '<h3>Write to us</h3><p><strong>Email:</strong> hallo@hspconnect.at</p><h3>Response time</h3><p>2–3 business days.</p>',
+        ],
+    ],
 ];

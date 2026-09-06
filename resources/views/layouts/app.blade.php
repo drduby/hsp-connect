@@ -40,6 +40,17 @@
 window.__AUTH__ = @json($authState);
 window.__NOTIF_COUNT__ = {{ $authUser ? $authUser->unreadNotifications()->count() : 0 }};
 window.__LOCALE__ = '{{ app()->getLocale() }}';
+@php
+$legalContent = [
+    'impressum' => ['title' => __('ui.legal.impressum.title'), 'body' => __('ui.legal.impressum.body')],
+    'datenschutz' => ['title' => __('ui.legal.datenschutz.title'), 'body' => __('ui.legal.datenschutz.body')],
+    'nutzung' => ['title' => __('ui.legal.nutzung.title'), 'body' => __('ui.legal.nutzung.body')],
+    'regeln' => ['title' => __('ui.legal.regeln.title'), 'body' => __('ui.legal.regeln.body')],
+    'faq' => ['title' => __('ui.legal.faq.title'), 'body' => __('ui.legal.faq.body')],
+    'kontakt' => ['title' => __('ui.legal.kontakt.title'), 'body' => __('ui.legal.kontakt.body')],
+];
+@endphp
+window.__LEGAL__ = @json($legalContent);
 window.__TRANS__ = {
     notificationsTitle: @json(__('ui.notifications.title')),
     noNotifications: @json(__('ui.notifications.none')),
